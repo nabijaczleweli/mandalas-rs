@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `util` mod in crate `mandalas`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, util">
+    <meta name="description" content="API documentation for the Rust `save` fn in crate `mandalas`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, save">
 
-    <title>mandalas::util - Rust</title>
+    <title>mandalas::ops::save - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>mandalas</a></p><script>window.sidebarCurrent = {name: 'util', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'><a href='../index.html'>mandalas</a>::<wbr><a href='index.html'>ops</a></p><script>window.sidebarCurrent = {name: 'save', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,22 +42,18 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>mandalas</a>::<wbr><a class='mod' href=''>util</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content fn">
+<h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>mandalas</a>::<wbr><a href='index.html'>ops</a>::<wbr><a class='fn' href=''>save</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-139' class='srclink' href='../../src/mandalas/src/util.rs.html#1-26' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>Various utility functions.</p>
-</div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class='fn' href='fn.distance.html'
-                                  title='mandalas::util::distance'>distance</a></td>
-                           <td class='docblock short'>
-                                <p>Calculate the distance between two specified points.</p>
-                           </td>
-                       </tr></table></section>
+               </span><a id='src-135' class='srclink' href='../../src/mandalas/src/ops/mod.rs.html#72-74' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn save(image: &amp;<a class='enum' href='../../image/dynimage/enum.DynamicImage.html' title='image::dynimage::DynamicImage'>DynamicImage</a>, outdir: &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>, fname: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>)</pre><div class='docblock'><p>Save the mandala to the specified file</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='ident'>save</span>(<span class='kw-2'>&amp;</span><span class='ident'>mandala</span>, <span class='kw-2'>&amp;</span><span class='ident'>opts</span>.<span class='ident'>outdir</span>.<span class='number'>1</span>, <span class='kw-2'>&amp;</span><span class='ident'>filename_to_save</span>(<span class='ident'>opts</span>.<span class='ident'>resolution</span>));</pre>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
