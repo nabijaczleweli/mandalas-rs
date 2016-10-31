@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["init_image","Initialise the mandala canvas from the given size."]],"struct":[["GenerationContext",""]]});
+initSidebarItems({"fn":[["init_image","Initialise the mandala canvas from the given size."],["points_to_generate","Check how many points need generating to acquire a smooth image for the given size."]],"struct":[["GenerationContext",""]]});

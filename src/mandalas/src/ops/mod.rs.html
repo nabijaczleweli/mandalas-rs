@@ -67,6 +67,27 @@
 <span id="23">23</span>
 <span id="24">24</span>
 <span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
 </pre><pre class='rust '>
 <span class='kw'>mod</span> <span class='ident'>gen_ctx</span>;
 
@@ -92,6 +113,27 @@
 <span class='doccomment'>/// ```</span>
 <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>init_image</span>(<span class='ident'>size</span>: (<span class='ident'>usize</span>, <span class='ident'>usize</span>)) <span class='op'>-&gt;</span> <span class='ident'>DynamicImage</span> {
     <span class='ident'>DynamicImage</span>::<span class='ident'>new_rgb8</span>(<span class='ident'>size</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='ident'>u32</span>, <span class='ident'>size</span>.<span class='number'>1</span> <span class='kw'>as</span> <span class='ident'>u32</span>)
+}
+
+<span class='doccomment'>/// Check how many points need generating to acquire a smooth image for the given size.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// This might not be 100% accurate but will try to be over- rather than underzealous.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// # Examples</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// ```</span>
+<span class='doccomment'>/// # use mandalas::ops::points_to_generate;</span>
+<span class='doccomment'>/// # struct O {</span>
+<span class='doccomment'>/// #     resolution: (usize, usize),</span>
+<span class='doccomment'>/// # }</span>
+<span class='doccomment'>/// # let opts = O { resolution: (900, 900) };</span>
+<span class='doccomment'>/// for _ in 0..points_to_generate(opts.resolution) {</span>
+<span class='doccomment'>///     // Generate and set pixel</span>
+<span class='doccomment'>/// }</span>
+<span class='doccomment'>/// ```</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>points_to_generate</span>(<span class='ident'>size</span>: (<span class='ident'>usize</span>, <span class='ident'>usize</span>)) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
+    <span class='comment'>// (Closest power of 10 upwards) * 10</span>
+    <span class='number'>10u64</span>.<span class='ident'>pow</span>(((<span class='ident'>size</span>.<span class='number'>0</span> <span class='op'>*</span> <span class='ident'>size</span>.<span class='number'>1</span>) <span class='kw'>as</span> <span class='ident'>f64</span>).<span class='ident'>log10</span>().<span class='ident'>ceil</span>() <span class='kw'>as</span> <span class='ident'>u32</span> <span class='op'>+</span> <span class='number'>1</span>)
 }
 </pre>
 </section>

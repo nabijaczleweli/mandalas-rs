@@ -67,30 +67,84 @@
 <span id="23">23</span>
 <span id="24">24</span>
 <span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
 </pre><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>distributions</span>::{<span class='ident'>Sample</span>, <span class='ident'>Range</span>};
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='kw'>super</span>::<span class='kw'>super</span>::<span class='ident'>util</span>::<span class='ident'>distance</span>;
 <span class='kw'>use</span> <span class='ident'>arraydeque</span>::<span class='ident'>ArrayDeque</span>;
-<span class='kw'>use</span> <span class='ident'>rand</span>::{<span class='ident'>StdRng</span>, <span class='ident'>Rng</span>};
+<span class='kw'>use</span> <span class='ident'>rand</span>::<span class='ident'>StdRng</span>;
+<span class='kw'>use</span> <span class='ident'>quickersort</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>u8</span>;
 
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>GenerationContext</span> {
-    <span class='ident'>bounds</span>: (<span class='ident'>usize</span>, <span class='ident'>usize</span>),
-    <span class='ident'>past_positions</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span>[(<span class='ident'>usize</span>, <span class='ident'>usize</span>); <span class='number'>4</span>]<span class='op'>&gt;</span>,
-    <span class='ident'>pos_generator</span>: <span class='ident'>StdRng</span>,
+    <span class='ident'>past_positions</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span>[(<span class='ident'>usize</span>, <span class='ident'>usize</span>); <span class='number'>4</span> <span class='op'>+</span> <span class='number'>1</span>]<span class='op'>&gt;</span>,
+    <span class='ident'>generator</span>: <span class='ident'>StdRng</span>,
+    <span class='ident'>corners</span>: (<span class='ident'>Range</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>, [(<span class='ident'>usize</span>, <span class='ident'>usize</span>); <span class='number'>4</span>]),
 }
 
 <span class='kw'>impl</span> <span class='ident'>GenerationContext</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>mandala_size</span>: (<span class='ident'>usize</span>, <span class='ident'>usize</span>)) <span class='op'>-&gt;</span> <span class='ident'>GenerationContext</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>past</span> <span class='op'>=</span> <span class='ident'>ArrayDeque</span>::<span class='ident'>new</span>();
-        <span class='kw'>while</span> <span class='ident'>past</span>.<span class='ident'>len</span>() <span class='op'>!=</span> <span class='ident'>past</span>.<span class='ident'>capacity</span>() {
-            <span class='ident'>past</span>.<span class='ident'>push_back</span>((<span class='number'>0</span>, <span class='number'>0</span>));
+        <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>past</span>.<span class='ident'>capacity</span>() {
+            <span class='ident'>past</span>.<span class='ident'>push_back</span>((<span class='ident'>mandala_size</span>.<span class='number'>0</span> <span class='op'>/</span> <span class='number'>2</span>, <span class='ident'>mandala_size</span>.<span class='number'>1</span> <span class='op'>/</span> <span class='number'>2</span>));
         }
 
         <span class='ident'>GenerationContext</span> {
-            <span class='ident'>bounds</span>: <span class='ident'>mandala_size</span>,
             <span class='ident'>past_positions</span>: <span class='ident'>past</span>,
-            <span class='ident'>pos_generator</span>: <span class='ident'>StdRng</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>(),
+            <span class='ident'>generator</span>: <span class='ident'>StdRng</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>(),
+            <span class='ident'>corners</span>: (<span class='ident'>Range</span>::<span class='ident'>new</span>(<span class='number'>0</span>, <span class='number'>4</span>), [(<span class='number'>0</span>, <span class='number'>0</span>), (<span class='ident'>mandala_size</span>.<span class='number'>0</span>, <span class='number'>0</span>), (<span class='number'>0</span>, <span class='ident'>mandala_size</span>.<span class='number'>1</span>), (<span class='ident'>mandala_size</span>.<span class='number'>0</span>, <span class='ident'>mandala_size</span>.<span class='number'>1</span>)]),
         }
+    }
+
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>gen</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> ((<span class='ident'>u32</span>, <span class='ident'>u32</span>), [<span class='ident'>u8</span>; <span class='number'>3</span>]) {
+        <span class='kw'>static</span> <span class='ident'>MAX_COLOUR</span>: <span class='ident'>f64</span> <span class='op'>=</span> <span class='ident'>u8</span>::<span class='ident'>MAX</span> <span class='kw'>as</span> <span class='ident'>f64</span>;
+
+        <span class='kw'>let</span> <span class='kw-2'>&amp;</span>(<span class='ident'>prev_x</span>, <span class='ident'>prev_y</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>past_positions</span>.<span class='ident'>back</span>().<span class='ident'>unwrap</span>();
+        <span class='kw'>let</span> (<span class='ident'>to_x</span>, <span class='ident'>to_y</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>corners</span>.<span class='number'>1</span>[<span class='self'>self</span>.<span class='ident'>corners</span>.<span class='number'>0</span>.<span class='ident'>sample</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>generator</span>)];
+
+        <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> (<span class='ident'>prev_x</span> <span class='kw'>as</span> <span class='ident'>isize</span> <span class='op'>-</span> ((<span class='ident'>prev_x</span> <span class='kw'>as</span> <span class='ident'>isize</span> <span class='op'>-</span> <span class='ident'>to_x</span> <span class='kw'>as</span> <span class='ident'>isize</span>) <span class='op'>/</span> <span class='number'>2</span>)) <span class='kw'>as</span> <span class='ident'>usize</span>;
+        <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> (<span class='ident'>prev_y</span> <span class='kw'>as</span> <span class='ident'>isize</span> <span class='op'>-</span> ((<span class='ident'>prev_y</span> <span class='kw'>as</span> <span class='ident'>isize</span> <span class='op'>-</span> <span class='ident'>to_y</span> <span class='kw'>as</span> <span class='ident'>isize</span>) <span class='op'>/</span> <span class='number'>2</span>)) <span class='kw'>as</span> <span class='ident'>usize</span>;
+
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>distances</span> <span class='op'>=</span> [<span class='ident'>distance</span>(<span class='self'>self</span>.<span class='ident'>past_positions</span>[<span class='number'>0</span>], <span class='self'>self</span>.<span class='ident'>past_positions</span>[<span class='number'>1</span>]),
+                             <span class='ident'>distance</span>(<span class='self'>self</span>.<span class='ident'>past_positions</span>[<span class='number'>1</span>], <span class='self'>self</span>.<span class='ident'>past_positions</span>[<span class='number'>2</span>]),
+                             <span class='ident'>distance</span>(<span class='self'>self</span>.<span class='ident'>past_positions</span>[<span class='number'>2</span>], <span class='self'>self</span>.<span class='ident'>past_positions</span>[<span class='number'>3</span>]),
+                             <span class='ident'>distance</span>(<span class='self'>self</span>.<span class='ident'>past_positions</span>[<span class='number'>3</span>], (<span class='ident'>x</span>, <span class='ident'>y</span>))];
+        <span class='ident'>quickersort</span>::<span class='ident'>sort_floats</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>distances</span>);
+
+        <span class='comment'>// TODO: use something actually circular that will take care of looping for us so as to remove the pop_front() call</span>
+        <span class='self'>self</span>.<span class='ident'>past_positions</span>.<span class='ident'>pop_front</span>();
+        <span class='self'>self</span>.<span class='ident'>past_positions</span>.<span class='ident'>push_back</span>((<span class='ident'>x</span>, <span class='ident'>y</span>));
+        ((<span class='ident'>x</span> <span class='kw'>as</span> <span class='ident'>u32</span>, <span class='ident'>y</span> <span class='kw'>as</span> <span class='ident'>u32</span>),
+         [(<span class='ident'>MAX_COLOUR</span> <span class='op'>-</span> ((<span class='ident'>distances</span>[<span class='number'>0</span>] <span class='op'>/</span> <span class='ident'>distances</span>[<span class='number'>3</span>]) <span class='op'>*</span> <span class='ident'>MAX_COLOUR</span>).<span class='ident'>round</span>()).<span class='ident'>abs</span>() <span class='kw'>as</span> <span class='ident'>u8</span>,
+          (<span class='ident'>MAX_COLOUR</span> <span class='op'>-</span> ((<span class='ident'>distances</span>[<span class='number'>1</span>] <span class='op'>/</span> <span class='ident'>distances</span>[<span class='number'>3</span>]) <span class='op'>*</span> <span class='ident'>MAX_COLOUR</span>).<span class='ident'>round</span>()).<span class='ident'>abs</span>() <span class='kw'>as</span> <span class='ident'>u8</span>,
+          (<span class='ident'>MAX_COLOUR</span> <span class='op'>-</span> ((<span class='ident'>distances</span>[<span class='number'>2</span>] <span class='op'>/</span> <span class='ident'>distances</span>[<span class='number'>3</span>]) <span class='op'>*</span> <span class='ident'>MAX_COLOUR</span>).<span class='ident'>round</span>()).<span class='ident'>abs</span>() <span class='kw'>as</span> <span class='ident'>u8</span>])
     }
 }
 </pre>
