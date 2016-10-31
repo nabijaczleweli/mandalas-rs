@@ -13,5 +13,7 @@ fn actual_main() -> Result<(), i32> {
     let opts = mandalas::Options::parse();
     println!("{:#?}", opts);
 
+    let img = mandalas::ops::init_image(opts.resolution);
+
     Ok(())
 }
