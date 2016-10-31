@@ -1,3 +1,4 @@
+extern crate quickersort;
 #[macro_use]
 extern crate lazy_static;
 extern crate arraydeque;
