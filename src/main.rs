@@ -1,9 +1,6 @@
-extern crate arraydeque;
 extern crate mandalas;
-extern crate image;
 
 use std::process::exit;
-use std::fs::File;
 
 
 fn main() {
@@ -24,7 +21,7 @@ fn actual_main() -> Result<(), i32> {
         img.as_mut_rgb8().unwrap().get_pixel_mut(x, y).data = colour;
     }
 
-    img.save(&mut File::create("mandala.png").unwrap(), image::ImageFormat::PNG).unwrap();
+    mandalas::ops::save(&img, &opts.outdir.1, &mandalas::ops::filename_to_save(opts.resolution));
 
     Ok(())
 }

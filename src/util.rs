@@ -1,3 +1,6 @@
+//! Various utility functions.
+
+
 /// Calculate the distance between two specified points.
 ///
 /// # Examples

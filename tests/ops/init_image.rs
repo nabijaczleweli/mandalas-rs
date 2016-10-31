@@ -4,9 +4,7 @@ use mandalas::ops::init_image;
 
 #[test]
 fn size() {
-    let i = init_image((1234, 5678));
-    assert_eq!(i.width(), 1234);
-    assert_eq!(i.height(), 5678);
+    assert_eq!(init_image((1234, 5678)).dimensions(), (1234, 5678));
 }
 
 #[test]
