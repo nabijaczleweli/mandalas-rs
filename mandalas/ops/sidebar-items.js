@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["init_image","Initialise the mandala canvas from the given size."]],"struct":[["GenerationContext",""]]});

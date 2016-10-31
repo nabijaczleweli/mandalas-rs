@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `arraydeque` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, arraydeque">
+
+    <title>arraydeque - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'arraydeque', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>arraydeque</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/arraydeque/lib.rs.html#1-2622' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>A circular buffer with fixed capacity.
+Requires Rust 1.12+</p>
+
+<p>It can be stored directly on the stack if needed.</p>
+
+<p>This queue has <code>O(1)</code> amortized inserts and removals from both ends of the
+container. It also has <code>O(1)</code> indexing like a vector. The contained elements
+are not required to be copyable</p>
+
+<p>This crate is inspired by <a href="https://github.com/bluss/arrayvec"><strong>bluss/arrayvec</strong></a></p>
+
+<h1 id='feature-flags' class='section-header'><a href='#feature-flags'>Feature Flags</a></h1>
+<p>The <strong>arraydeque</strong> crate has the following cargo feature flags:</p>
+
+<ul>
+<li><p><code>std</code></p>
+
+<ul>
+<li>Optional, enabled by default</li>
+<li>Requires Rust 1.6 <em>to disable</em></li>
+<li>Use libstd</li>
+</ul></li>
+<li><p><code>use_union</code></p>
+
+<ul>
+<li>Optional</li>
+<li>Requires Rust nightly channel</li>
+<li>Use the unstable feature untagged unions for the internal implementation,
+which has reduced space overhead</li>
+</ul></li>
+<li><p><code>use_generic_array</code></p>
+
+<ul>
+<li>Optional</li>
+<li>Requires Rust stable channel</li>
+<li>Depend on generic-array and allow using it just like a fixed
+size array for ArrayVec storage.</li>
+</ul></li>
+</ul>
+
+<h1 id='usage' class='section-header'><a href='#usage'>Usage</a></h1>
+<p>First, add the following to your <code>Cargo.toml</code>:</p>
+
+<pre><code class="language-toml">[dependencies]
+arraydeque = &quot;0.1.3&quot;
+</code></pre>
+
+<p>Next, add this to your crate root:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>arraydeque</span>;</pre>
+
+<p>Currently arraydeque by default links to the standard library, but if you would
+instead like to use arraydeque in a <code>#![no_std]</code> situation or crate you can
+request this via:</p>
+
+<pre><code class="language-toml">[dependencies]
+arraydeque = { version = &quot;0.1.3&quot;, default-features = false }
+</code></pre>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>arraydeque</span>;
+
+<span class='kw'>use</span> <span class='ident'>arraydeque</span>::<span class='ident'>ArrayDeque</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vector</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span>[_; <span class='number'>8</span>]<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>ArrayDeque</span>::<span class='ident'>new</span>();
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vector</span>.<span class='ident'>capacity</span>(), <span class='number'>7</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vector</span>.<span class='ident'>len</span>(), <span class='number'>0</span>);
+
+    <span class='ident'>vector</span>.<span class='ident'>push_back</span>(<span class='number'>1</span>);
+    <span class='ident'>vector</span>.<span class='ident'>push_back</span>(<span class='number'>2</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vector</span>.<span class='ident'>len</span>(), <span class='number'>2</span>);
+
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vector</span>.<span class='ident'>pop_front</span>(), <span class='prelude-val'>Some</span>(<span class='number'>1</span>));
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vector</span>.<span class='ident'>pop_front</span>(), <span class='prelude-val'>Some</span>(<span class='number'>2</span>));
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vector</span>.<span class='ident'>pop_front</span>(), <span class='prelude-val'>None</span>);
+}</pre>
+
+<h1 id='insert--remove' class='section-header'><a href='#insert--remove'>Insert &amp; Remove</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>arraydeque</span>::<span class='ident'>ArrayDeque</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vector</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span>[_; <span class='number'>8</span>]<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>ArrayDeque</span>::<span class='ident'>new</span>();
+
+<span class='ident'>vector</span>.<span class='ident'>push_back</span>(<span class='number'>11</span>);
+<span class='ident'>vector</span>.<span class='ident'>push_back</span>(<span class='number'>13</span>);
+<span class='ident'>vector</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='number'>12</span>);
+<span class='ident'>vector</span>.<span class='ident'>remove</span>(<span class='number'>0</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vector</span>[<span class='number'>0</span>], <span class='number'>12</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vector</span>[<span class='number'>1</span>], <span class='number'>13</span>);</pre>
+
+<h1 id='append--extend' class='section-header'><a href='#append--extend'>Append &amp; Extend</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>arraydeque</span>::<span class='ident'>ArrayDeque</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vector</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span>[_; <span class='number'>8</span>]<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>ArrayDeque</span>::<span class='ident'>new</span>();
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vector2</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span>[_; <span class='number'>8</span>]<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>ArrayDeque</span>::<span class='ident'>new</span>();
+
+<span class='ident'>vector</span>.<span class='ident'>extend</span>(<span class='number'>0</span>..<span class='number'>5</span>);
+<span class='ident'>vector2</span>.<span class='ident'>extend</span>(<span class='number'>5</span>..<span class='number'>7</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>vector</span>), <span class='string'>&quot;[0, 1, 2, 3, 4]&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>vector2</span>), <span class='string'>&quot;[5, 6]&quot;</span>);
+
+<span class='ident'>vector</span>.<span class='ident'>append</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>vector2</span>);
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>vector</span>), <span class='string'>&quot;[0, 1, 2, 3, 4, 5, 6]&quot;</span>);
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>vector2</span>), <span class='string'>&quot;[]&quot;</span>);</pre>
+
+<h1 id='iterator' class='section-header'><a href='#iterator'>Iterator</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>arraydeque</span>::<span class='ident'>ArrayDeque</span>;
+
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vector</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span>[_; <span class='number'>8</span>]<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>ArrayDeque</span>::<span class='ident'>new</span>();
+
+<span class='ident'>vector</span>.<span class='ident'>extend</span>(<span class='number'>0</span>..<span class='number'>5</span>);
+
+<span class='kw'>let</span> <span class='ident'>iters</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>vector</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>();
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>iters</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>]);</pre>
+
+<h1 id='from-iterator' class='section-header'><a href='#from-iterator'>From Iterator</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>arraydeque</span>::<span class='ident'>ArrayDeque</span>;
+
+<span class='kw'>let</span> <span class='ident'>vector</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span>[_; <span class='number'>8</span>]<span class='op'>&gt;</span>;
+<span class='kw'>let</span> <span class='ident'>vector2</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span>[_; <span class='number'>8</span>]<span class='op'>&gt;</span>;
+
+<span class='ident'>vector</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>].<span class='ident'>into_iter</span>().<span class='ident'>collect</span>();
+
+<span class='ident'>vector2</span> <span class='op'>=</span> (<span class='number'>0</span>..<span class='number'>5</span>).<span class='ident'>into_iter</span>().<span class='ident'>collect</span>();
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vector</span>, <span class='ident'>vector2</span>);</pre>
+
+<h1 id='generic-array' class='section-header'><a href='#generic-array'>Generic Array</a></h1>
+<pre><code class="language-toml">[dependencies]
+generic-array = &quot;0.5.1&quot;
+
+[dependencies.arraydeque]
+version = &quot;0.1.3&quot;
+features = [&quot;use_generic_array&quot;]
+</code></pre>
+
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>generic_array</span>;
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>arraydeque</span>;
+
+<span class='kw'>use</span> <span class='ident'>generic_array</span>::<span class='ident'>GenericArray</span>;
+<span class='kw'>use</span> <span class='ident'>generic_array</span>::<span class='ident'>typenum</span>::<span class='ident'>U41</span>;
+
+<span class='kw'>use</span> <span class='ident'>arraydeque</span>::<span class='ident'>ArrayDeque</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>vec</span>: <span class='ident'>ArrayDeque</span><span class='op'>&lt;</span><span class='ident'>GenericArray</span><span class='op'>&lt;</span><span class='ident'>i32</span>, <span class='ident'>U41</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span> <span class='ident'>ArrayDeque</span>::<span class='ident'>new</span>();
+
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>.<span class='ident'>len</span>(), <span class='number'>0</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>.<span class='ident'>capacity</span>(), <span class='number'>40</span>);
+
+    <span class='ident'>vec</span>.<span class='ident'>extend</span>(<span class='number'>0</span>..<span class='number'>20</span>);
+
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>.<span class='ident'>len</span>(), <span class='number'>20</span>);
+    <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>vec</span>.<span class='ident'>into_iter</span>().<span class='ident'>take</span>(<span class='number'>5</span>).<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>(), <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0</span>, <span class='number'>1</span>, <span class='number'>2</span>, <span class='number'>3</span>, <span class='number'>4</span>]);
+}
+</pre>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.ArrayDeque.html'
+                                  title='arraydeque::ArrayDeque'>ArrayDeque</a></td>
+                           <td class='docblock short'>
+                                <p><code>ArrayDeque</code> is a fixed capacity ring buffer.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Drain.html'
+                                  title='arraydeque::Drain'>Drain</a></td>
+                           <td class='docblock short'>
+                                <p>A draining <code>ArrayDeque</code> iterator</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.IntoIter.html'
+                                  title='arraydeque::IntoIter'>IntoIter</a></td>
+                           <td class='docblock short'>
+                                <p>A by-value <code>ArrayDeque</code> iterator</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Iter.html'
+                                  title='arraydeque::Iter'>Iter</a></td>
+                           <td class='docblock short'>
+                                <p><code>ArrayDeque</code> iterator</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.IterMut.html'
+                                  title='arraydeque::IterMut'>IterMut</a></td>
+                           <td class='docblock short'>
+                                <p><code>ArrayDeque</code> mutable iterator</p>
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='trait' href='trait.RangeArgument.html'
+                                  title='arraydeque::RangeArgument'>RangeArgument</a></td>
+                           <td class='docblock short'>
+                                <p><strong>IndexRange</strong> is implemented by Rust&#39;s built-in range types, produced
+by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <code>c..d</code>.</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "arraydeque";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
