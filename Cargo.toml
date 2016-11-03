@@ -17,6 +17,7 @@ exclude = ["*.enc"]
 quickersort = "2.1"
 lazy_static = "0.2"
 arraydeque = "0.1"
+num_cpus = "1.1"
 image = "0.10"
 regex = "0.1"
 clap = "2.17"

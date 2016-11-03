@@ -19,10 +19,10 @@ fn actual_main() -> Result<(), i32> {
     let pts = mandalas::ops::points_to_generate(opts.resolution);
 
     let rx = {
-        let pts = pts / 8;
+        let pts = pts / opts.threads;
         let (tx, rx) = mpsc::channel();
 
-        for _ in 0..8 {
+        for _ in 0..opts.threads {
             let tx = tx.clone();
             let res = opts.resolution;
             thread::spawn(move || {
@@ -33,13 +33,18 @@ fn actual_main() -> Result<(), i32> {
                 }
             });
         }
+
         rx
     };
 
     let mut pb = pbr::ProgressBar::new(pts / 1000);
     pb.show_speed = false;
     pb.show_tick = false;
-    pb.message(&format!("A {}x{} mandala on 8 threads. Points [k]: ", opts.resolution.0, opts.resolution.1));
+    pb.message(&format!("A {}x{} mandala on {} thread{}. Points [k]: ",
+                        opts.resolution.0,
+                        opts.resolution.1,
+                        opts.threads,
+                        if opts.threads == 1 { "" } else { "s" }));
     {
         let ref mut img = img.as_mut_rgb8().unwrap();
         for (i, ((x, y), colour)) in rx.iter().enumerate() {

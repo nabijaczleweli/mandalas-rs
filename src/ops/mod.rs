@@ -64,6 +64,7 @@ pub fn filename_to_save(size: (usize, usize)) -> String {
 /// # let opts = Options {
 /// #     resolution: (900, 900),
 /// #     outdir: ("$TEMP/mandalas-doctest/save-0".to_string(), temp_dir().join("mandalas-doctest").join("save-0")),
+/// #     threads: 0,
 /// # };
 /// # let _ = fs::create_dir_all(&opts.outdir.1);
 /// # let mandala = init_image(opts.resolution);

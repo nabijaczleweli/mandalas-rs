@@ -17,6 +17,7 @@ use std::env::current_dir;
 use std::path::PathBuf;
 use std::str::FromStr;
 use regex::Regex;
+use num_cpus;
 use std::fs;
 
 
@@ -32,11 +33,14 @@ pub struct Options {
     pub resolution: (usize, usize),
     /// The directory to put the resulting mandalas in. Default: working directory.
     pub outdir: (String, PathBuf),
+    /// The amount of threads to run. Default: amount of hypercores on the CPU.
+    pub threads: u64,
 }
 
 impl Options {
     /// Parse `env`-wide command-line arguments into an `Options` instance
     pub fn parse() -> Options {
+        let cpus_s = num_cpus::get().to_string();
         let matches = App::new("mandalas")
             .settings(&[AppSettings::ColoredHelp])
             .version(crate_version!())
@@ -44,7 +48,8 @@ impl Options {
             .about("A cargo subcommand for checking and applying updates to installed executables")
             .args(&[Arg::from_usage("-o --outdir=[OUTPUT_DIR] 'The directory to put the resulting mandalas in. Default: working directory'")
                         .validator(Options::outdir_validator),
-                    Arg::from_usage("-s --size 'The output mandala resolution'").default_value("900x900").validator(Options::size_validator)])
+                    Arg::from_usage("-s --size 'The output mandala resolution'").default_value("900x900").validator(Options::size_validator),
+                    Arg::from_usage("-j --jobs 'The amount of threads to use for generation'").default_value(&cpus_s).validator(Options::jobs_validator)])
             .get_matches();
 
         Options {
@@ -70,6 +75,7 @@ impl Options {
                     }
                 }
             },
+            threads: u64::from_str(matches.value_of("jobs").unwrap()).unwrap(),
         }
     }
 
@@ -85,6 +91,14 @@ impl Options {
         match Options::parse_size(&s) {
             None => Err(format!("\"{}\" is not a valid size (in format \"NNNxMMM\")", s)),
             Some((0, _)) | Some((_, 0)) => Err("Can't generate a 0-sized image".to_string()),
+            Some(_) => Ok(()),
+        }
+    }
+
+    fn jobs_validator(s: String) -> Result<(), String> {
+        match u64::from_str(&s).ok() {
+            None => Err(format!("\"{}\" is not a valid job amount", s)),
+            Some(0) => Err("Can't run 0 threads".to_string()),
             Some(_) => Ok(()),
         }
     }
