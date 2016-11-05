@@ -1,7 +1,9 @@
 extern crate mandalas;
 extern crate pbr;
 
+use std::io::{Write, stdout};
 use std::process::exit;
+use std::path::PathBuf;
 use std::sync::mpsc;
 use std::thread;
 
@@ -15,7 +17,11 @@ fn actual_main() -> Result<(), i32> {
     let opts = mandalas::Options::parse();
     println!("{:#?}", opts);
 
+    print!("Allocating {}kB image...", mandalas::util::separated_number((opts.resolution.0 * opts.resolution.1 * 3 / 1024) as u64));
+    stdout().flush().unwrap();
     let mut img = mandalas::ops::init_image(opts.resolution);
+    println!(" Done");
+
     let pts = mandalas::ops::points_to_generate(opts.resolution);
 
     let rx = {
@@ -50,14 +56,18 @@ fn actual_main() -> Result<(), i32> {
         for (i, ((x, y), colour)) in rx.iter().enumerate() {
             img.get_pixel_mut(x, y).data = colour;
 
-            if i % 10000 == 0 {
-                pb.add(10);
+            if i % 25000 == 0 {
+                pb.add(25);
             }
         }
     }
-    pb.finish();
+    pb.finish_print("");
 
-    mandalas::ops::save(&img, &opts.outdir.1, &mandalas::ops::filename_to_save(opts.resolution));
+    let fname = mandalas::ops::filename_to_save(opts.resolution);
+    print!("Saving to {}...", PathBuf::from(&opts.outdir.0).join(&fname).to_str().unwrap().replace('\\', "/"));
+    stdout().flush().unwrap();
+    mandalas::ops::save(&img, &opts.outdir.1, &fname);
+    println!(" Done");
 
     Ok(())
 }

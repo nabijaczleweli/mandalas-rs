@@ -18,6 +18,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 use regex::Regex;
 use num_cpus;
+use std::cmp;
 use std::fs;
 
 
@@ -33,14 +34,14 @@ pub struct Options {
     pub resolution: (usize, usize),
     /// The directory to put the resulting mandalas in. Default: working directory.
     pub outdir: (String, PathBuf),
-    /// The amount of threads to run. Default: amount of hypercores on the CPU.
+    /// The amount of threads to run. Default: amount of hypercores on the CPU - 1.
     pub threads: u64,
 }
 
 impl Options {
     /// Parse `env`-wide command-line arguments into an `Options` instance
     pub fn parse() -> Options {
-        let cpus_s = num_cpus::get().to_string();
+        let cpus_s = cmp::max(1, num_cpus::get() - 1).to_string();
         let matches = App::new("mandalas")
             .settings(&[AppSettings::ColoredHelp])
             .version(crate_version!())
