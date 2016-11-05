@@ -147,6 +147,7 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
+<span id="106">106</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Option parsing and management.</span>
 <span class='doccomment'>//!</span>
@@ -168,6 +169,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>::<span class='ident'>FromStr</span>;
 <span class='kw'>use</span> <span class='ident'>regex</span>::<span class='ident'>Regex</span>;
 <span class='kw'>use</span> <span class='ident'>num_cpus</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fs</span>;
 
 
@@ -183,14 +185,14 @@
     <span class='kw'>pub</span> <span class='ident'>resolution</span>: (<span class='ident'>usize</span>, <span class='ident'>usize</span>),
     <span class='doccomment'>/// The directory to put the resulting mandalas in. Default: working directory.</span>
     <span class='kw'>pub</span> <span class='ident'>outdir</span>: (<span class='ident'>String</span>, <span class='ident'>PathBuf</span>),
-    <span class='doccomment'>/// The amount of threads to run. Default: amount of hypercores on the CPU.</span>
+    <span class='doccomment'>/// The amount of threads to run. Default: amount of hypercores on the CPU - 1.</span>
     <span class='kw'>pub</span> <span class='ident'>threads</span>: <span class='ident'>u64</span>,
 }
 
 <span class='kw'>impl</span> <span class='ident'>Options</span> {
     <span class='doccomment'>/// Parse `env`-wide command-line arguments into an `Options` instance</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>() <span class='op'>-&gt;</span> <span class='ident'>Options</span> {
-        <span class='kw'>let</span> <span class='ident'>cpus_s</span> <span class='op'>=</span> <span class='ident'>num_cpus</span>::<span class='ident'>get</span>().<span class='ident'>to_string</span>();
+        <span class='kw'>let</span> <span class='ident'>cpus_s</span> <span class='op'>=</span> <span class='ident'>cmp</span>::<span class='ident'>max</span>(<span class='number'>1</span>, <span class='ident'>num_cpus</span>::<span class='ident'>get</span>() <span class='op'>-</span> <span class='number'>1</span>).<span class='ident'>to_string</span>();
         <span class='kw'>let</span> <span class='ident'>matches</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;mandalas&quot;</span>)
             .<span class='ident'>settings</span>(<span class='kw-2'>&amp;</span>[<span class='ident'>AppSettings</span>::<span class='ident'>ColoredHelp</span>])
             .<span class='ident'>version</span>(<span class='macro'>crate_version</span><span class='macro'>!</span>())
