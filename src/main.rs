@@ -1,4 +1,5 @@
 extern crate mandalas;
+extern crate rand;
 extern crate pbr;
 
 use std::io::{Write, stdout};
@@ -17,9 +18,10 @@ fn actual_main() -> Result<(), i32> {
     let opts = mandalas::Options::parse();
     println!("{:#?}", opts);
 
-    print!("Allocating {}kB image...", mandalas::util::separated_number((opts.resolution.0 * opts.resolution.1 * 3 / 1024) as u64));
+    print!("Allocating {}kB of images...",
+           mandalas::util::separated_number((opts.resolution.0 * opts.resolution.1 * opts.resolution.2 * 3 / 1024) as u64));
     stdout().flush().unwrap();
-    let mut img = mandalas::ops::init_image(opts.resolution);
+    let mut imgs = mandalas::ops::init_image(opts.resolution);
     println!(" Done");
 
     let pts = mandalas::ops::points_to_generate(opts.resolution);
@@ -46,28 +48,32 @@ fn actual_main() -> Result<(), i32> {
     let mut pb = pbr::ProgressBar::new(pts / 1000);
     pb.show_speed = false;
     pb.show_tick = false;
-    pb.message(&format!("A {}x{} mandala on {} thread{}. Points [k]: ",
+    pb.message(&format!("A {}x{}x{} mandala on {} thread{}. Points [k]: ",
                         opts.resolution.0,
                         opts.resolution.1,
+                        opts.resolution.2,
                         opts.threads,
                         if opts.threads == 1 { "" } else { "s" }));
     {
-        let ref mut img = img.as_mut_rgb8().unwrap();
-        for (i, ((x, y), colour)) in rx.iter().enumerate() {
-            img.get_pixel_mut(x, y).data = colour;
+        let ref mut imgs: Vec<_> = imgs.iter_mut().map(|img| img.as_mut_rgb8().unwrap()).collect();
+        for (i, (pos, colour)) in rx.iter().enumerate() {
+            imgs[pos.2 as usize][(pos.0, pos.1)].data = colour;
 
-            if i % 25000 == 0 {
-                pb.add(25);
+            if i % 85000 == 0 {
+                pb.add(85);
             }
         }
     }
     pb.finish_print("");
 
-    let fname = mandalas::ops::filename_to_save(opts.resolution);
-    print!("Saving to {}...", PathBuf::from(&opts.outdir.0).join(&fname).to_str().unwrap().replace('\\', "/"));
-    stdout().flush().unwrap();
-    mandalas::ops::save(&img, &opts.outdir.1, &fname);
-    println!(" Done");
+    for y in 0..opts.resolution.2 {
+        let fname = mandalas::ops::filename_to_save(opts.resolution, y);
+        print!("Saving to {}...",
+               PathBuf::from(&opts.outdir.0).join(&fname).to_str().unwrap().replace('\\', "/"));
+        stdout().flush().unwrap();
+        mandalas::ops::save(&imgs[y], &opts.outdir.1, &fname);
+        println!(" Done");
+    }
 
     Ok(())
 }

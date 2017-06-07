@@ -23,15 +23,15 @@ use std::fs;
 
 
 lazy_static! {
-    static ref RESOLUTION_RGX: Regex = Regex::new(r"(\d+)x(\d+)").unwrap();
+    static ref RESOLUTION_RGX: Regex = Regex::new(r"(\d+)x(\d+)x(\d+)").unwrap();
 }
 
 
 /// Representation of the application's all configurable values.
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct Options {
-    /// The output resolution. Default: `900x900`
-    pub resolution: (usize, usize),
+    /// The output resolution. Default: `900x900x900`
+    pub resolution: (usize, usize, usize),
     /// The directory to put the resulting mandalas in. Default: working directory.
     pub outdir: (String, PathBuf),
     /// The amount of threads to run. Default: amount of hypercores on the CPU - 1.
@@ -43,13 +43,13 @@ impl Options {
     pub fn parse() -> Options {
         let cpus_s = cmp::max(1, num_cpus::get() - 1).to_string();
         let matches = App::new("mandalas")
-            .settings(&[AppSettings::ColoredHelp])
             .version(crate_version!())
-            .author(crate_authors!())
-            .about("A cargo subcommand for checking and applying updates to installed executables")
+            .author(crate_authors!("\n"))
+            .about(crate_description!())
+            .settings(&[AppSettings::ColoredHelp])
             .args(&[Arg::from_usage("-o --outdir=[OUTPUT_DIR] 'The directory to put the resulting mandalas in. Default: working directory'")
                         .validator(Options::outdir_validator),
-                    Arg::from_usage("-s --size 'The output mandala resolution'").default_value("900x900").validator(Options::size_validator),
+                    Arg::from_usage("-s --size 'The output mandala resolution'").default_value("900x900x900").validator(Options::size_validator),
                     Arg::from_usage("-j --jobs 'The amount of threads to use for generation'").default_value(&cpus_s).validator(Options::jobs_validator)])
             .get_matches();
 
@@ -80,8 +80,13 @@ impl Options {
         }
     }
 
-    fn parse_size(s: &str) -> Option<(usize, usize)> {
-        RESOLUTION_RGX.captures(s).map(|c| (usize::from_str(c.at(1).unwrap()).unwrap(), usize::from_str(c.at(2).unwrap()).unwrap()))
+    fn parse_size(s: &str) -> Option<(usize, usize, usize)> {
+        RESOLUTION_RGX.captures(s)
+            .map(|c| {
+                (usize::from_str(c.get(1).unwrap().as_str()).unwrap(),
+                 usize::from_str(c.get(2).unwrap().as_str()).unwrap(),
+                 usize::from_str(c.get(3).unwrap().as_str()).unwrap())
+            })
     }
 
     fn outdir_validator(s: String) -> Result<(), String> {
@@ -91,7 +96,7 @@ impl Options {
     fn size_validator(s: String) -> Result<(), String> {
         match Options::parse_size(&s) {
             None => Err(format!("\"{}\" is not a valid size (in format \"NNNxMMM\")", s)),
-            Some((0, _)) | Some((_, 0)) => Err("Can't generate a 0-sized image".to_string()),
+            Some((0, _, _)) | Some((_, 0, _)) | Some((_, _, 0)) => Err("Can't generate a 0-sized image".to_string()),
             Some(_) => Ok(()),
         }
     }
