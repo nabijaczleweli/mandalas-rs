@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/quickersort-2.1.1/src/float.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/quickersort-3.0.0/src/float.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>float.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -143,20 +144,136 @@
 <span id="99"> 99</span>
 <span id="100">100</span>
 <span id="101">101</span>
-</pre><pre class='rust '>
-<span class='comment'>// (C) 2015 Christian Klauser &lt;christianklauser@outlook.com&gt;</span>
-<span class='comment'>// (C) 2015 Viktor Dahl &lt;pazaconyoman@gmail.com&gt;</span>
-<span class='comment'>// This file is licensed under the same terms as Rust itself.</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+</pre><pre class="rust ">
+<span class="comment">// (C) 2015 Christian Klauser &lt;christianklauser@outlook.com&gt;</span>
+<span class="comment">// (C) 2015 Viktor Dahl &lt;pazaconyoman@gmail.com&gt;</span>
+<span class="comment">// This file is licensed under the same terms as Rust itself.</span>
 
-<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>sort</span>::{<span class='ident'>sort_by</span>};
-<span class='kw'>use</span> <span class='ident'>num_traits</span>::{<span class='ident'>Float</span>};
-<span class='kw'>use</span> <span class='ident'>unreachable</span>::<span class='ident'>unreachable</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">sort</span>::{<span class="ident">sort_by</span>};
+<span class="kw">use</span> <span class="ident">unreachable</span>::<span class="ident">unreachable</span>;
 
-<span class='doccomment'>/// Sorts floating point number.</span>
-<span class='doccomment'>/// The ordering used is</span>
-<span class='doccomment'>/// | -inf | &lt; 0 | -0 | +0 | &gt; 0 | +inf | NaN |</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sort_floats</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Float</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>]) {
-    <span class='comment'>/*
+<span class="doccomment">/// Minimal trait required for sorting floats.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Float</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">PartialOrd</span> {
+    <span class="doccomment">/// Returns `1.0`.</span>
+    <span class="kw">fn</span> <span class="ident">one</span>() <span class="op">-&gt;</span> <span class="self">Self</span>;
+
+    <span class="doccomment">/// Returns `0.0`.</span>
+    <span class="kw">fn</span> <span class="ident">zero</span>() <span class="op">-&gt;</span> <span class="self">Self</span>;
+
+    <span class="doccomment">/// Returns `-0.0`.</span>
+    <span class="kw">fn</span> <span class="ident">neg_zero</span>() <span class="op">-&gt;</span> <span class="self">Self</span>;
+
+    <span class="doccomment">/// Returns `true` if this value is `NaN` and `false` otherwise.</span>
+    <span class="kw">fn</span> <span class="ident">is_nan</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
+
+    <span class="doccomment">/// Returns `true` if this value is positive, including `-0.0` and `-inf`.</span>
+    <span class="kw">fn</span> <span class="ident">is_sign_negative</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
+}
+
+<span class="kw">impl</span> <span class="ident">Float</span> <span class="kw">for</span> <span class="ident">f32</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">one</span>() <span class="op">-&gt;</span> <span class="ident">f32</span> { <span class="number">1.0</span> }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">zero</span>() <span class="op">-&gt;</span> <span class="ident">f32</span> { <span class="number">0.0</span> }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">neg_zero</span>() <span class="op">-&gt;</span> <span class="ident">f32</span> { <span class="op">-</span><span class="number">0.0</span> }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_nan</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span> <span class="op">!=</span> <span class="self">self</span>
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_sign_negative</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span> <span class="op">&lt;</span> <span class="number">0.0</span> <span class="op">||</span> (<span class="number">1.0</span> <span class="op">/</span> <span class="self">self</span>) <span class="op">==</span> ::<span class="ident">core</span>::<span class="ident">f32</span>::<span class="ident">NEG_INFINITY</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Float</span> <span class="kw">for</span> <span class="ident">f64</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">one</span>() <span class="op">-&gt;</span> <span class="ident">f64</span> { <span class="number">1.0</span> }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">zero</span>() <span class="op">-&gt;</span> <span class="ident">f64</span> { <span class="number">0.0</span> }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">neg_zero</span>() <span class="op">-&gt;</span> <span class="ident">f64</span> { <span class="op">-</span><span class="number">0.0</span> }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_nan</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span> <span class="op">!=</span> <span class="self">self</span>
+    }
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_sign_negative</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span> <span class="op">&lt;</span> <span class="number">0.0</span> <span class="op">||</span> (<span class="number">1.0</span> <span class="op">/</span> <span class="self">self</span>) <span class="op">==</span> ::<span class="ident">core</span>::<span class="ident">f64</span>::<span class="ident">NEG_INFINITY</span>
+    }
+}
+
+<span class="doccomment">/// Sorts floating point number.</span>
+<span class="doccomment">/// The ordering used is</span>
+<span class="doccomment">/// | -inf | &lt; 0 | -0 | +0 | &gt; 0 | +inf | NaN |</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sort_floats</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Float</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>]) {
+    <span class="comment">/*
      * We don&#39;t have hardware support for a total order on floats. NaN is not
      * smaller or greater than any number. We want NaNs to be last, so we could
      * just use is_nan() in the comparison function. It turns out that hurts
@@ -169,81 +286,81 @@
      * them up.
      */</span>
 
-    <span class='kw'>if</span> <span class='ident'>v</span>.<span class='ident'>len</span>() <span class='op'>&lt;=</span> <span class='number'>1</span> {
-        <span class='kw'>return</span>;
+    <span class="kw">if</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">&lt;=</span> <span class="number">1</span> {
+        <span class="kw">return</span>;
     }
 
-    <span class='comment'>// First we move all NaNs to the end</span>
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>rnan</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>;
-    <span class='comment'>// Skip NaNs already in place</span>
-    <span class='kw'>while</span> <span class='ident'>rnan</span> <span class='op'>&gt;</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='ident'>v</span>[<span class='ident'>rnan</span>].<span class='ident'>is_nan</span>() {
-        <span class='ident'>rnan</span> <span class='op'>-=</span> <span class='number'>1</span>;
+    <span class="comment">// First we move all NaNs to the end</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rnan</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>;
+    <span class="comment">// Skip NaNs already in place</span>
+    <span class="kw">while</span> <span class="ident">rnan</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">v</span>[<span class="ident">rnan</span>].<span class="ident">is_nan</span>() {
+        <span class="ident">rnan</span> <span class="op">-=</span> <span class="number">1</span>;
     }
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>rnan</span>;
-    <span class='kw'>while</span> <span class='ident'>p</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
-        <span class='ident'>p</span> <span class='op'>-=</span> <span class='number'>1</span>;
-        <span class='kw'>if</span> <span class='ident'>v</span>[<span class='ident'>p</span>].<span class='ident'>is_nan</span>() {
-            <span class='ident'>v</span>.<span class='ident'>swap</span>(<span class='ident'>p</span>, <span class='ident'>rnan</span>);
-            <span class='ident'>rnan</span> <span class='op'>-=</span> <span class='number'>1</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p</span> <span class="op">=</span> <span class="ident">rnan</span>;
+    <span class="kw">while</span> <span class="ident">p</span> <span class="op">&gt;</span> <span class="number">0</span> {
+        <span class="ident">p</span> <span class="op">-=</span> <span class="number">1</span>;
+        <span class="kw">if</span> <span class="ident">v</span>[<span class="ident">p</span>].<span class="ident">is_nan</span>() {
+            <span class="ident">v</span>.<span class="ident">swap</span>(<span class="ident">p</span>, <span class="ident">rnan</span>);
+            <span class="ident">rnan</span> <span class="op">-=</span> <span class="number">1</span>;
         }
     }
 
-    <span class='comment'>// Sort the non-NaN part with efficient comparisons</span>
-    <span class='ident'>sort_by</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>v</span>[..<span class='ident'>rnan</span> <span class='op'>+</span> <span class='number'>1</span>], <span class='kw-2'>&amp;</span><span class='op'>|</span><span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='ident'>y</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span><span class='op'>|</span>
-        <span class='kw'>match</span> <span class='ident'>x</span>.<span class='ident'>partial_cmp</span>(<span class='ident'>y</span>) {
-            <span class='prelude-val'>Some</span>(<span class='ident'>ord</span>) <span class='op'>=&gt;</span> <span class='ident'>ord</span>,
-            <span class='prelude-val'>None</span>      <span class='op'>=&gt;</span> <span class='kw'>unsafe</span> { <span class='ident'>unreachable</span>() }
+    <span class="comment">// Sort the non-NaN part with efficient comparisons</span>
+    <span class="ident">sort_by</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>[..<span class="ident">rnan</span> <span class="op">+</span> <span class="number">1</span>], <span class="kw-2">&amp;</span><span class="op">|</span><span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="ident">y</span>: <span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">|</span>
+        <span class="kw">match</span> <span class="ident">x</span>.<span class="ident">partial_cmp</span>(<span class="ident">y</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">ord</span>) <span class="op">=&gt;</span> <span class="ident">ord</span>,
+            <span class="prelude-val">None</span>      <span class="op">=&gt;</span> <span class="kw">unsafe</span> { <span class="ident">unreachable</span>() }
         });
 
 
-    <span class='kw'>let</span> <span class='ident'>left</span> <span class='op'>=</span> <span class='ident'>find_first_zero</span>(<span class='kw-2'>&amp;</span><span class='ident'>v</span>[..<span class='ident'>rnan</span> <span class='op'>+</span> <span class='number'>1</span>]);
+    <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">find_first_zero</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[..<span class="ident">rnan</span> <span class="op">+</span> <span class="number">1</span>]);
 
-    <span class='comment'>// Count zeros of each type and then fill them in in the right order</span>
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>zeros</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>neg_zeros</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>v</span>[<span class='ident'>left</span>..].<span class='ident'>iter</span>() {
-        <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>x</span> <span class='op'>!=</span> <span class='ident'>T</span>::<span class='ident'>zero</span>() {
-            <span class='kw'>break</span>;
+    <span class="comment">// Count zeros of each type and then fill them in in the right order</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">zeros</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">neg_zeros</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="ident">v</span>[<span class="ident">left</span>..].<span class="ident">iter</span>() {
+        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">!=</span> <span class="ident">T</span>::<span class="ident">zero</span>() {
+            <span class="kw">break</span>;
         }
-        <span class='kw'>if</span> <span class='ident'>x</span>.<span class='ident'>is_sign_negative</span>() {
-            <span class='ident'>neg_zeros</span> <span class='op'>+=</span> <span class='number'>1</span>;
-        } <span class='kw'>else</span> {
-            <span class='ident'>zeros</span> <span class='op'>+=</span> <span class='number'>1</span>;
+        <span class="kw">if</span> <span class="ident">x</span>.<span class="ident">is_sign_negative</span>() {
+            <span class="ident">neg_zeros</span> <span class="op">+=</span> <span class="number">1</span>;
+        } <span class="kw">else</span> {
+            <span class="ident">zeros</span> <span class="op">+=</span> <span class="number">1</span>;
         }
     }
-    <span class='kw'>for</span> <span class='ident'>x</span> <span class='kw'>in</span> <span class='ident'>v</span>[<span class='ident'>left</span>..].<span class='ident'>iter_mut</span>() {
-        <span class='kw'>if</span> <span class='ident'>neg_zeros</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
-            <span class='op'>*</span><span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>Float</span>::<span class='ident'>neg_zero</span>();
-            <span class='ident'>neg_zeros</span> <span class='op'>-=</span> <span class='number'>1</span>;
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>zeros</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
-             <span class='op'>*</span><span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>zero</span>();
-             <span class='ident'>zeros</span> <span class='op'>-=</span> <span class='number'>1</span>;
-        } <span class='kw'>else</span> {
-            <span class='kw'>break</span>;
+    <span class="kw">for</span> <span class="ident">x</span> <span class="kw">in</span> <span class="ident">v</span>[<span class="ident">left</span>..].<span class="ident">iter_mut</span>() {
+        <span class="kw">if</span> <span class="ident">neg_zeros</span> <span class="op">&gt;</span> <span class="number">0</span> {
+            <span class="kw-2">*</span><span class="ident">x</span> <span class="op">=</span> <span class="ident">Float</span>::<span class="ident">neg_zero</span>();
+            <span class="ident">neg_zeros</span> <span class="op">-=</span> <span class="number">1</span>;
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">zeros</span> <span class="op">&gt;</span> <span class="number">0</span> {
+             <span class="kw-2">*</span><span class="ident">x</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">zero</span>();
+             <span class="ident">zeros</span> <span class="op">-=</span> <span class="number">1</span>;
+        } <span class="kw">else</span> {
+            <span class="kw">break</span>;
         }
     }
 }
 
-<span class='doccomment'>/// Find the first zero in `v`.</span>
-<span class='doccomment'>/// If there is no zero, it return v.len() - 1</span>
-<span class='kw'>fn</span> <span class='ident'>find_first_zero</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Float</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>]) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-    <span class='kw'>if</span> <span class='ident'>v</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>return</span> <span class='number'>0</span>; }
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>hi</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>left</span> <span class='op'>=</span> <span class='number'>0</span>;
+<span class="doccomment">/// Find the first zero in `v`.</span>
+<span class="doccomment">/// If there is no zero, it return v.len() - 1</span>
+<span class="kw">fn</span> <span class="ident">find_first_zero</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Float</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>]) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+    <span class="kw">if</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> { <span class="kw">return</span> <span class="number">0</span>; }
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hi</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">left</span> <span class="op">=</span> <span class="number">0</span>;
 
-    <span class='kw'>while</span> <span class='ident'>left</span> <span class='op'>&lt;</span> <span class='ident'>hi</span> {
-        <span class='kw'>let</span> <span class='ident'>mid</span> <span class='op'>=</span> ((<span class='ident'>hi</span> <span class='op'>-</span> <span class='ident'>left</span>) <span class='op'>/</span> <span class='number'>2</span>) <span class='op'>+</span> <span class='ident'>left</span>;
-        <span class='kw'>if</span> <span class='ident'>v</span>[<span class='ident'>mid</span>] <span class='op'>&lt;</span> <span class='ident'>T</span>::<span class='ident'>zero</span>() {
-            <span class='ident'>left</span> <span class='op'>=</span> <span class='ident'>mid</span> <span class='op'>+</span> <span class='number'>1</span>;
-        } <span class='kw'>else</span> {
-            <span class='ident'>hi</span> <span class='op'>=</span> <span class='ident'>mid</span>;
+    <span class="kw">while</span> <span class="ident">left</span> <span class="op">&lt;</span> <span class="ident">hi</span> {
+        <span class="kw">let</span> <span class="ident">mid</span> <span class="op">=</span> ((<span class="ident">hi</span> <span class="op">-</span> <span class="ident">left</span>) <span class="op">/</span> <span class="number">2</span>) <span class="op">+</span> <span class="ident">left</span>;
+        <span class="kw">if</span> <span class="ident">v</span>[<span class="ident">mid</span>] <span class="op">&lt;</span> <span class="ident">T</span>::<span class="ident">zero</span>() {
+            <span class="ident">left</span> <span class="op">=</span> <span class="ident">mid</span> <span class="op">+</span> <span class="number">1</span>;
+        } <span class="kw">else</span> {
+            <span class="ident">hi</span> <span class="op">=</span> <span class="ident">mid</span>;
         }
     }
 
-    <span class='kw'>while</span> <span class='ident'>left</span> <span class='op'>&lt;</span> <span class='ident'>v</span>.<span class='ident'>len</span>() <span class='op'>&amp;&amp;</span> <span class='ident'>v</span>[<span class='ident'>left</span>] <span class='op'>&lt;</span> <span class='ident'>T</span>::<span class='ident'>zero</span>() {
-        <span class='ident'>left</span> <span class='op'>+=</span> <span class='number'>1</span>;
+    <span class="kw">while</span> <span class="ident">left</span> <span class="op">&lt;</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">v</span>[<span class="ident">left</span>] <span class="op">&lt;</span> <span class="ident">T</span>::<span class="ident">zero</span>() {
+        <span class="ident">left</span> <span class="op">+=</span> <span class="number">1</span>;
     }
-    <span class='kw'>return</span> <span class='ident'>left</span>;
+    <span class="kw">return</span> <span class="ident">left</span>;
 }
 </pre>
 </section>
@@ -302,11 +419,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "quickersort";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -1,5 +1,13 @@
 (function() {var implementors = {};
-implementors["lazy_static"] = [];implementors["void"] = [];implementors["either"] = [];implementors["regex_syntax"] = [];implementors["libc"] = [];implementors["enum_primitive"] = [];
+implementors["arraydeque"] = [];
+implementors["enum_primitive"] = [];
+implementors["image"] = [];
+implementors["itertools"] = [];
+implementors["libc"] = [];
+implementors["mandalas"] = [];
+implementors["rayon"] = [];
+implementors["regex_syntax"] = [];
+implementors["void"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

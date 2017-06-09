@@ -1,4 +1,5 @@
 (function() {var implementors = {};
+implementors["mandalas"] = [];
 implementors["unicode_width"] = [];
 
             if (window.register_implementors) {

@@ -9,6 +9,7 @@
 
     <title>unreachable::UncheckedOptionExt - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>unreachable</a></p><script>window.sidebarCurrent = {name: 'UncheckedOptionExt', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait UncheckedOptionExt</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='index.html'>unreachable</a></p><script>window.sidebarCurrent = {name: 'UncheckedOptionExt', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,12 +43,12 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>unreachable</a>::<wbr><a class='trait' href=''>UncheckedOptionExt</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>unreachable</a>::<wbr><a class="trait" href=''>UncheckedOptionExt</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-8' class='srclink' href='../src/unreachable/lib.rs.html#29-35' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/unreachable/lib.rs.html#29-35' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait UncheckedOptionExt&lt;T&gt; {
     unsafe fn <a href='#tymethod.unchecked_unwrap' class='fnname'>unchecked_unwrap</a>(self) -&gt; T;
     unsafe fn <a href='#tymethod.unchecked_unwrap_none' class='fnname'>unchecked_unwrap_none</a>(self);
@@ -55,12 +56,12 @@
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.unchecked_unwrap' class='method stab '><code>unsafe fn <a href='#tymethod.unchecked_unwrap' class='fnname'>unchecked_unwrap</a>(self) -&gt; T</code></h3><div class='docblock'><p>Get the value out of this Option without checking for None.</p>
-</div><h3 id='tymethod.unchecked_unwrap_none' class='method stab '><code>unsafe fn <a href='#tymethod.unchecked_unwrap_none' class='fnname'>unchecked_unwrap_none</a>(self)</code></h3><div class='docblock'><p>Assert that this Option is a None to the optimizer.</p>
+        <h3 id='tymethod.unchecked_unwrap' class='method'><span id='unchecked_unwrap.v' class='invisible'><code>unsafe fn <a href='#tymethod.unchecked_unwrap' class='fnname'>unchecked_unwrap</a>(self) -&gt; T</code></span></h3><div class='docblock'><p>Get the value out of this Option without checking for None.</p>
+</div><h3 id='tymethod.unchecked_unwrap_none' class='method'><span id='unchecked_unwrap_none.v' class='invisible'><code>unsafe fn <a href='#tymethod.unchecked_unwrap_none' class='fnname'>unchecked_unwrap_none</a>(self)</code></span></h3><div class='docblock'><p>Assert that this Option is a None to the optimizer.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;T&gt; UncheckedOptionExt&lt;T&gt; for <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code></li>
+    <li><code>impl&lt;T&gt; UncheckedOptionExt&lt;T&gt; for <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;T&gt;</code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/unreachable/trait.UncheckedOptionExt.js">
                  </script></section>
@@ -119,11 +120,9 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "unreachable";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

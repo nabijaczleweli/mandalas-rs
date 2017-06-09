@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/itertools-0.5.5/src/tuple_impl.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/itertools-0.6.0/src/tuple_impl.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>tuple_impl.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -287,252 +288,286 @@
 <span id="243">243</span>
 <span id="244">244</span>
 <span id="245">245</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Some iterator that produces tuples</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Some iterator that produces tuples</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>Fuse</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Fuse</span>;
 
-<span class='doccomment'>/// An iterator over a incomplete tuple.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// See [`.tuples()`](../trait.Itertools.html#method.tuples) and</span>
-<span class='doccomment'>/// [`Tuples::into_buffer()`](struct.Tuples.html#method.into_buffer).</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TupleBuffer</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>TupleCollect</span>
+<span class="doccomment">/// An iterator over a incomplete tuple.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See [`.tuples()`](../trait.Itertools.html#method.tuples) and</span>
+<span class="doccomment">/// [`Tuples::into_buffer()`](struct.Tuples.html#method.into_buffer).</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TupleBuffer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">TupleCollect</span>
 {
-    <span class='ident'>cur</span>: <span class='ident'>usize</span>,
-    <span class='ident'>buf</span>: <span class='ident'>T</span>::<span class='ident'>Buffer</span>,
+    <span class="ident">cur</span>: <span class="ident">usize</span>,
+    <span class="ident">buf</span>: <span class="ident">T</span>::<span class="ident">Buffer</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>TupleBuffer</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>TupleCollect</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">TupleBuffer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">TupleCollect</span>
 {
-    <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>buf</span>: <span class='ident'>T</span>::<span class='ident'>Buffer</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>TupleBuffer</span> {
-            <span class='ident'>cur</span>: <span class='number'>0</span>,
-            <span class='ident'>buf</span>: <span class='ident'>buf</span>,
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">buf</span>: <span class="ident">T</span>::<span class="ident">Buffer</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">TupleBuffer</span> {
+            <span class="ident">cur</span>: <span class="number">0</span>,
+            <span class="ident">buf</span>: <span class="ident">buf</span>,
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>TupleBuffer</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>TupleCollect</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">TupleBuffer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">TupleCollect</span>
 {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>Item</span>;
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">Item</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>buf</span>.<span class='ident'>as_mut</span>();
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>item</span>) <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>get_mut</span>(<span class='self'>self</span>.<span class='ident'>cur</span>) {
-            <span class='self'>self</span>.<span class='ident'>cur</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            <span class='ident'>item</span>.<span class='ident'>take</span>()
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
-        }
-    }
-}
-
-<span class='doccomment'>/// An iterator that groups the items in tuples of a specific size.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// See [`.tuples()`](../trait.Itertools.html#method.tuples) for more information.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Tuples</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>,
-          <span class='ident'>T</span>: <span class='ident'>TupleCollect</span>
-{
-    <span class='ident'>iter</span>: <span class='ident'>Fuse</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>,
-    <span class='ident'>buf</span>: <span class='ident'>T</span>::<span class='ident'>Buffer</span>,
-}
-
-<span class='doccomment'>/// Create a new tuples iterator.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tuples</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>Tuples</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>,
-          <span class='ident'>T</span>: <span class='ident'>TupleCollect</span>
-{
-    <span class='ident'>Tuples</span> {
-        <span class='ident'>iter</span>: <span class='ident'>iter</span>.<span class='ident'>fuse</span>(),
-        <span class='ident'>buf</span>: <span class='ident'>Default</span>::<span class='ident'>default</span>(),
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Tuples</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>,
-          <span class='ident'>T</span>: <span class='ident'>TupleCollect</span>
-{
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
-
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>T</span>::<span class='ident'>collect_from_iter</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>iter</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>buf</span>)
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Tuples</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>,
-          <span class='ident'>T</span>: <span class='ident'>TupleCollect</span>
-{
-    <span class='doccomment'>/// Return a buffer with the produced items that was not enough to be grouped in a tuple.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// use itertools::Itertools;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// let mut iter = (0..5).tuples();</span>
-    <span class='doccomment'>/// assert_eq!(Some((0, 1, 2)), iter.next());</span>
-    <span class='doccomment'>/// assert_eq!(None, iter.next());</span>
-    <span class='doccomment'>/// itertools::assert_equal(vec![3, 4], iter.into_buffer());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>into_buffer</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>TupleBuffer</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='ident'>TupleBuffer</span>::<span class='ident'>new</span>(<span class='self'>self</span>.<span class='ident'>buf</span>)
-    }
-}
-
-
-<span class='doccomment'>/// An iterator over all contiguous windows that produces tuples of a specific size.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// See [`.tuple_windows()`](../trait.Itertools.html#method.tuple_windows) for more</span>
-<span class='doccomment'>/// information.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>TupleWindows</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>,
-          <span class='ident'>T</span>: <span class='ident'>TupleCollect</span>
-{
-    <span class='ident'>iter</span>: <span class='ident'>I</span>,
-    <span class='ident'>last</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-}
-
-<span class='doccomment'>/// Create a new tuple windows iterator.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tuple_windows</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='ident'>iter</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>TupleWindows</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>,
-          <span class='ident'>T</span>: <span class='ident'>TupleCollect</span>,
-          <span class='ident'>T</span>::<span class='ident'>Item</span>: <span class='ident'>Clone</span>
-{
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>once</span>;
-
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>last</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
-    <span class='kw'>if</span> <span class='ident'>T</span>::<span class='ident'>num_items</span>() <span class='op'>!=</span> <span class='number'>1</span> {
-        <span class='comment'>// put in a duplicate item in front of the tuple; this simplifies</span>
-        <span class='comment'>// .next() function.</span>
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>item</span>) <span class='op'>=</span> <span class='ident'>iter</span>.<span class='ident'>next</span>() {
-            <span class='kw'>let</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>once</span>(<span class='ident'>item</span>.<span class='ident'>clone</span>()).<span class='ident'>chain</span>(<span class='ident'>once</span>(<span class='ident'>item</span>)).<span class='ident'>chain</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>iter</span>);
-            <span class='ident'>last</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>collect_from_iter_no_buf</span>(<span class='ident'>iter</span>);
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">as_mut</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">item</span>) <span class="op">=</span> <span class="ident">s</span>.<span class="ident">get_mut</span>(<span class="self">self</span>.<span class="ident">cur</span>) {
+            <span class="self">self</span>.<span class="ident">cur</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="ident">item</span>.<span class="ident">take</span>()
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         }
     }
 
-    <span class='ident'>TupleWindows</span> {
-        <span class='ident'>last</span>: <span class='ident'>last</span>,
-        <span class='ident'>iter</span>: <span class='ident'>iter</span>,
+    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
+        <span class="kw">let</span> <span class="ident">buffer</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">as_ref</span>()[<span class="self">self</span>.<span class="ident">cur</span>..];
+        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">buffer</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+            <span class="number">0</span>
+        } <span class="kw">else</span> {
+            <span class="ident">buffer</span>.<span class="ident">iter</span>()
+                  .<span class="ident">position</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">is_none</span>())
+                  .<span class="ident">unwrap_or</span>(<span class="ident">buffer</span>.<span class="ident">len</span>())
+        };
+        (<span class="ident">len</span>, <span class="prelude-val">Some</span>(<span class="ident">len</span>))
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>TupleWindows</span><span class='op'>&lt;</span><span class='ident'>I</span>, <span class='ident'>T</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>,
-          <span class='ident'>T</span>: <span class='ident'>TupleCollect</span> <span class='op'>+</span> <span class='ident'>Clone</span>,
-          <span class='ident'>T</span>::<span class='ident'>Item</span>: <span class='ident'>Clone</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">TupleBuffer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">TupleCollect</span>
 {
-    <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>T</span>;
+}
 
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>T</span>::<span class='ident'>num_items</span>() <span class='op'>==</span> <span class='number'>1</span> {
-            <span class='kw'>return</span> <span class='ident'>T</span>::<span class='ident'>collect_from_iter_no_buf</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>iter</span>)
+<span class="doccomment">/// An iterator that groups the items in tuples of a specific size.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See [`.tuples()`](../trait.Itertools.html#method.tuples) for more information.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Tuples</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">Item</span><span class="op">&gt;</span>,
+          <span class="ident">T</span>: <span class="ident">TupleCollect</span>
+{
+    <span class="ident">iter</span>: <span class="ident">Fuse</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>,
+    <span class="ident">buf</span>: <span class="ident">T</span>::<span class="ident">Buffer</span>,
+}
+
+<span class="doccomment">/// Create a new tuples iterator.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tuples</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="ident">Tuples</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">Item</span><span class="op">&gt;</span>,
+          <span class="ident">T</span>: <span class="ident">TupleCollect</span>
+{
+    <span class="ident">Tuples</span> {
+        <span class="ident">iter</span>: <span class="ident">iter</span>.<span class="ident">fuse</span>(),
+        <span class="ident">buf</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Tuples</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">Item</span><span class="op">&gt;</span>,
+          <span class="ident">T</span>: <span class="ident">TupleCollect</span>
+{
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>;
+
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="ident">T</span>::<span class="ident">collect_from_iter</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">iter</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">buf</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Tuples</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">Item</span><span class="op">&gt;</span>,
+          <span class="ident">T</span>: <span class="ident">TupleCollect</span>
+{
+    <span class="doccomment">/// Return a buffer with the produced items that was not enough to be grouped in a tuple.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use itertools::Itertools;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut iter = (0..5).tuples();</span>
+    <span class="doccomment">/// assert_eq!(Some((0, 1, 2)), iter.next());</span>
+    <span class="doccomment">/// assert_eq!(None, iter.next());</span>
+    <span class="doccomment">/// itertools::assert_equal(vec![3, 4], iter.into_buffer());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_buffer</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">TupleBuffer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="ident">TupleBuffer</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">buf</span>)
+    }
+}
+
+
+<span class="doccomment">/// An iterator over all contiguous windows that produces tuples of a specific size.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// See [`.tuple_windows()`](../trait.Itertools.html#method.tuple_windows) for more</span>
+<span class="doccomment">/// information.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TupleWindows</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">Item</span><span class="op">&gt;</span>,
+          <span class="ident">T</span>: <span class="ident">TupleCollect</span>
+{
+    <span class="ident">iter</span>: <span class="ident">I</span>,
+    <span class="ident">last</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+}
+
+<span class="doccomment">/// Create a new tuple windows iterator.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tuple_windows</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">iter</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="ident">TupleWindows</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">Item</span><span class="op">&gt;</span>,
+          <span class="ident">T</span>: <span class="ident">TupleCollect</span>,
+          <span class="ident">T</span>::<span class="ident">Item</span>: <span class="ident">Clone</span>
+{
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">once</span>;
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+    <span class="kw">if</span> <span class="ident">T</span>::<span class="ident">num_items</span>() <span class="op">!=</span> <span class="number">1</span> {
+        <span class="comment">// put in a duplicate item in front of the tuple; this simplifies</span>
+        <span class="comment">// .next() function.</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">item</span>) <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">next</span>() {
+            <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">once</span>(<span class="ident">item</span>.<span class="ident">clone</span>()).<span class="ident">chain</span>(<span class="ident">once</span>(<span class="ident">item</span>)).<span class="ident">chain</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">iter</span>);
+            <span class="ident">last</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">collect_from_iter_no_buf</span>(<span class="ident">iter</span>);
         }
-        <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>last</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>last</span> {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>new</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>() {
-                <span class='ident'>last</span>.<span class='ident'>left_shift_push</span>(<span class='ident'>new</span>);
-                <span class='kw'>return</span> <span class='prelude-val'>Some</span>(<span class='ident'>last</span>.<span class='ident'>clone</span>());
+    }
+
+    <span class="ident">TupleWindows</span> {
+        <span class="ident">last</span>: <span class="ident">last</span>,
+        <span class="ident">iter</span>: <span class="ident">iter</span>,
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">TupleWindows</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">T</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">Item</span><span class="op">&gt;</span>,
+          <span class="ident">T</span>: <span class="ident">TupleCollect</span> <span class="op">+</span> <span class="ident">Clone</span>,
+          <span class="ident">T</span>::<span class="ident">Item</span>: <span class="ident">Clone</span>
+{
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>;
+
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">T</span>::<span class="ident">num_items</span>() <span class="op">==</span> <span class="number">1</span> {
+            <span class="kw">return</span> <span class="ident">T</span>::<span class="ident">collect_from_iter_no_buf</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">iter</span>)
+        }
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">last</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">last</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">new</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>() {
+                <span class="ident">last</span>.<span class="ident">left_shift_push</span>(<span class="ident">new</span>);
+                <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">last</span>.<span class="ident">clone</span>());
             }
         }
-        <span class='prelude-val'>None</span>
+        <span class="prelude-val">None</span>
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>TupleCollect</span>: <span class='ident'>Sized</span> {
-    <span class='kw'>type</span> <span class='ident'>Item</span>;
-    <span class='kw'>type</span> <span class='ident'>Buffer</span>: <span class='ident'>Default</span> <span class='op'>+</span> <span class='ident'>AsMut</span><span class='op'>&lt;</span>[<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>]<span class='op'>&gt;</span>;
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TupleCollect</span>: <span class="ident">Sized</span> {
+    <span class="kw">type</span> <span class="ident">Item</span>;
+    <span class="kw">type</span> <span class="ident">Buffer</span>: <span class="ident">Default</span> <span class="op">+</span> <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span>]<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">AsMut</span><span class="op">&lt;</span>[<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span>]<span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>collect_from_iter</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>I</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>Buffer</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">collect_from_iter</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="ident">I</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>::<span class="ident">Buffer</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>collect_from_iter_no_buf</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Item</span><span class='op'>&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">collect_from_iter_no_buf</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>num_items</span>() <span class='op'>-&gt;</span> <span class='ident'>usize</span>;
+    <span class="kw">fn</span> <span class="ident">num_items</span>() <span class="op">-&gt;</span> <span class="ident">usize</span>;
 
-    <span class='kw'>fn</span> <span class='ident'>left_shift_push</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>item</span>: <span class='self'>Self</span>::<span class='ident'>Item</span>);
+    <span class="kw">fn</span> <span class="ident">left_shift_push</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">item</span>: <span class="self">Self</span>::<span class="ident">Item</span>);
 }
 
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>impl_tuple_collect</span> {
-    () <span class='op'>=&gt;</span> ();
-    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>N</span>:<span class='ident'>expr</span>; <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span>:<span class='ident'>ident</span> ; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>X</span>:<span class='ident'>ident</span>),<span class='op'>*</span> ; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span>:<span class='ident'>ident</span>),<span class='op'>*</span> ; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y_rev</span>:<span class='ident'>ident</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
-        <span class='kw'>impl</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span><span class='op'>&gt;</span> <span class='ident'>TupleCollect</span> <span class='kw'>for</span> ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>X</span>),<span class='op'>*</span>,) {
-            <span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span>;
-            <span class='kw'>type</span> <span class='ident'>Buffer</span> <span class='op'>=</span> [<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span><span class='op'>&gt;</span>; <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>N</span> <span class='op'>-</span> <span class='number'>1</span>];
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">impl_tuple_collect</span> {
+    () <span class="op">=&gt;</span> ();
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">N</span>:<span class="ident">expr</span>; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">A</span>:<span class="ident">ident</span> ; $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>:<span class="ident">ident</span>),<span class="op">*</span> ; $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span>:<span class="ident">ident</span>),<span class="op">*</span> ; $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y_rev</span>:<span class="ident">ident</span>),<span class="kw-2">*</span>) <span class="op">=&gt;</span> (
+        <span class="kw">impl</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">A</span><span class="op">&gt;</span> <span class="ident">TupleCollect</span> <span class="kw">for</span> ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">X</span>),<span class="kw-2">*</span>,) {
+            <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">A</span>;
+            <span class="kw">type</span> <span class="ident">Buffer</span> <span class="op">=</span> [<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">A</span><span class="op">&gt;</span>; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">N</span> <span class="op">-</span> <span class="number">1</span>];
 
-            <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_assignments</span>)]</span>
-            <span class='kw'>fn</span> <span class='ident'>collect_from_iter</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>I</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>Buffer</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>
-                <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span><span class='op'>&gt;</span>
+            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_assignments</span>)]</span>
+            <span class="kw">fn</span> <span class="ident">collect_from_iter</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="ident">I</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>::<span class="ident">Buffer</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+                <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">A</span><span class="op">&gt;</span>
             {
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>.<span class='ident'>into_iter</span>();
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">into_iter</span>();
                 $(
-                    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
-                )<span class='op'>*</span>
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                )<span class="op">*</span>
 
-                <span class='kw'>loop</span> {
+                <span class="kw">loop</span> {
                     $(
-                        <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span> <span class='op'>=</span> <span class='ident'>iter</span>.<span class='ident'>next</span>();
-                        <span class='kw'>if</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span>.<span class='ident'>is_none</span>() {
-                            <span class='kw'>break</span>
+                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span> <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">next</span>();
+                        <span class="kw">if</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span>.<span class="ident">is_none</span>() {
+                            <span class="kw">break</span>
                         }
-                    )<span class='op'>*</span>
-                    <span class='kw'>return</span> <span class='prelude-val'>Some</span>(($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span>.<span class='ident'>unwrap</span>()),<span class='op'>*</span>,))
+                    )<span class="op">*</span>
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span>.<span class="ident">unwrap</span>()),<span class="kw-2">*</span>,))
                 }
 
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>buf</span>.<span class='ident'>as_mut</span>();
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">as_mut</span>();
                 $(
-                    <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>s</span>.<span class='ident'>len</span>() {
-                        <span class='ident'>s</span>[<span class='ident'>i</span>] <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span>;
-                        <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
+                    <span class="kw">if</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">s</span>.<span class="ident">len</span>() {
+                        <span class="ident">s</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span>;
+                        <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
                     }
-                )<span class='op'>*</span>
-                <span class='kw'>return</span> <span class='prelude-val'>None</span>;
+                )<span class="op">*</span>
+                <span class="kw">return</span> <span class="prelude-val">None</span>;
             }
 
-            <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_assignments</span>)]</span>
-            <span class='kw'>fn</span> <span class='ident'>collect_from_iter_no_buf</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='ident'>iter</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span>
-                <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span><span class='op'>&gt;</span>
+            <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_assignments</span>)]</span>
+            <span class="kw">fn</span> <span class="ident">collect_from_iter_no_buf</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>
+                <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">A</span><span class="op">&gt;</span>
             {
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>.<span class='ident'>into_iter</span>();
-                <span class='kw'>loop</span> {
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">into_iter</span>();
+                <span class="kw">loop</span> {
                     $(
-                        <span class='kw'>let</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span>) <span class='op'>=</span> <span class='ident'>iter</span>.<span class='ident'>next</span>() {
-                            <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span>
-                        } <span class='kw'>else</span> {
-                            <span class='kw'>break</span>;
+                        <span class="kw">let</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span>) <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">next</span>() {
+                            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span>
+                        } <span class="kw">else</span> {
+                            <span class="kw">break</span>;
                         };
-                    )<span class='op'>*</span>
-                    <span class='kw'>return</span> <span class='prelude-val'>Some</span>(($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span>),<span class='op'>*</span>,))
+                    )<span class="op">*</span>
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span>),<span class="kw-2">*</span>,))
                 }
 
-                <span class='kw'>return</span> <span class='prelude-val'>None</span>;
+                <span class="kw">return</span> <span class="prelude-val">None</span>;
             }
 
-            <span class='kw'>fn</span> <span class='ident'>num_items</span>() <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>N</span>
+            <span class="kw">fn</span> <span class="ident">num_items</span>() <span class="op">-&gt;</span> <span class="ident">usize</span> {
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">N</span>
             }
 
-            <span class='kw'>fn</span> <span class='ident'>left_shift_push</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>item</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>A</span>) {
-                <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>replace</span>;
+            <span class="kw">fn</span> <span class="ident">left_shift_push</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">item</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">A</span>) {
+                <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">replace</span>;
 
-                <span class='kw'>let</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> ($(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y</span>),<span class='op'>*</span>,) <span class='op'>=</span> <span class='self'>self</span>;
-                <span class='kw'>let</span> <span class='ident'>tmp</span> <span class='op'>=</span> <span class='ident'>item</span>;
+                <span class="kw">let</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ($(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y</span>),<span class="kw-2">*</span>,) <span class="op">=</span> <span class="self">self</span>;
+                <span class="kw">let</span> <span class="ident">tmp</span> <span class="op">=</span> <span class="ident">item</span>;
                 $(
-                    <span class='kw'>let</span> <span class='ident'>tmp</span> <span class='op'>=</span> <span class='ident'>replace</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>Y_rev</span>, <span class='ident'>tmp</span>);
-                )<span class='op'>*</span>
-                <span class='ident'>drop</span>(<span class='ident'>tmp</span>);
+                    <span class="kw">let</span> <span class="ident">tmp</span> <span class="op">=</span> <span class="ident">replace</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">Y_rev</span>, <span class="ident">tmp</span>);
+                )<span class="op">*</span>
+                <span class="ident">drop</span>(<span class="ident">tmp</span>);
             }
         }
     )
 }
 
-<span class='macro'>impl_tuple_collect</span><span class='macro'>!</span>(<span class='number'>1</span>; <span class='ident'>A</span>; <span class='ident'>A</span>; <span class='ident'>a</span>; <span class='ident'>a</span>);
-<span class='macro'>impl_tuple_collect</span><span class='macro'>!</span>(<span class='number'>2</span>; <span class='ident'>A</span>; <span class='ident'>A</span>, <span class='ident'>A</span>; <span class='ident'>a</span>, <span class='ident'>b</span>; <span class='ident'>b</span>, <span class='ident'>a</span>);
-<span class='macro'>impl_tuple_collect</span><span class='macro'>!</span>(<span class='number'>3</span>; <span class='ident'>A</span>; <span class='ident'>A</span>, <span class='ident'>A</span>, <span class='ident'>A</span>; <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='ident'>c</span>; <span class='ident'>c</span>, <span class='ident'>b</span>, <span class='ident'>a</span>);
-<span class='macro'>impl_tuple_collect</span><span class='macro'>!</span>(<span class='number'>4</span>; <span class='ident'>A</span>; <span class='ident'>A</span>, <span class='ident'>A</span>, <span class='ident'>A</span>, <span class='ident'>A</span>; <span class='ident'>a</span>, <span class='ident'>b</span>, <span class='ident'>c</span>, <span class='ident'>d</span>; <span class='ident'>d</span>, <span class='ident'>c</span>, <span class='ident'>b</span>, <span class='ident'>a</span>);
+<span class="macro">impl_tuple_collect</span><span class="macro">!</span>(<span class="number">1</span>; <span class="ident">A</span>; <span class="ident">A</span>; <span class="ident">a</span>; <span class="ident">a</span>);
+<span class="macro">impl_tuple_collect</span><span class="macro">!</span>(<span class="number">2</span>; <span class="ident">A</span>; <span class="ident">A</span>, <span class="ident">A</span>; <span class="ident">a</span>, <span class="ident">b</span>; <span class="ident">b</span>, <span class="ident">a</span>);
+<span class="macro">impl_tuple_collect</span><span class="macro">!</span>(<span class="number">3</span>; <span class="ident">A</span>; <span class="ident">A</span>, <span class="ident">A</span>, <span class="ident">A</span>; <span class="ident">a</span>, <span class="ident">b</span>, <span class="ident">c</span>; <span class="ident">c</span>, <span class="ident">b</span>, <span class="ident">a</span>);
+<span class="macro">impl_tuple_collect</span><span class="macro">!</span>(<span class="number">4</span>; <span class="ident">A</span>; <span class="ident">A</span>, <span class="ident">A</span>, <span class="ident">A</span>, <span class="ident">A</span>; <span class="ident">a</span>, <span class="ident">b</span>, <span class="ident">c</span>, <span class="ident">d</span>; <span class="ident">d</span>, <span class="ident">c</span>, <span class="ident">b</span>, <span class="ident">a</span>);
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -590,11 +625,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "itertools";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

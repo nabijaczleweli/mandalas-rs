@@ -1,4 +1,5 @@
 (function() {var implementors = {};
+implementors["mandalas"] = [];
 implementors["void"] = [];
 
             if (window.register_implementors) {

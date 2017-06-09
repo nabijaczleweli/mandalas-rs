@@ -9,6 +9,7 @@
 
     <title>mandalas::ops - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>mandalas</a></p><script>window.sidebarCurrent = {name: 'ops', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module ops</p><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>mandalas</a></p><script>window.sidebarCurrent = {name: 'ops', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,47 +43,51 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>mandalas</a>::<wbr><a class='mod' href=''>ops</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>mandalas</a>::<wbr><a class="mod" href=''>ops</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-112' class='srclink' href='../../src/mandalas/src/ops/mod.rs.html#1-75' title='goto source code'>[src]</a></span></h1>
-<h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+               </span><a class='srclink' href='../../src/mandalas/ops/mod.rs.html#1-84' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Main functions doing actual work.</p>
+
+<h1 id='the-tonči-juričev-grgin-mandala-generation-method' class='section-header'><a href='#the-tonči-juričev-grgin-mandala-generation-method'>The Tonči Juričev-Grgin mandala generation method</a></h1>
+<p>First, choose a corner.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.GenerationContext.html'
-                                  title='mandalas::ops::GenerationContext'>GenerationContext</a></td>
-                           <td class='docblock short'>
-                                
+                           <td><a class="struct" href="struct.GenerationContext.html"
+                                  title='struct mandalas::ops::GenerationContext'>GenerationContext</a></td>
+                           <td class='docblock-short'>
+                                <p>A generator for mandala points for a canvas of a given size.</p>
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.filename_to_save.html'
-                                  title='mandalas::ops::filename_to_save'>filename_to_save</a></td>
-                           <td class='docblock short'>
+                           <td><a class="fn" href="fn.filename_to_save.html"
+                                  title='fn mandalas::ops::filename_to_save'>filename_to_save</a></td>
+                           <td class='docblock-short'>
                                 <p>Generate a filename to save the mandala in.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.init_image.html'
-                                  title='mandalas::ops::init_image'>init_image</a></td>
-                           <td class='docblock short'>
+                           <td><a class="fn" href="fn.init_image.html"
+                                  title='fn mandalas::ops::init_image'>init_image</a></td>
+                           <td class='docblock-short'>
                                 <p>Initialise the mandala canvas from the given size.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.points_to_generate.html'
-                                  title='mandalas::ops::points_to_generate'>points_to_generate</a></td>
-                           <td class='docblock short'>
+                           <td><a class="fn" href="fn.points_to_generate.html"
+                                  title='fn mandalas::ops::points_to_generate'>points_to_generate</a></td>
+                           <td class='docblock-short'>
                                 <p>Check how many points need generating to acquire a smooth image for the given size.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.save.html'
-                                  title='mandalas::ops::save'>save</a></td>
-                           <td class='docblock short'>
+                           <td><a class="fn" href="fn.save.html"
+                                  title='fn mandalas::ops::save'>save</a></td>
+                           <td class='docblock-short'>
                                 <p>Save the mandala to the specified file</p>
                            </td>
                        </tr></table></section>
@@ -141,11 +146,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "mandalas";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -1,4 +1,11 @@
 (function() {var implementors = {};
+implementors["arraydeque"] = [];
+implementors["enum_primitive"] = [];
+implementors["image"] = [];
+implementors["itertools"] = [];
+implementors["libc"] = [];
+implementors["mandalas"] = [];
+implementors["rayon"] = [];
 implementors["regex_syntax"] = [];
 
             if (window.register_implementors) {

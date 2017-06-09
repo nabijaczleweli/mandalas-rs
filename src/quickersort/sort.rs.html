@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/quickersort-2.1.1/src/sort.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/quickersort-3.0.0/src/sort.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>sort.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -455,419 +456,613 @@
 <span id="411">411</span>
 <span id="412">412</span>
 <span id="413">413</span>
-</pre><pre class='rust '>
-<span class='comment'>// (C) 2015 Viktor Dahl &lt;pazaconyoman@gmail.com&gt;</span>
-<span class='comment'>// (C) 2015 Michael Howell &lt;michael@notriddle.com&gt;</span>
-<span class='comment'>// This file is licensed under the same terms as Rust itself.</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+</pre><pre class="rust ">
+<span class="comment">// (C) 2015 Viktor Dahl &lt;pazaconyoman@gmail.com&gt;</span>
+<span class="comment">// (C) 2015 Michael Howell &lt;michael@notriddle.com&gt;</span>
+<span class="comment">// This file is licensed under the same terms as Rust itself.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::<span class='ident'>Ordering</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>::{<span class='ident'>min</span>, <span class='ident'>max</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>::{<span class='ident'>size_of</span>, <span class='ident'>swap</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>unreachable</span>::<span class='ident'>UncheckedOptionExt</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">cmp</span>::<span class="ident">Ordering</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">cmp</span>::<span class="ident">Ordering</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">cmp</span>::{<span class="ident">min</span>, <span class="ident">max</span>};
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">mem</span>::{<span class="ident">size_of</span>, <span class="ident">swap</span>};
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">nodrop</span>::<span class="ident">NoDrop</span>;
 
-<span class='doccomment'>/// The smallest number of elements that may be quicksorted.</span>
-<span class='doccomment'>/// Must be at least 9.</span>
-<span class='kw'>const</span> <span class='ident'>MIN_QUICKSORT_ELEMS</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>10</span>;
+<span class="doccomment">/// The smallest number of elements that may be quicksorted.</span>
+<span class="doccomment">/// Must be at least 9.</span>
+<span class="kw">const</span> <span class="ident">MIN_QUICKSORT_ELEMS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">10</span>;
 
-<span class='doccomment'>/// The maximum number of elements to be insertion sorted.</span>
-<span class='kw'>const</span> <span class='ident'>MAX_INSERTION_SORT_ELEMS</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>42</span>;
+<span class="doccomment">/// The maximum number of elements to be insertion sorted.</span>
+<span class="kw">const</span> <span class="ident">MAX_INSERTION_SORT_ELEMS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">42</span>;
 
-<span class='doccomment'>/// Controls the number of elements to be insertion sorted.</span>
-<span class='doccomment'>/// Higher values give more insertion sorted elements.</span>
-<span class='kw'>const</span> <span class='ident'>INSERTION_SORT_FACTOR</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>450</span>;
+<span class="doccomment">/// Controls the number of elements to be insertion sorted.</span>
+<span class="doccomment">/// Higher values give more insertion sorted elements.</span>
+<span class="kw">const</span> <span class="ident">INSERTION_SORT_FACTOR</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">450</span>;
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sort_by</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) {
-    <span class='kw'>if</span> <span class='ident'>maybe_insertion_sort</span>(<span class='ident'>v</span>, <span class='ident'>compare</span>) { <span class='kw'>return</span>; }
-    <span class='kw'>let</span> <span class='ident'>heapsort_depth</span> <span class='op'>=</span> (<span class='number'>3</span> <span class='op'>*</span> <span class='ident'>log2</span>(<span class='ident'>v</span>.<span class='ident'>len</span>())) <span class='op'>/</span> <span class='number'>2</span>;
-    <span class='ident'>do_introsort</span>(<span class='ident'>v</span>, <span class='ident'>compare</span>, <span class='number'>0</span>, <span class='ident'>heapsort_depth</span>);
+<span class="doccomment">/// Maximum number of swaps to attempt before falling back</span>
+<span class="doccomment">/// on quicksort.</span>
+<span class="kw">const</span> <span class="ident">INSERTION_SORTED_CAP</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">8</span>;
+
+<span class="doccomment">/// Sort using a comparison function.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Example</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///     let mut unsorted = [1, 3, 9, 2, 6, 5];</span>
+<span class="doccomment">///     let sorted = [9, 6, 5, 3, 2, 1];</span>
+<span class="doccomment">///     ::quickersort::sort_by(&amp;mut unsorted, &amp;|a, b| b.cmp(a));</span>
+<span class="doccomment">///     assert_eq!(unsorted, sorted);</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sort_by</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) {
+    <span class="kw">if</span> <span class="ident">maybe_insertion_sort</span>(<span class="ident">v</span>, <span class="ident">compare</span>) { <span class="kw">return</span>; }
+    <span class="kw">let</span> <span class="ident">heapsort_depth</span> <span class="op">=</span> (<span class="number">3</span> <span class="op">*</span> <span class="ident">log2</span>(<span class="ident">v</span>.<span class="ident">len</span>())) <span class="op">/</span> <span class="number">2</span>;
+    <span class="ident">do_introsort</span>(<span class="ident">v</span>, <span class="ident">compare</span>, <span class="number">0</span>, <span class="ident">heapsort_depth</span>);
 }
 
-<span class='doccomment'>/// Sort using a conversion function.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Example</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///     #[derive(Debug, Eq, PartialEq)]</span>
-<span class='doccomment'>///     struct Selector {</span>
-<span class='doccomment'>///         specificity: u32,</span>
-<span class='doccomment'>///         source_order: u32,</span>
-<span class='doccomment'>///     }</span>
-<span class='doccomment'>///     let mut selectors_scrambled = [</span>
-<span class='doccomment'>///         Selector{ specificity: 1, source_order: 5 },</span>
-<span class='doccomment'>///         Selector{ specificity: 1, source_order: 4 },</span>
-<span class='doccomment'>///         Selector{ specificity: 3, source_order: 1 },</span>
-<span class='doccomment'>///     ];</span>
-<span class='doccomment'>///     let selectors_sorted = [</span>
-<span class='doccomment'>///         Selector{ specificity: 1, source_order: 4 },</span>
-<span class='doccomment'>///         Selector{ specificity: 1, source_order: 5 },</span>
-<span class='doccomment'>///         Selector{ specificity: 3, source_order: 1 },</span>
-<span class='doccomment'>///     ];</span>
-<span class='doccomment'>///     ::quickersort::sort_by_key(</span>
-<span class='doccomment'>///         &amp;mut selectors_scrambled,</span>
-<span class='doccomment'>///         |a| (a.specificity, a.source_order)</span>
-<span class='doccomment'>///     );</span>
-<span class='doccomment'>///     assert_eq!(selectors_scrambled, selectors_sorted);</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sort_by_key</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>K</span>: <span class='ident'>Ord</span>, <span class='ident'>F</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>K</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>key</span>: <span class='ident'>F</span>) {
-    <span class='ident'>sort_by</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='op'>|</span><span class='ident'>a</span>, <span class='ident'>b</span><span class='op'>|</span> <span class='ident'>key</span>(<span class='ident'>a</span>).<span class='ident'>cmp</span>(<span class='kw-2'>&amp;</span><span class='ident'>key</span>(<span class='ident'>b</span>)));
+<span class="doccomment">/// Sort using a conversion function.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Example</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///     #[derive(Debug, Eq, PartialEq)]</span>
+<span class="doccomment">///     struct Selector {</span>
+<span class="doccomment">///         specificity: u32,</span>
+<span class="doccomment">///         source_order: u32,</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">///     let mut selectors_scrambled = [</span>
+<span class="doccomment">///         Selector{ specificity: 1, source_order: 5 },</span>
+<span class="doccomment">///         Selector{ specificity: 1, source_order: 4 },</span>
+<span class="doccomment">///         Selector{ specificity: 3, source_order: 1 },</span>
+<span class="doccomment">///     ];</span>
+<span class="doccomment">///     let selectors_sorted = [</span>
+<span class="doccomment">///         Selector{ specificity: 1, source_order: 4 },</span>
+<span class="doccomment">///         Selector{ specificity: 1, source_order: 5 },</span>
+<span class="doccomment">///         Selector{ specificity: 3, source_order: 1 },</span>
+<span class="doccomment">///     ];</span>
+<span class="doccomment">///     ::quickersort::sort_by_key(</span>
+<span class="doccomment">///         &amp;mut selectors_scrambled,</span>
+<span class="doccomment">///         |a| (a.specificity, a.source_order)</span>
+<span class="doccomment">///     );</span>
+<span class="doccomment">///     assert_eq!(selectors_scrambled, selectors_sorted);</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sort_by_key</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">K</span>: <span class="ident">Ord</span>, <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">K</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">key</span>: <span class="ident">F</span>) {
+    <span class="ident">sort_by</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">key</span>(<span class="ident">a</span>).<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>(<span class="ident">b</span>)));
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sort</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Ord</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>]) {
-    <span class='ident'>sort_by</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='op'>|</span><span class='ident'>a</span>, <span class='ident'>b</span><span class='op'>|</span> <span class='ident'>a</span>.<span class='ident'>cmp</span>(<span class='ident'>b</span>));
+<span class="doccomment">/// Sort using the default comparison function.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sort</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Ord</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>]) {
+    <span class="ident">sort_by</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">cmp</span>(<span class="ident">b</span>));
 }
 
-<span class='kw'>fn</span> <span class='ident'>introsort</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>, <span class='ident'>rec</span>: <span class='ident'>u32</span>, <span class='ident'>heapsort_depth</span>: <span class='ident'>u32</span>) {
-    <span class='kw'>if</span> <span class='ident'>maybe_insertion_sort</span>(<span class='ident'>v</span>, <span class='ident'>compare</span>) { <span class='kw'>return</span>; }
-    <span class='ident'>do_introsort</span>(<span class='ident'>v</span>, <span class='ident'>compare</span>, <span class='ident'>rec</span>, <span class='ident'>heapsort_depth</span>);
+<span class="kw">fn</span> <span class="ident">introsort</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>, <span class="ident">rec</span>: <span class="ident">u32</span>, <span class="ident">heapsort_depth</span>: <span class="ident">u32</span>) {
+    <span class="kw">if</span> <span class="ident">maybe_insertion_sort</span>(<span class="ident">v</span>, <span class="ident">compare</span>) { <span class="kw">return</span>; }
+    <span class="ident">do_introsort</span>(<span class="ident">v</span>, <span class="ident">compare</span>, <span class="ident">rec</span>, <span class="ident">heapsort_depth</span>);
 }
 
-<span class='kw'>fn</span> <span class='ident'>do_introsort</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>, <span class='ident'>rec</span>: <span class='ident'>u32</span>, <span class='ident'>heapsort_depth</span>: <span class='ident'>u32</span>) {
-    <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>maybe_swap</span>(
-        (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>: <span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>: <span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>: <span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>compare</span>: <span class='ident'>expr</span>) <span class='op'>=&gt;</span> {
-            <span class='kw'>if</span> <span class='ident'>compare_idxs</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>, <span class='op'>*</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>, <span class='op'>*</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>compare</span>) <span class='op'>==</span> <span class='ident'>Greater</span> {
-                <span class='ident'>swap</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>a</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>);
+<span class="kw">fn</span> <span class="ident">do_introsort</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>, <span class="ident">rec</span>: <span class="ident">u32</span>, <span class="ident">heapsort_depth</span>: <span class="ident">u32</span>) {
+    <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">maybe_swap</span>(
+        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">compare</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">swapped</span>: <span class="ident">ident</span>) <span class="op">=&gt;</span> {
+            <span class="kw">if</span> <span class="ident">compare_idxs</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>, <span class="kw-2">*</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>, <span class="kw-2">*</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">compare</span>) <span class="op">==</span> <span class="ident">Greater</span> {
+                <span class="ident">swap</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>);
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">swapped</span> <span class="op">=</span> <span class="bool-val">true</span>;
             }
         }
     );
 
-    <span class='kw'>if</span> <span class='ident'>rec</span> <span class='op'>&gt;</span> <span class='ident'>heapsort_depth</span> {
-        <span class='ident'>heapsort</span>(<span class='ident'>v</span>, <span class='ident'>compare</span>);
-        <span class='kw'>return</span>;
+    <span class="kw">if</span> <span class="ident">rec</span> <span class="op">&gt;</span> <span class="ident">heapsort_depth</span> {
+        <span class="ident">heapsort</span>(<span class="ident">v</span>, <span class="ident">compare</span>);
+        <span class="kw">return</span>;
     }
 
-    <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>();
+    <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>();
 
-    <span class='comment'>// Pivot selection algorithm based on Java&#39;s DualPivotQuicksort.</span>
+    <span class="comment">// Pivot selection algorithm based on Java&#39;s DualPivotQuicksort.</span>
 
-    <span class='comment'>// Fast approximation of n / 7</span>
-    <span class='kw'>let</span> <span class='ident'>seventh</span> <span class='op'>=</span> (<span class='ident'>n</span> <span class='op'>/</span> <span class='number'>8</span>) <span class='op'>+</span> (<span class='ident'>n</span> <span class='op'>/</span> <span class='number'>64</span>) <span class='op'>+</span> <span class='number'>1</span>;
+    <span class="comment">// Fast approximation of n / 7</span>
+    <span class="kw">let</span> <span class="ident">seventh</span> <span class="op">=</span> (<span class="ident">n</span> <span class="op">/</span> <span class="number">8</span>) <span class="op">+</span> (<span class="ident">n</span> <span class="op">/</span> <span class="number">64</span>) <span class="op">+</span> <span class="number">1</span>;
 
-    <span class='comment'>// Pick five element evenly spaced around the middle (inclusive) of the slice.</span>
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>e3</span> <span class='op'>=</span> <span class='ident'>n</span> <span class='op'>/</span> <span class='number'>2</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>e2</span> <span class='op'>=</span> <span class='ident'>e3</span> <span class='op'>-</span> <span class='ident'>seventh</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>e1</span> <span class='op'>=</span> <span class='ident'>e3</span> <span class='op'>-</span> <span class='number'>2</span><span class='op'>*</span><span class='ident'>seventh</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>e4</span> <span class='op'>=</span> <span class='ident'>e3</span> <span class='op'>+</span> <span class='ident'>seventh</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>e5</span> <span class='op'>=</span> <span class='ident'>e3</span> <span class='op'>+</span> <span class='number'>2</span><span class='op'>*</span><span class='ident'>seventh</span>;
+    <span class="comment">// Pick five element evenly spaced around the middle (inclusive) of the slice.</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">e3</span> <span class="op">=</span> <span class="ident">n</span> <span class="op">/</span> <span class="number">2</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">e2</span> <span class="op">=</span> <span class="ident">e3</span> <span class="op">-</span> <span class="ident">seventh</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">e1</span> <span class="op">=</span> <span class="ident">e3</span> <span class="op">-</span> <span class="number">2</span><span class="kw-2">*</span><span class="ident">seventh</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">e4</span> <span class="op">=</span> <span class="ident">e3</span> <span class="op">+</span> <span class="ident">seventh</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">e5</span> <span class="op">=</span> <span class="ident">e3</span> <span class="op">+</span> <span class="number">2</span><span class="kw-2">*</span><span class="ident">seventh</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">swapped</span> <span class="op">=</span> <span class="bool-val">false</span>;
 
-    <span class='comment'>// Sort them with a sorting network.</span>
-    <span class='kw'>unsafe</span> {
-        <span class='macro'>maybe_swap</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e1</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e2</span>, <span class='ident'>compare</span>);
-        <span class='macro'>maybe_swap</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e4</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e5</span>, <span class='ident'>compare</span>);
-        <span class='macro'>maybe_swap</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e3</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e5</span>, <span class='ident'>compare</span>);
-        <span class='macro'>maybe_swap</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e3</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e4</span>, <span class='ident'>compare</span>);
-        <span class='macro'>maybe_swap</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e2</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e5</span>, <span class='ident'>compare</span>);
-        <span class='macro'>maybe_swap</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e1</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e4</span>, <span class='ident'>compare</span>);
-        <span class='macro'>maybe_swap</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e1</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e3</span>, <span class='ident'>compare</span>);
-        <span class='macro'>maybe_swap</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e2</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e4</span>, <span class='ident'>compare</span>);
-        <span class='macro'>maybe_swap</span><span class='macro'>!</span>(<span class='ident'>v</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e2</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>e3</span>, <span class='ident'>compare</span>);
+    <span class="comment">// Sort them with a sorting network.</span>
+    <span class="kw">unsafe</span> {
+        <span class="macro">maybe_swap</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e1</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e2</span>, <span class="ident">compare</span>, <span class="ident">swapped</span>);
+        <span class="macro">maybe_swap</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e4</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e5</span>, <span class="ident">compare</span>, <span class="ident">swapped</span>);
+        <span class="macro">maybe_swap</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e3</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e5</span>, <span class="ident">compare</span>, <span class="ident">swapped</span>);
+        <span class="macro">maybe_swap</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e3</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e4</span>, <span class="ident">compare</span>, <span class="ident">swapped</span>);
+        <span class="macro">maybe_swap</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e2</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e5</span>, <span class="ident">compare</span>, <span class="ident">swapped</span>);
+        <span class="macro">maybe_swap</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e1</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e4</span>, <span class="ident">compare</span>, <span class="ident">swapped</span>);
+        <span class="macro">maybe_swap</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e1</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e3</span>, <span class="ident">compare</span>, <span class="ident">swapped</span>);
+        <span class="macro">maybe_swap</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e2</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e4</span>, <span class="ident">compare</span>, <span class="ident">swapped</span>);
+        <span class="macro">maybe_swap</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e2</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">e3</span>, <span class="ident">compare</span>, <span class="ident">swapped</span>);
     }
 
-    <span class='kw'>if</span> <span class='kw'>unsafe</span> { <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>e1</span>, <span class='ident'>e2</span>, <span class='ident'>compare</span>) <span class='op'>!=</span> <span class='ident'>Equal</span> <span class='op'>&amp;&amp;</span>
-                <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>e2</span>, <span class='ident'>e3</span>, <span class='ident'>compare</span>) <span class='op'>!=</span> <span class='ident'>Equal</span> <span class='op'>&amp;&amp;</span>
-                <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>e3</span>, <span class='ident'>e4</span>, <span class='ident'>compare</span>) <span class='op'>!=</span> <span class='ident'>Equal</span> <span class='op'>&amp;&amp;</span>
-                <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>e4</span>, <span class='ident'>e5</span>, <span class='ident'>compare</span>) <span class='op'>!=</span> <span class='ident'>Equal</span> } {
-        <span class='comment'>// No consecutive pivot candidates are the same, meaning there is some variaton.</span>
-        <span class='ident'>dual_pivot_sort</span>(<span class='ident'>v</span>, (<span class='ident'>e1</span>, <span class='ident'>e2</span>, <span class='ident'>e3</span>, <span class='ident'>e4</span>, <span class='ident'>e5</span>), <span class='ident'>compare</span>, <span class='ident'>rec</span>, <span class='ident'>heapsort_depth</span>);
-    } <span class='kw'>else</span> {
-        <span class='comment'>// Two consecutive pivots candidates where the same.</span>
-        <span class='comment'>// There are probably many similar elements.</span>
-        <span class='ident'>single_pivot_sort</span>(<span class='ident'>v</span>, <span class='ident'>e3</span>, <span class='ident'>compare</span>, <span class='ident'>rec</span>, <span class='ident'>heapsort_depth</span>);
+    <span class="comment">// If the input appears partially sorted, try an insertion sort.</span>
+    <span class="kw">if</span> <span class="op">!</span><span class="ident">swapped</span> <span class="op">&amp;&amp;</span> <span class="ident">capped_insertion_sort</span>(<span class="ident">v</span>, <span class="ident">compare</span>) {
+        <span class="kw">return</span>;
+    }
+
+    <span class="comment">// Dual-pivot quicksort behaves very poorly if both pivots are equal.</span>
+    <span class="comment">// Use a single-pivot quicksort if they are.</span>
+    <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">compare_idxs</span>(<span class="ident">v</span>, <span class="ident">e2</span>, <span class="ident">e4</span>, <span class="ident">compare</span>) <span class="op">!=</span> <span class="ident">Equal</span> } {
+        <span class="ident">DualPivotSort</span>::<span class="ident">dual_pivot_sort</span>(<span class="ident">v</span>, (<span class="ident">e2</span>, <span class="ident">e4</span>), <span class="ident">compare</span>, <span class="ident">rec</span>, <span class="ident">heapsort_depth</span>);
+    } <span class="kw">else</span> {
+        <span class="comment">// N.B. If compare() is a well-behaved total order,</span>
+        <span class="comment">// e3 must be equal to e2 and e4.</span>
+        <span class="ident">single_pivot_sort</span>(<span class="ident">v</span>, <span class="ident">e3</span>, <span class="ident">compare</span>, <span class="ident">rec</span>, <span class="ident">heapsort_depth</span>);
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>maybe_insertion_sort</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>();
-    <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>&lt;=</span> <span class='number'>1</span> {
-        <span class='kw'>return</span> <span class='bool-val'>true</span>;
+<span class="kw">fn</span> <span class="ident">maybe_insertion_sort</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>();
+    <span class="kw">if</span> <span class="ident">n</span> <span class="op">&lt;=</span> <span class="number">1</span> {
+        <span class="kw">return</span> <span class="bool-val">true</span>;
     }
 
-    <span class='kw'>let</span> <span class='ident'>threshold</span> <span class='op'>=</span> <span class='ident'>min</span>(<span class='ident'>MAX_INSERTION_SORT_ELEMS</span>,
-                        <span class='ident'>max</span>(<span class='ident'>MIN_QUICKSORT_ELEMS</span>, <span class='ident'>INSERTION_SORT_FACTOR</span> <span class='op'>/</span> <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>()));
-    <span class='kw'>if</span> <span class='ident'>n</span> <span class='op'>&lt;=</span> <span class='ident'>threshold</span> {
-        <span class='ident'>insertion_sort</span>(<span class='ident'>v</span>, <span class='ident'>compare</span>);
-        <span class='kw'>return</span> <span class='bool-val'>true</span>;
+    <span class="kw">let</span> <span class="ident">threshold</span> <span class="op">=</span> <span class="ident">min</span>(<span class="ident">MAX_INSERTION_SORT_ELEMS</span>,
+                        <span class="ident">max</span>(<span class="ident">MIN_QUICKSORT_ELEMS</span>, <span class="ident">INSERTION_SORT_FACTOR</span> <span class="op">/</span> <span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()));
+    <span class="kw">if</span> <span class="ident">n</span> <span class="op">&lt;=</span> <span class="ident">threshold</span> {
+        <span class="ident">insertion_sort</span>(<span class="ident">v</span>, <span class="ident">compare</span>);
+        <span class="kw">return</span> <span class="bool-val">true</span>;
     }
-    <span class='kw'>return</span> <span class='bool-val'>false</span>;
+    <span class="kw">return</span> <span class="bool-val">false</span>;
 }
 
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>insertion_sort</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>();
-    <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>n</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>j</span> <span class='op'>=</span> <span class='ident'>i</span>;
-        <span class='kw'>while</span> <span class='ident'>j</span> <span class='op'>&gt;</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='kw'>unsafe</span> { <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>j</span><span class='op'>-</span><span class='number'>1</span>, <span class='ident'>j</span>, <span class='ident'>compare</span>) } <span class='op'>==</span> <span class='ident'>Greater</span> {
-            <span class='kw'>unsafe</span> { <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>j</span>, <span class='ident'>j</span><span class='op'>-</span><span class='number'>1</span>); }
-            <span class='ident'>j</span> <span class='op'>-=</span> <span class='number'>1</span>;
+<span class="kw">fn</span> <span class="ident">capped_insertion_sort</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cap</span> <span class="op">=</span> <span class="ident">INSERTION_SORTED_CAP</span>;
+    <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>();
+    <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">n</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">j</span> <span class="op">=</span> <span class="ident">i</span>;
+        <span class="kw">while</span> <span class="ident">j</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="kw">unsafe</span> { <span class="ident">compare_idxs</span>(<span class="ident">v</span>, <span class="ident">j</span><span class="op">-</span><span class="number">1</span>, <span class="ident">j</span>, <span class="ident">compare</span>) } <span class="op">==</span> <span class="ident">Greater</span> {
+            <span class="kw">unsafe</span> { <span class="ident">unsafe_swap</span>(<span class="ident">v</span>, <span class="ident">j</span>, <span class="ident">j</span><span class="op">-</span><span class="number">1</span>); }
+            <span class="ident">cap</span> <span class="op">-=</span> <span class="number">1</span>;
+            <span class="ident">j</span> <span class="op">-=</span> <span class="number">1</span>;
+            <span class="kw">if</span> <span class="ident">cap</span> <span class="op">==</span> <span class="number">0</span> {
+                <span class="kw">return</span> <span class="bool-val">false</span>;
+            }
         }
-        <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
+        <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+    }
+    <span class="bool-val">true</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insertion_sort</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>();
+    <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">n</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">j</span> <span class="op">=</span> <span class="ident">i</span>;
+        <span class="kw">while</span> <span class="ident">j</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="kw">unsafe</span> { <span class="ident">compare_idxs</span>(<span class="ident">v</span>, <span class="ident">j</span><span class="op">-</span><span class="number">1</span>, <span class="ident">j</span>, <span class="ident">compare</span>) } <span class="op">==</span> <span class="ident">Greater</span> {
+            <span class="kw">unsafe</span> { <span class="ident">unsafe_swap</span>(<span class="ident">v</span>, <span class="ident">j</span>, <span class="ident">j</span><span class="op">-</span><span class="number">1</span>); }
+            <span class="ident">j</span> <span class="op">-=</span> <span class="number">1</span>;
+        }
+        <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>dual_pivot_sort</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>pivots</span>: (<span class='ident'>usize</span>, <span class='ident'>usize</span>, <span class='ident'>usize</span>, <span class='ident'>usize</span>, <span class='ident'>usize</span>),
-                                                 <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>, <span class='ident'>rec</span>: <span class='ident'>u32</span>, <span class='ident'>heapsort_depth</span>: <span class='ident'>u32</span>) {
-    <span class='kw'>let</span> (_, <span class='ident'>p1</span>, _, <span class='ident'>p2</span>, _) <span class='op'>=</span> <span class='ident'>pivots</span>;
-    <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>();
+<span class="kw">struct</span> <span class="ident">DualPivotSort</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">p1</span>: <span class="ident">usize</span>,
+    <span class="ident">pivot1</span>: <span class="ident">NoDrop</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="ident">p2</span>: <span class="ident">usize</span>,
+    <span class="ident">pivot2</span>: <span class="ident">NoDrop</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> [<span class="ident">T</span>],
+}
 
-    <span class='kw'>let</span> <span class='ident'>lp</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>let</span> <span class='ident'>rp</span> <span class='op'>=</span> <span class='ident'>n</span> <span class='op'>-</span> <span class='number'>1</span>;
-
-    <span class='ident'>v</span>.<span class='ident'>swap</span>(<span class='ident'>p1</span>, <span class='ident'>lp</span>);
-    <span class='ident'>v</span>.<span class='ident'>swap</span>(<span class='ident'>p2</span>, <span class='ident'>rp</span>);
-
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>lesser</span> <span class='op'>=</span> <span class='number'>1</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>greater</span> <span class='op'>=</span> <span class='ident'>n</span> <span class='op'>-</span> <span class='number'>2</span>;
-
-    <span class='kw'>unsafe</span> {
-        <span class='comment'>// Skip elements that are already in the correct position</span>
-        <span class='kw'>while</span> <span class='ident'>lesser</span> <span class='op'>&lt;=</span> <span class='ident'>greater</span> <span class='op'>&amp;&amp;</span> <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>lesser</span>, <span class='ident'>lp</span>, <span class='ident'>compare</span>) <span class='op'>==</span> <span class='ident'>Less</span> { <span class='ident'>lesser</span> <span class='op'>+=</span> <span class='number'>1</span>; }
-        <span class='kw'>while</span> <span class='ident'>lesser</span> <span class='op'>&lt;=</span> <span class='ident'>greater</span> <span class='op'>&amp;&amp;</span> <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>greater</span>, <span class='ident'>rp</span>, <span class='ident'>compare</span>) <span class='op'>==</span> <span class='ident'>Greater</span> { <span class='ident'>greater</span> <span class='op'>-=</span> <span class='number'>1</span>; }
-
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>k</span> <span class='op'>=</span> <span class='ident'>lesser</span>;
-        <span class='comment'>// XXX We make some unecessary swaps since we can&#39;t leave uninitialized values</span>
-        <span class='comment'>// in `v` in case `compare` unwinds.</span>
-        <span class='kw'>while</span> <span class='ident'>k</span> <span class='op'>&lt;=</span> <span class='ident'>greater</span> {
-            <span class='kw'>if</span> <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>k</span>, <span class='ident'>lp</span>, <span class='ident'>compare</span>) <span class='op'>==</span> <span class='ident'>Less</span> {
-                <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>k</span>, <span class='ident'>lesser</span>);
-                <span class='ident'>lesser</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            } <span class='kw'>else</span> {
-                <span class='kw'>let</span> <span class='ident'>cmp</span> <span class='op'>=</span> <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>k</span>, <span class='ident'>rp</span>, <span class='ident'>compare</span>);
-                <span class='kw'>if</span> <span class='ident'>cmp</span> <span class='op'>==</span> <span class='ident'>Greater</span> <span class='op'>||</span> <span class='ident'>cmp</span> <span class='op'>==</span> <span class='ident'>Equal</span> {
-                    <span class='kw'>while</span> <span class='ident'>k</span> <span class='op'>&lt;</span> <span class='ident'>greater</span> <span class='op'>&amp;&amp;</span> <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>greater</span>, <span class='ident'>rp</span>, <span class='ident'>compare</span>) <span class='op'>==</span> <span class='ident'>Greater</span> {
-                        <span class='ident'>greater</span> <span class='op'>-=</span> <span class='number'>1</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">DualPivotSort</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">dual_pivot_sort</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], (<span class="ident">p1</span>, <span class="ident">p2</span>): (<span class="ident">usize</span>, <span class="ident">usize</span>),
+                                                  <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>, <span class="ident">rec</span>: <span class="ident">u32</span>, <span class="ident">heapsort_depth</span>: <span class="ident">u32</span>) {
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">9</span>);
+        <span class="kw">let</span> (<span class="ident">left</span>, <span class="ident">right</span>) <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="kw">if</span> <span class="ident">compare_idxs</span>(<span class="ident">v</span>, <span class="ident">p1</span>, <span class="ident">p2</span>, <span class="ident">compare</span>) <span class="op">==</span> <span class="ident">Greater</span> {
+                <span class="ident">unsafe_swap</span>(<span class="ident">v</span>, <span class="ident">p1</span>, <span class="ident">p2</span>);
+            }
+            <span class="comment">// Move the leftmost and rightmost list elements into the spots formerly occupied by the pivots.</span>
+            <span class="comment">// This leaves `v[0]` and `v[n-1]` logically uninitialized.</span>
+            <span class="comment">// Those gaps get filled back in by `DualPivotSort::Drop`.</span>
+            <span class="comment">// If `compare` unwinds, we&#39;ll put the items in p1 and p2 back into 0 and len()-1,</span>
+            <span class="comment">// otherwise p1 and p2 will be replaced with the last locations in the leftmost and rightmost</span>
+            <span class="comment">// partitions, where the pivots will be placed.</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">this</span> <span class="op">=</span> <span class="ident">DualPivotSort</span>{
+                <span class="ident">p1</span>: <span class="ident">p1</span>,
+                <span class="ident">pivot1</span>: <span class="ident">NoDrop</span>::<span class="ident">new</span>(<span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">p1</span>))),
+                <span class="ident">p2</span>: <span class="ident">p2</span>,
+                <span class="ident">pivot2</span>: <span class="ident">NoDrop</span>::<span class="ident">new</span>(<span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">p2</span>))),
+                <span class="ident">v</span>: <span class="ident">v</span>,
+            };
+            <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="number">0</span>), <span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">p1</span>), <span class="number">1</span>);
+            <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>), <span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">p2</span>), <span class="number">1</span>);
+            <span class="comment">// Start partitioning:</span>
+            <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">l</span>, <span class="kw-2">mut</span> <span class="ident">r</span>) <span class="op">=</span> (<span class="number">1</span>, <span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">2</span>);
+            <span class="kw">while</span> <span class="ident">l</span> <span class="op">&lt;</span> <span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="ident">compare</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">l</span>), <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">this</span>.<span class="ident">pivot1</span>) <span class="op">==</span> <span class="ident">Less</span> { <span class="ident">l</span> <span class="op">+=</span> <span class="number">1</span>; }
+            <span class="kw">while</span> <span class="ident">r</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">compare</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">r</span>), <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">this</span>.<span class="ident">pivot2</span>) <span class="op">==</span> <span class="ident">Greater</span> { <span class="ident">r</span> <span class="op">-=</span> <span class="number">1</span>; }
+            <span class="comment">// The invariant has been established, and shall now be maintained.</span>
+            <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">this</span>.<span class="ident">v</span>;
+            <span class="kw">let</span> <span class="ident">p1</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">this</span>.<span class="ident">pivot1</span>;
+            <span class="kw">let</span> <span class="ident">p2</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">this</span>.<span class="ident">pivot2</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">l</span>;
+            <span class="kw">while</span> <span class="ident">m</span> <span class="op">&lt;=</span> <span class="ident">r</span> {
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">l</span> <span class="op">!=</span> <span class="number">0</span>);
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">l</span> <span class="op">&lt;=</span> <span class="ident">m</span>);
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">l</span> <span class="op">==</span> <span class="ident">m</span> <span class="op">||</span> <span class="ident">l</span> <span class="op">&lt;</span> <span class="ident">r</span>);
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">r</span> <span class="op">!=</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>);
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">m</span> <span class="op">&lt;</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">r</span> <span class="op">&lt;</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">l</span> <span class="op">&lt;</span> <span class="ident">v</span>.<span class="ident">len</span>());
+                <span class="kw">if</span> <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;assert_working_compare&quot;</span>) {
+                    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">l</span> <span class="op">==</span> <span class="ident">m</span> <span class="op">||</span> <span class="ident">compare</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">l</span>], <span class="ident">p1</span>) <span class="op">!=</span> <span class="ident">Less</span>);
+                    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">l</span> <span class="op">==</span> <span class="number">1</span> <span class="op">||</span> <span class="ident">compare</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">l</span><span class="op">-</span><span class="number">1</span>], <span class="ident">p1</span>) <span class="op">!=</span> <span class="ident">Greater</span>);
+                    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">l</span> <span class="op">&lt;=</span> <span class="number">2</span> <span class="op">||</span> <span class="ident">compare</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">l</span><span class="op">-</span><span class="number">2</span>], <span class="ident">p1</span>) <span class="op">!=</span> <span class="ident">Greater</span>);
+                    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">compare</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">r</span>], <span class="ident">p2</span>) <span class="op">!=</span> <span class="ident">Greater</span>);
+                    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">r</span> <span class="op">==</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">2</span> <span class="op">||</span> <span class="ident">compare</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">r</span><span class="op">+</span><span class="number">1</span>], <span class="ident">p2</span>) <span class="op">!=</span> <span class="ident">Less</span>);
+                    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">r</span> <span class="op">&gt;=</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">3</span> <span class="op">||</span> <span class="ident">compare</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">r</span><span class="op">+</span><span class="number">2</span>], <span class="ident">p2</span>) <span class="op">!=</span> <span class="ident">Less</span>);
+                }
+                <span class="kw">let</span> <span class="ident">middle</span> <span class="op">=</span> <span class="ident">NoDrop</span>::<span class="ident">new</span>(<span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">m</span>)));
+                <span class="kw">let</span> <span class="ident">middle</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">middle</span>;
+                <span class="kw">if</span> <span class="ident">compare</span>(<span class="ident">middle</span>, <span class="ident">p1</span>) <span class="op">==</span> <span class="ident">Less</span> {
+                    <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">l</span>), <span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">m</span>), <span class="number">1</span>);
+                    <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">middle</span>, <span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">l</span>), <span class="number">1</span>);
+                    <span class="ident">l</span> <span class="op">+=</span> <span class="number">1</span>;
+                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">compare</span>(<span class="ident">middle</span>, <span class="ident">p2</span>) <span class="op">==</span> <span class="ident">Greater</span> {
+                    <span class="kw">if</span> <span class="ident">compare</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">r</span>), <span class="ident">p1</span>) <span class="op">==</span> <span class="ident">Less</span> {
+                        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">l</span>), <span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">m</span>), <span class="number">1</span>);
+                        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">r</span>), <span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">l</span>), <span class="number">1</span>);
+                        <span class="ident">l</span> <span class="op">+=</span> <span class="number">1</span>;
+                    } <span class="kw">else</span> {
+                        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">r</span>), <span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">m</span>), <span class="number">1</span>);
                     }
-                    <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>k</span>, <span class='ident'>greater</span>);
-                    <span class='ident'>greater</span> <span class='op'>-=</span> <span class='number'>1</span>;
-                    <span class='kw'>if</span> <span class='ident'>compare_idxs</span>(<span class='ident'>v</span>, <span class='ident'>k</span>, <span class='ident'>lp</span>, <span class='ident'>compare</span>) <span class='op'>==</span> <span class='ident'>Less</span> {
-                        <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>k</span>, <span class='ident'>lesser</span>);
-                        <span class='ident'>lesser</span> <span class='op'>+=</span> <span class='number'>1</span>;
+                    <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="ident">middle</span>, <span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">r</span>), <span class="number">1</span>);
+                    <span class="ident">r</span> <span class="op">-=</span> <span class="number">1</span>;
+                    <span class="kw">while</span> <span class="ident">m</span> <span class="op">&lt;=</span> <span class="ident">r</span> <span class="op">&amp;&amp;</span> <span class="ident">compare</span>(<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">r</span>), <span class="ident">p2</span>) <span class="op">==</span> <span class="ident">Greater</span> {
+                        <span class="ident">r</span> <span class="op">-=</span> <span class="number">1</span>;
                     }
                 }
+                <span class="ident">m</span> <span class="op">+=</span> <span class="number">1</span>;
             }
-            <span class='ident'>k</span> <span class='op'>+=</span> <span class='number'>1</span>;
-        }
-    }
-
-    <span class='ident'>lesser</span> <span class='op'>-=</span> <span class='number'>1</span>;
-    <span class='ident'>greater</span> <span class='op'>+=</span> <span class='number'>1</span>;
-
-    <span class='comment'>// Swap back pivots</span>
-    <span class='kw'>unsafe</span> {
-        <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>lp</span>, <span class='ident'>lesser</span>);
-        <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>rp</span>, <span class='ident'>greater</span>);
-    }
-
-    <span class='ident'>introsort</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>v</span>[..<span class='ident'>lesser</span>], <span class='ident'>compare</span>, <span class='ident'>rec</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>heapsort_depth</span>);
-    <span class='ident'>introsort</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>v</span>[<span class='ident'>lesser</span><span class='op'>+</span><span class='number'>1</span>..<span class='ident'>greater</span>], <span class='ident'>compare</span>, <span class='ident'>rec</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>heapsort_depth</span>);
-    <span class='ident'>introsort</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>v</span>[<span class='ident'>greater</span><span class='op'>+</span><span class='number'>1</span>..], <span class='ident'>compare</span>, <span class='ident'>rec</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>heapsort_depth</span>);
-}
-
-<span class='kw'>fn</span> <span class='ident'>single_pivot_sort</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>pivot</span>: <span class='ident'>usize</span>, <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>, <span class='ident'>rec</span>: <span class='ident'>u32</span>, <span class='ident'>heapsort_depth</span>: <span class='ident'>u32</span>) {
-    <span class='kw'>let</span> (<span class='ident'>l</span>, <span class='ident'>r</span>) <span class='op'>=</span> <span class='ident'>fat_partition</span>(<span class='ident'>v</span>, <span class='ident'>pivot</span>, <span class='ident'>compare</span>);
-    <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>();
-    <span class='kw'>if</span> <span class='ident'>l</span> <span class='op'>&gt;</span> <span class='number'>1</span> {
-        <span class='ident'>introsort</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>v</span>[..<span class='ident'>l</span>], <span class='ident'>compare</span>, <span class='ident'>rec</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>heapsort_depth</span>);
-    }
-    <span class='kw'>if</span> <span class='ident'>r</span> <span class='op'>&gt;</span> <span class='number'>1</span> {
-        <span class='ident'>introsort</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>v</span>[<span class='ident'>n</span> <span class='op'>-</span> <span class='ident'>r</span>..], <span class='ident'>compare</span>, <span class='ident'>rec</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>heapsort_depth</span>);
-    }
-}
-
-<span class='doccomment'>/// Partitions elements, using the element at `pivot` as pivot.</span>
-<span class='doccomment'>/// After partitioning, the array looks as following:</span>
-<span class='doccomment'>/// &lt;&lt;&lt;&lt;&lt;==&gt;&gt;&gt;</span>
-<span class='doccomment'>/// Return (number of &lt; elements, number of &gt; elements)</span>
-<span class='kw'>fn</span> <span class='ident'>fat_partition</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>pivot</span>: <span class='ident'>usize</span>, <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) <span class='op'>-&gt;</span> (<span class='ident'>usize</span>, <span class='ident'>usize</span>)  {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>a</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>b</span> <span class='op'>=</span> <span class='ident'>a</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>c</span>;
-    <span class='ident'>v</span>.<span class='ident'>swap</span>(<span class='number'>0</span>, <span class='ident'>pivot</span>);
-    <span class='kw'>loop</span> {
-        <span class='kw'>while</span> <span class='ident'>b</span> <span class='op'>&lt;=</span> <span class='ident'>c</span> {
-            <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>compare_idxs_safe</span>(<span class='ident'>v</span>, <span class='ident'>b</span>, <span class='number'>0</span>, <span class='ident'>compare</span>);
-            <span class='kw'>if</span> <span class='ident'>r</span> <span class='op'>==</span> <span class='ident'>Greater</span> { <span class='kw'>break</span>; }
-            <span class='kw'>if</span> <span class='ident'>r</span> <span class='op'>==</span> <span class='ident'>Equal</span> {
-                <span class='kw'>unsafe</span> { <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>a</span>, <span class='ident'>b</span>); }
-                <span class='ident'>a</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            }
-            <span class='ident'>b</span> <span class='op'>+=</span> <span class='number'>1</span>;
-        }
-        <span class='kw'>while</span> <span class='ident'>c</span> <span class='op'>&gt;=</span> <span class='ident'>b</span> {
-            <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>compare_idxs_safe</span>(<span class='ident'>v</span>, <span class='ident'>c</span>, <span class='number'>0</span>, <span class='ident'>compare</span>);
-            <span class='kw'>if</span> <span class='ident'>r</span> <span class='op'>==</span> <span class='ident'>Less</span> { <span class='kw'>break</span>; }
-            <span class='kw'>if</span> <span class='ident'>r</span> <span class='op'>==</span> <span class='ident'>Equal</span> {
-                <span class='kw'>unsafe</span> { <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>c</span>, <span class='ident'>d</span>); }
-                <span class='ident'>d</span> <span class='op'>-=</span> <span class='number'>1</span>;
-            }
-            <span class='ident'>c</span> <span class='op'>-=</span> <span class='number'>1</span>;
-        }
-        <span class='kw'>if</span> <span class='ident'>b</span> <span class='op'>&gt;</span> <span class='ident'>c</span> { <span class='kw'>break</span>; }
-        <span class='kw'>unsafe</span> { <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>b</span>, <span class='ident'>c</span>); }
-        <span class='ident'>b</span> <span class='op'>+=</span> <span class='number'>1</span>;
-        <span class='ident'>c</span> <span class='op'>-=</span> <span class='number'>1</span>;
-    }
-
-    <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>();
-    <span class='kw'>let</span> <span class='ident'>l</span> <span class='op'>=</span> <span class='ident'>min</span>(<span class='ident'>a</span>, <span class='ident'>b</span> <span class='op'>-</span> <span class='ident'>a</span>);
-    <span class='kw'>unsafe</span> { <span class='ident'>swap_many</span>(<span class='ident'>v</span>, <span class='number'>0</span>, <span class='ident'>b</span> <span class='op'>-</span> <span class='ident'>l</span>, <span class='ident'>l</span>); }
-    <span class='kw'>let</span> <span class='ident'>r</span> <span class='op'>=</span> <span class='ident'>min</span>(<span class='ident'>d</span> <span class='op'>-</span> <span class='ident'>c</span>, <span class='ident'>n</span> <span class='op'>-</span> <span class='number'>1</span> <span class='op'>-</span> <span class='ident'>d</span>);
-    <span class='kw'>unsafe</span> { <span class='ident'>swap_many</span>(<span class='ident'>v</span>, <span class='ident'>b</span>, <span class='ident'>n</span> <span class='op'>-</span> <span class='ident'>r</span>, <span class='ident'>r</span>); }
-
-    <span class='kw'>return</span> (<span class='ident'>b</span> <span class='op'>-</span> <span class='ident'>a</span>, <span class='ident'>d</span> <span class='op'>-</span> <span class='ident'>c</span>);
-}
-
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>swap_many</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>a</span>: <span class='ident'>usize</span>, <span class='ident'>b</span>: <span class='ident'>usize</span>, <span class='ident'>n</span>: <span class='ident'>usize</span>) {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>n</span> {
-        <span class='ident'>unsafe_swap</span>(<span class='ident'>v</span>, <span class='ident'>a</span> <span class='op'>+</span> <span class='ident'>i</span>, <span class='ident'>b</span> <span class='op'>+</span> <span class='ident'>i</span>);
-        <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cold</span>]</span>
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>never</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>heapsort</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>end</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>isize</span>;
-    <span class='ident'>heapify</span>(<span class='ident'>v</span>, <span class='ident'>compare</span>);
-    <span class='kw'>while</span> <span class='ident'>end</span> <span class='op'>&gt;</span> <span class='number'>0</span> {
-        <span class='ident'>end</span> <span class='op'>-=</span> <span class='number'>1</span>;
-        <span class='ident'>v</span>.<span class='ident'>swap</span>(<span class='number'>0</span>, <span class='ident'>end</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
-        <span class='ident'>Siftdown</span>::<span class='ident'>siftdown_range</span>(<span class='ident'>v</span>, <span class='number'>0</span>, <span class='ident'>end</span> <span class='kw'>as</span> <span class='ident'>usize</span>, <span class='ident'>compare</span>);
-    }
-}
-
-<span class='kw'>fn</span> <span class='ident'>heapify</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>n</span> <span class='op'>=</span> (<span class='ident'>v</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>isize</span>).<span class='ident'>wrapping_sub</span>(<span class='number'>1</span>) <span class='op'>/</span> <span class='number'>4</span>;
-    <span class='kw'>while</span> <span class='ident'>n</span> <span class='op'>&gt;=</span> <span class='number'>0</span> {
-        <span class='ident'>Siftdown</span>::<span class='ident'>siftdown</span>(<span class='ident'>v</span>, <span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>usize</span>, <span class='ident'>compare</span>);
-        <span class='ident'>n</span> <span class='op'>-=</span> <span class='number'>1</span>;
-    }
-}
-
-<span class='kw'>struct</span> <span class='ident'>Siftup</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>new</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-    <span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='ident'>T</span>],
-    <span class='ident'>pos</span>: <span class='ident'>usize</span>,
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Siftup</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>siftup</span><span class='op'>&lt;</span><span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v_</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>start</span>: <span class='ident'>usize</span>, <span class='ident'>pos_</span>: <span class='ident'>usize</span>, <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>this</span> <span class='op'>=</span> <span class='ident'>Siftup</span>{
-                <span class='ident'>new</span>: <span class='prelude-val'>Some</span>(<span class='ident'>ptr</span>::<span class='ident'>read</span>(<span class='ident'>v_</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>pos_</span>))),
-                <span class='ident'>v</span>: <span class='ident'>v_</span>,
-                <span class='ident'>pos</span>: <span class='ident'>pos_</span>,
-            };
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>parent</span> <span class='op'>=</span> <span class='ident'>this</span>.<span class='ident'>pos</span>.<span class='ident'>wrapping_sub</span>(<span class='number'>1</span>) <span class='op'>/</span> <span class='number'>4</span>;
-            <span class='kw'>while</span> <span class='ident'>this</span>.<span class='ident'>pos</span> <span class='op'>&gt;</span> <span class='ident'>start</span> <span class='op'>&amp;&amp;</span> <span class='ident'>compare</span>(<span class='ident'>this</span>.<span class='ident'>new</span>.<span class='ident'>as_ref</span>().<span class='ident'>unchecked_unwrap</span>(), <span class='ident'>this</span>.<span class='ident'>v</span>.<span class='ident'>get_unchecked</span>(<span class='ident'>parent</span>)) <span class='op'>==</span> <span class='ident'>Greater</span> {
-                <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>read</span>(<span class='ident'>this</span>.<span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>parent</span>));
-                <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>this</span>.<span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>this</span>.<span class='ident'>pos</span>), <span class='ident'>x</span>);
-                <span class='ident'>this</span>.<span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>parent</span>;
-                <span class='ident'>parent</span> <span class='op'>=</span> <span class='ident'>this</span>.<span class='ident'>pos</span>.<span class='ident'>wrapping_sub</span>(<span class='number'>1</span>) <span class='op'>/</span> <span class='number'>4</span>;
-            }
-            <span class='comment'>// siftup dropped here</span>
-        }
-    }
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Siftup</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ptr</span>::<span class='ident'>copy</span>(<span class='self'>self</span>.<span class='ident'>new</span>.<span class='ident'>as_ref</span>().<span class='ident'>unchecked_unwrap</span>(), <span class='self'>self</span>.<span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='self'>self</span>.<span class='ident'>pos</span>), <span class='number'>1</span>);
-            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>new</span>, <span class='prelude-val'>None</span>);
-        }
-    }
-}
-
-<span class='kw'>struct</span> <span class='ident'>Siftdown</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>new</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-    <span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> [<span class='ident'>T</span>],
-    <span class='ident'>pos</span>: <span class='ident'>usize</span>,
-}
-
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Siftdown</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>siftdown_range</span><span class='op'>&lt;</span><span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v_</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>pos_</span>: <span class='ident'>usize</span>, <span class='ident'>end</span>: <span class='ident'>usize</span>, <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) {
-        <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>this</span> <span class='op'>=</span> <span class='ident'>Siftdown</span>{
-                <span class='ident'>new</span>: <span class='prelude-val'>Some</span>(<span class='ident'>ptr</span>::<span class='ident'>read</span>(<span class='ident'>v_</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>pos_</span>))),
-                <span class='ident'>v</span>: <span class='ident'>v_</span>,
-                <span class='ident'>pos</span>: <span class='ident'>pos_</span>,
-            };
-
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>m_left</span> <span class='op'>=</span> <span class='number'>4</span> <span class='op'>*</span> <span class='ident'>this</span>.<span class='ident'>pos</span> <span class='op'>+</span> <span class='number'>2</span>;
-            <span class='kw'>while</span> <span class='ident'>m_left</span> <span class='op'>&lt;</span> <span class='ident'>end</span> {
-                <span class='kw'>let</span> <span class='ident'>left</span> <span class='op'>=</span> <span class='ident'>m_left</span> <span class='op'>-</span> <span class='number'>1</span>;
-                <span class='kw'>let</span> <span class='ident'>m_right</span> <span class='op'>=</span> <span class='ident'>m_left</span> <span class='op'>+</span> <span class='number'>1</span>;
-                <span class='kw'>let</span> <span class='ident'>right</span> <span class='op'>=</span> <span class='ident'>m_left</span> <span class='op'>+</span> <span class='number'>2</span>;
-                <span class='kw'>let</span> <span class='ident'>largest_left</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>compare_idxs</span>(<span class='ident'>this</span>.<span class='ident'>v</span>, <span class='ident'>left</span>, <span class='ident'>m_left</span>, <span class='ident'>compare</span>) <span class='op'>==</span> <span class='ident'>Less</span> {
-                    <span class='ident'>m_left</span>
-                } <span class='kw'>else</span> {
-                    <span class='ident'>left</span>
-                };
-                <span class='kw'>let</span> <span class='ident'>largest_right</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>right</span> <span class='op'>&lt;</span> <span class='ident'>end</span> <span class='op'>&amp;&amp;</span> <span class='ident'>compare_idxs</span>(<span class='ident'>this</span>.<span class='ident'>v</span>, <span class='ident'>m_right</span>, <span class='ident'>right</span>, <span class='ident'>compare</span>) <span class='op'>==</span> <span class='ident'>Less</span> {
-                    <span class='ident'>right</span>
-                } <span class='kw'>else</span> {
-                    <span class='ident'>m_right</span>
-                };
-                <span class='kw'>let</span> <span class='ident'>child</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>m_right</span> <span class='op'>&lt;</span> <span class='ident'>end</span> <span class='op'>&amp;&amp;</span> <span class='ident'>compare_idxs</span>(<span class='ident'>this</span>.<span class='ident'>v</span>, <span class='ident'>largest_left</span>, <span class='ident'>largest_right</span>, <span class='ident'>compare</span>) <span class='op'>==</span> <span class='ident'>Less</span> {
-                    <span class='ident'>largest_right</span>
-                } <span class='kw'>else</span> {
-                    <span class='ident'>largest_left</span>
-                };
-                <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>read</span>(<span class='ident'>this</span>.<span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>child</span>));
-                <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>this</span>.<span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>this</span>.<span class='ident'>pos</span>), <span class='ident'>x</span>);
-                <span class='ident'>this</span>.<span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>child</span>;
-                <span class='ident'>m_left</span> <span class='op'>=</span> <span class='number'>4</span> <span class='op'>*</span> <span class='ident'>this</span>.<span class='ident'>pos</span> <span class='op'>+</span> <span class='number'>2</span>;
-            }
-            <span class='kw'>let</span> <span class='ident'>left</span> <span class='op'>=</span> <span class='ident'>m_left</span> <span class='op'>-</span> <span class='number'>1</span>;
-            <span class='kw'>if</span> <span class='ident'>left</span> <span class='op'>&lt;</span> <span class='ident'>end</span> {
-                <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>read</span>(<span class='ident'>this</span>.<span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>left</span>));
-                <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='ident'>this</span>.<span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>this</span>.<span class='ident'>pos</span>), <span class='ident'>x</span>);
-                <span class='ident'>this</span>.<span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>left</span>;
-            }
-
-            <span class='ident'>this</span>.<span class='ident'>pos</span>
-            <span class='comment'>// this dropped here</span>
+            <span class="ident">this</span>.<span class="ident">p1</span> <span class="op">=</span> <span class="ident">l</span> <span class="op">-</span> <span class="number">1</span>;
+            <span class="ident">this</span>.<span class="ident">p2</span> <span class="op">=</span> <span class="ident">r</span> <span class="op">+</span> <span class="number">1</span>;
+            (<span class="ident">l</span>, <span class="ident">r</span>)
+            <span class="comment">// DualPivotSort dropped here</span>
         };
-        <span class='ident'>Siftup</span>::<span class='ident'>siftup</span>(<span class='ident'>v_</span>, <span class='ident'>pos_</span>, <span class='ident'>pos</span>, <span class='ident'>compare</span>);
+        <span class="kw">let</span> <span class="ident">left_pivot</span> <span class="op">=</span> <span class="ident">left</span> <span class="op">-</span> <span class="number">1</span>;
+        <span class="kw">let</span> <span class="ident">right_pivot</span> <span class="op">=</span> <span class="ident">right</span> <span class="op">+</span> <span class="number">1</span>;
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">right_pivot</span> <span class="op">&gt;</span> <span class="ident">left_pivot</span>);
+        <span class="kw">if</span> <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;assert_working_compare&quot;</span>) {
+            <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">v</span>[..<span class="ident">left_pivot</span>] {
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">compare</span>(<span class="ident">item</span>, <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">left_pivot</span>]) <span class="op">!=</span> <span class="ident">Greater</span>);
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">compare</span>(<span class="ident">item</span>, <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">right_pivot</span>]) <span class="op">!=</span> <span class="ident">Greater</span>);
+            }
+            <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">left_pivot</span>..<span class="ident">right_pivot</span>] {
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">compare</span>(<span class="ident">item</span>, <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">left_pivot</span>]) <span class="op">!=</span> <span class="ident">Less</span>);
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">compare</span>(<span class="ident">item</span>, <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">right_pivot</span>]) <span class="op">!=</span> <span class="ident">Greater</span>);
+            }
+            <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">right_pivot</span>..] {
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">compare</span>(<span class="ident">item</span>, <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">right_pivot</span>]) <span class="op">!=</span> <span class="ident">Less</span>);
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">compare</span>(<span class="ident">item</span>, <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">left_pivot</span>]) <span class="op">!=</span> <span class="ident">Less</span>);
+            }
+            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">compare</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">left_pivot</span>], <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">right_pivot</span>]) <span class="op">==</span> <span class="ident">Less</span>);
+        }
+        <span class="ident">introsort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>[..<span class="ident">left_pivot</span>], <span class="ident">compare</span>, <span class="ident">rec</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">heapsort_depth</span>);
+        <span class="ident">introsort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>[<span class="ident">left_pivot</span> <span class="op">+</span> <span class="number">1</span>..<span class="ident">right_pivot</span>], <span class="ident">compare</span>, <span class="ident">rec</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">heapsort_depth</span>);
+        <span class="ident">introsort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>[<span class="ident">right_pivot</span> <span class="op">+</span> <span class="number">1</span>..], <span class="ident">compare</span>, <span class="ident">rec</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">heapsort_depth</span>);
     }
-
-    <span class='kw'>fn</span> <span class='ident'>siftdown</span><span class='op'>&lt;</span><span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>pos</span>: <span class='ident'>usize</span>, <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) {
-        <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>len</span>();
-        <span class='ident'>Siftdown</span>::<span class='ident'>siftdown_range</span>(<span class='ident'>v</span>, <span class='ident'>pos</span>, <span class='ident'>len</span>, <span class='ident'>compare</span>);
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">write_pivots</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">len</span>();
+        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="self">self</span>.<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="self">self</span>.<span class="ident">p1</span>), <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="number">0</span>), <span class="number">1</span>);
+        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">pivot1</span>, <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="self">self</span>.<span class="ident">p1</span>), <span class="number">1</span>);
+        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="self">self</span>.<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="self">self</span>.<span class="ident">p2</span>), <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">n</span> <span class="op">-</span> <span class="number">1</span>), <span class="number">1</span>);
+        <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">pivot2</span>, <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="self">self</span>.<span class="ident">p2</span>), <span class="number">1</span>);
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Siftdown</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ptr</span>::<span class='ident'>copy</span>(<span class='self'>self</span>.<span class='ident'>new</span>.<span class='ident'>as_ref</span>().<span class='ident'>unchecked_unwrap</span>(), <span class='self'>self</span>.<span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='self'>self</span>.<span class='ident'>pos</span>), <span class='number'>1</span>);
-            <span class='ident'>ptr</span>::<span class='ident'>write</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>new</span>, <span class='prelude-val'>None</span>);
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">DualPivotSort</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="self">self</span>.<span class="ident">write_pivots</span>();
         }
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>log2</span>(<span class='ident'>x</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-    <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>&lt;=</span> <span class='number'>1</span> { <span class='kw'>return</span> <span class='number'>0</span>; }
-    <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='ident'>x</span>.<span class='ident'>leading_zeros</span>();
-    <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>() <span class='kw'>as</span> <span class='ident'>u32</span> <span class='op'>*</span> <span class='number'>8</span> <span class='op'>-</span> <span class='ident'>n</span>
+<span class="kw">fn</span> <span class="ident">single_pivot_sort</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">pivot</span>: <span class="ident">usize</span>, <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>, <span class="ident">rec</span>: <span class="ident">u32</span>, <span class="ident">heapsort_depth</span>: <span class="ident">u32</span>) {
+    <span class="kw">let</span> (<span class="ident">l</span>, <span class="ident">r</span>) <span class="op">=</span> <span class="ident">fat_partition</span>(<span class="ident">v</span>, <span class="ident">pivot</span>, <span class="ident">compare</span>);
+    <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>();
+    <span class="kw">if</span> <span class="ident">l</span> <span class="op">&gt;</span> <span class="number">1</span> {
+        <span class="ident">introsort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>[..<span class="ident">l</span>], <span class="ident">compare</span>, <span class="ident">rec</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">heapsort_depth</span>);
+    }
+    <span class="kw">if</span> <span class="ident">r</span> <span class="op">&gt;</span> <span class="number">1</span> {
+        <span class="ident">introsort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>[<span class="ident">n</span> <span class="op">-</span> <span class="ident">r</span>..], <span class="ident">compare</span>, <span class="ident">rec</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">heapsort_depth</span>);
+    }
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>compare_idxs</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>], <span class='ident'>a</span>: <span class='ident'>usize</span>, <span class='ident'>b</span>: <span class='ident'>usize</span>, <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span> {
-    <span class='kw'>let</span> <span class='ident'>x</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>get_unchecked</span>(<span class='ident'>a</span>);
-    <span class='kw'>let</span> <span class='ident'>y</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>get_unchecked</span>(<span class='ident'>b</span>);
-    <span class='ident'>compare</span>(<span class='ident'>x</span>, <span class='ident'>y</span>)
+<span class="doccomment">/// Partitions elements, using the element at `pivot` as pivot.</span>
+<span class="doccomment">/// After partitioning, the array looks as following:</span>
+<span class="doccomment">/// &lt;&lt;&lt;&lt;&lt;==&gt;&gt;&gt;</span>
+<span class="doccomment">/// Return (number of &lt; elements, number of &gt; elements)</span>
+<span class="kw">fn</span> <span class="ident">fat_partition</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">pivot</span>: <span class="ident">usize</span>, <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-&gt;</span> (<span class="ident">usize</span>, <span class="ident">usize</span>)  {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">a</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">c</span>;
+    <span class="ident">v</span>.<span class="ident">swap</span>(<span class="number">0</span>, <span class="ident">pivot</span>);
+    <span class="kw">loop</span> {
+        <span class="kw">while</span> <span class="ident">b</span> <span class="op">&lt;=</span> <span class="ident">c</span> {
+            <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">compare_idxs_safe</span>(<span class="ident">v</span>, <span class="ident">b</span>, <span class="number">0</span>, <span class="ident">compare</span>);
+            <span class="kw">if</span> <span class="ident">r</span> <span class="op">==</span> <span class="ident">Greater</span> { <span class="kw">break</span>; }
+            <span class="kw">if</span> <span class="ident">r</span> <span class="op">==</span> <span class="ident">Equal</span> {
+                <span class="kw">unsafe</span> { <span class="ident">unsafe_swap</span>(<span class="ident">v</span>, <span class="ident">a</span>, <span class="ident">b</span>); }
+                <span class="ident">a</span> <span class="op">+=</span> <span class="number">1</span>;
+            }
+            <span class="ident">b</span> <span class="op">+=</span> <span class="number">1</span>;
+        }
+        <span class="kw">while</span> <span class="ident">c</span> <span class="op">&gt;=</span> <span class="ident">b</span> {
+            <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">compare_idxs_safe</span>(<span class="ident">v</span>, <span class="ident">c</span>, <span class="number">0</span>, <span class="ident">compare</span>);
+            <span class="kw">if</span> <span class="ident">r</span> <span class="op">==</span> <span class="ident">Less</span> { <span class="kw">break</span>; }
+            <span class="kw">if</span> <span class="ident">r</span> <span class="op">==</span> <span class="ident">Equal</span> {
+                <span class="kw">unsafe</span> { <span class="ident">unsafe_swap</span>(<span class="ident">v</span>, <span class="ident">c</span>, <span class="ident">d</span>); }
+                <span class="ident">d</span> <span class="op">-=</span> <span class="number">1</span>;
+            }
+            <span class="ident">c</span> <span class="op">-=</span> <span class="number">1</span>;
+        }
+        <span class="kw">if</span> <span class="ident">b</span> <span class="op">&gt;</span> <span class="ident">c</span> { <span class="kw">break</span>; }
+        <span class="kw">unsafe</span> { <span class="ident">unsafe_swap</span>(<span class="ident">v</span>, <span class="ident">b</span>, <span class="ident">c</span>); }
+        <span class="ident">b</span> <span class="op">+=</span> <span class="number">1</span>;
+        <span class="ident">c</span> <span class="op">-=</span> <span class="number">1</span>;
+    }
+
+    <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>();
+    <span class="kw">let</span> <span class="ident">l</span> <span class="op">=</span> <span class="ident">min</span>(<span class="ident">a</span>, <span class="ident">b</span> <span class="op">-</span> <span class="ident">a</span>);
+    <span class="kw">unsafe</span> { <span class="ident">swap_many</span>(<span class="ident">v</span>, <span class="number">0</span>, <span class="ident">b</span> <span class="op">-</span> <span class="ident">l</span>, <span class="ident">l</span>); }
+    <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">min</span>(<span class="ident">d</span> <span class="op">-</span> <span class="ident">c</span>, <span class="ident">n</span> <span class="op">-</span> <span class="number">1</span> <span class="op">-</span> <span class="ident">d</span>);
+    <span class="kw">unsafe</span> { <span class="ident">swap_many</span>(<span class="ident">v</span>, <span class="ident">b</span>, <span class="ident">n</span> <span class="op">-</span> <span class="ident">r</span>, <span class="ident">r</span>); }
+
+    <span class="kw">return</span> (<span class="ident">b</span> <span class="op">-</span> <span class="ident">a</span>, <span class="ident">d</span> <span class="op">-</span> <span class="ident">c</span>);
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-<span class='kw'>fn</span> <span class='ident'>compare_idxs_safe</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>C</span>: <span class='ident'>Fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>T</span>, <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>T</span>], <span class='ident'>a</span>: <span class='ident'>usize</span>, <span class='ident'>b</span>: <span class='ident'>usize</span>, <span class='ident'>compare</span>: <span class='kw-2'>&amp;</span><span class='ident'>C</span>) <span class='op'>-&gt;</span> <span class='ident'>Ordering</span> {
-    <span class='ident'>compare</span>(<span class='kw-2'>&amp;</span><span class='ident'>v</span>[<span class='ident'>a</span>], <span class='kw-2'>&amp;</span><span class='ident'>v</span>[<span class='ident'>b</span>])
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">swap_many</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">a</span>: <span class="ident">usize</span>, <span class="ident">b</span>: <span class="ident">usize</span>, <span class="ident">n</span>: <span class="ident">usize</span>) {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">n</span> {
+        <span class="ident">unsafe_swap</span>(<span class="ident">v</span>, <span class="ident">a</span> <span class="op">+</span> <span class="ident">i</span>, <span class="ident">b</span> <span class="op">+</span> <span class="ident">i</span>);
+        <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+    }
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-<span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>unsafe_swap</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span>[<span class='ident'>T</span>], <span class='ident'>a</span>: <span class='ident'>usize</span>, <span class='ident'>b</span>: <span class='ident'>usize</span>) {
-    <span class='ident'>ptr</span>::<span class='ident'>swap</span>(<span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>a</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>, <span class='ident'>v</span>.<span class='ident'>get_unchecked_mut</span>(<span class='ident'>b</span>) <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>T</span>);
+<span class="attribute">#[<span class="ident">cold</span>]</span>
+<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">never</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">heapsort</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">isize</span>;
+    <span class="ident">heapify</span>(<span class="ident">v</span>, <span class="ident">compare</span>);
+    <span class="kw">while</span> <span class="ident">end</span> <span class="op">&gt;</span> <span class="number">0</span> {
+        <span class="ident">end</span> <span class="op">-=</span> <span class="number">1</span>;
+        <span class="ident">v</span>.<span class="ident">swap</span>(<span class="number">0</span>, <span class="ident">end</span> <span class="kw">as</span> <span class="ident">usize</span>);
+        <span class="ident">Siftdown</span>::<span class="ident">siftdown_range</span>(<span class="ident">v</span>, <span class="number">0</span>, <span class="ident">end</span> <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">compare</span>);
+    }
+}
+
+<span class="kw">fn</span> <span class="ident">heapify</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> (<span class="ident">v</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">isize</span>).<span class="ident">wrapping_sub</span>(<span class="number">1</span>) <span class="op">/</span> <span class="number">4</span>;
+    <span class="kw">while</span> <span class="ident">n</span> <span class="op">&gt;=</span> <span class="number">0</span> {
+        <span class="ident">Siftdown</span>::<span class="ident">siftdown</span>(<span class="ident">v</span>, <span class="ident">n</span> <span class="kw">as</span> <span class="ident">usize</span>, <span class="ident">compare</span>);
+        <span class="ident">n</span> <span class="op">-=</span> <span class="number">1</span>;
+    }
+}
+
+<span class="kw">struct</span> <span class="ident">Siftup</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">new</span>: <span class="ident">NoDrop</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> [<span class="ident">T</span>],
+    <span class="ident">pos</span>: <span class="ident">usize</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Siftup</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">siftup</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">start</span>: <span class="ident">usize</span>, <span class="ident">pos_</span>: <span class="ident">usize</span>, <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">this</span> <span class="op">=</span> <span class="ident">Siftup</span>{
+                <span class="ident">new</span>: <span class="ident">NoDrop</span>::<span class="ident">new</span>(<span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">v_</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">pos_</span>))),
+                <span class="ident">v</span>: <span class="ident">v_</span>,
+                <span class="ident">pos</span>: <span class="ident">pos_</span>,
+            };
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">this</span>.<span class="ident">pos</span>.<span class="ident">wrapping_sub</span>(<span class="number">1</span>) <span class="op">/</span> <span class="number">4</span>;
+            <span class="kw">while</span> <span class="ident">this</span>.<span class="ident">pos</span> <span class="op">&gt;</span> <span class="ident">start</span> <span class="op">&amp;&amp;</span> <span class="ident">compare</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">this</span>.<span class="ident">new</span>, <span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">parent</span>)) <span class="op">==</span> <span class="ident">Greater</span> {
+                <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">parent</span>));
+                <span class="ident">ptr</span>::<span class="ident">write</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">this</span>.<span class="ident">pos</span>), <span class="ident">x</span>);
+                <span class="ident">this</span>.<span class="ident">pos</span> <span class="op">=</span> <span class="ident">parent</span>;
+                <span class="ident">parent</span> <span class="op">=</span> <span class="ident">this</span>.<span class="ident">pos</span>.<span class="ident">wrapping_sub</span>(<span class="number">1</span>) <span class="op">/</span> <span class="number">4</span>;
+            }
+            <span class="comment">// siftup dropped here</span>
+        }
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Siftup</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">new</span>, <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="self">self</span>.<span class="ident">pos</span>), <span class="number">1</span>);
+        }
+    }
+}
+
+<span class="kw">struct</span> <span class="ident">Siftdown</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">new</span>: <span class="ident">NoDrop</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> [<span class="ident">T</span>],
+    <span class="ident">pos</span>: <span class="ident">usize</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Siftdown</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">siftdown_range</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">pos_</span>: <span class="ident">usize</span>, <span class="ident">end</span>: <span class="ident">usize</span>, <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) {
+        <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">this</span> <span class="op">=</span> <span class="ident">Siftdown</span>{
+                <span class="ident">new</span>: <span class="ident">NoDrop</span>::<span class="ident">new</span>(<span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">v_</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">pos_</span>))),
+                <span class="ident">v</span>: <span class="ident">v_</span>,
+                <span class="ident">pos</span>: <span class="ident">pos_</span>,
+            };
+
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">m_left</span> <span class="op">=</span> <span class="number">4</span> <span class="op">*</span> <span class="ident">this</span>.<span class="ident">pos</span> <span class="op">+</span> <span class="number">2</span>;
+            <span class="kw">while</span> <span class="ident">m_left</span> <span class="op">&lt;</span> <span class="ident">end</span> {
+                <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">m_left</span> <span class="op">-</span> <span class="number">1</span>;
+                <span class="kw">let</span> <span class="ident">m_right</span> <span class="op">=</span> <span class="ident">m_left</span> <span class="op">+</span> <span class="number">1</span>;
+                <span class="kw">let</span> <span class="ident">right</span> <span class="op">=</span> <span class="ident">m_left</span> <span class="op">+</span> <span class="number">2</span>;
+                <span class="kw">let</span> <span class="ident">largest_left</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">compare_idxs</span>(<span class="ident">this</span>.<span class="ident">v</span>, <span class="ident">left</span>, <span class="ident">m_left</span>, <span class="ident">compare</span>) <span class="op">==</span> <span class="ident">Less</span> {
+                    <span class="ident">m_left</span>
+                } <span class="kw">else</span> {
+                    <span class="ident">left</span>
+                };
+                <span class="kw">let</span> <span class="ident">largest_right</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">right</span> <span class="op">&lt;</span> <span class="ident">end</span> <span class="op">&amp;&amp;</span> <span class="ident">compare_idxs</span>(<span class="ident">this</span>.<span class="ident">v</span>, <span class="ident">m_right</span>, <span class="ident">right</span>, <span class="ident">compare</span>) <span class="op">==</span> <span class="ident">Less</span> {
+                    <span class="ident">right</span>
+                } <span class="kw">else</span> {
+                    <span class="ident">m_right</span>
+                };
+                <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">m_right</span> <span class="op">&lt;</span> <span class="ident">end</span> <span class="op">&amp;&amp;</span> <span class="ident">compare_idxs</span>(<span class="ident">this</span>.<span class="ident">v</span>, <span class="ident">largest_left</span>, <span class="ident">largest_right</span>, <span class="ident">compare</span>) <span class="op">==</span> <span class="ident">Less</span> {
+                    <span class="ident">largest_right</span>
+                } <span class="kw">else</span> {
+                    <span class="ident">largest_left</span>
+                };
+                <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">child</span>));
+                <span class="ident">ptr</span>::<span class="ident">write</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">this</span>.<span class="ident">pos</span>), <span class="ident">x</span>);
+                <span class="ident">this</span>.<span class="ident">pos</span> <span class="op">=</span> <span class="ident">child</span>;
+                <span class="ident">m_left</span> <span class="op">=</span> <span class="number">4</span> <span class="op">*</span> <span class="ident">this</span>.<span class="ident">pos</span> <span class="op">+</span> <span class="number">2</span>;
+            }
+            <span class="kw">let</span> <span class="ident">left</span> <span class="op">=</span> <span class="ident">m_left</span> <span class="op">-</span> <span class="number">1</span>;
+            <span class="kw">if</span> <span class="ident">left</span> <span class="op">&lt;</span> <span class="ident">end</span> {
+                <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">ptr</span>::<span class="ident">read</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">left</span>));
+                <span class="ident">ptr</span>::<span class="ident">write</span>(<span class="ident">this</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">this</span>.<span class="ident">pos</span>), <span class="ident">x</span>);
+                <span class="ident">this</span>.<span class="ident">pos</span> <span class="op">=</span> <span class="ident">left</span>;
+            }
+
+            <span class="ident">this</span>.<span class="ident">pos</span>
+            <span class="comment">// this dropped here</span>
+        };
+        <span class="ident">Siftup</span>::<span class="ident">siftup</span>(<span class="ident">v_</span>, <span class="ident">pos_</span>, <span class="ident">pos</span>, <span class="ident">compare</span>);
+    }
+
+    <span class="kw">fn</span> <span class="ident">siftdown</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">T</span>], <span class="ident">pos</span>: <span class="ident">usize</span>, <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) {
+        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">len</span>();
+        <span class="ident">Siftdown</span>::<span class="ident">siftdown_range</span>(<span class="ident">v</span>, <span class="ident">pos</span>, <span class="ident">len</span>, <span class="ident">compare</span>);
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Siftdown</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ptr</span>::<span class="ident">copy</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">new</span>, <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="self">self</span>.<span class="ident">pos</span>), <span class="number">1</span>);
+        }
+    }
+}
+
+<span class="kw">fn</span> <span class="ident">log2</span>(<span class="ident">x</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+    <span class="kw">if</span> <span class="ident">x</span> <span class="op">&lt;=</span> <span class="number">1</span> { <span class="kw">return</span> <span class="number">0</span>; }
+    <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="ident">x</span>.<span class="ident">leading_zeros</span>();
+    <span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>() <span class="kw">as</span> <span class="ident">u32</span> <span class="op">*</span> <span class="number">8</span> <span class="op">-</span> <span class="ident">n</span>
+}
+
+<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">compare_idxs</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>], <span class="ident">a</span>: <span class="ident">usize</span>, <span class="ident">b</span>: <span class="ident">usize</span>, <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span> {
+    <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">a</span>);
+    <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">get_unchecked</span>(<span class="ident">b</span>);
+    <span class="ident">compare</span>(<span class="ident">x</span>, <span class="ident">y</span>)
+}
+
+<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+<span class="kw">fn</span> <span class="ident">compare_idxs_safe</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">C</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span>[<span class="ident">T</span>], <span class="ident">a</span>: <span class="ident">usize</span>, <span class="ident">b</span>: <span class="ident">usize</span>, <span class="ident">compare</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-&gt;</span> <span class="ident">Ordering</span> {
+    <span class="ident">compare</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">a</span>], <span class="kw-2">&amp;</span><span class="ident">v</span>[<span class="ident">b</span>])
+}
+
+<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">unsafe_swap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span>[<span class="ident">T</span>], <span class="ident">a</span>: <span class="ident">usize</span>, <span class="ident">b</span>: <span class="ident">usize</span>) {
+    <span class="ident">ptr</span>::<span class="ident">swap</span>(<span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">a</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">v</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">b</span>) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>);
 }
 </pre>
 </section>
@@ -926,11 +1121,9 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "quickersort";
-        window.playgroundUrl = "";
     </script>
     <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

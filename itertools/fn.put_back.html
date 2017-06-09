@@ -9,6 +9,7 @@
 
     <title>itertools::put_back - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc fn">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,13 +43,13 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>itertools</a>::<wbr><a class='fn' href=''>put_back</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='index.html'>itertools</a>::<wbr><a class="fn" href=''>put_back</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-169' class='srclink' href='../src/itertools/adaptors.rs.html#181-188' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn put_back&lt;I&gt;(iterable: I) -&gt; <a class='struct' href='../itertools/structs/struct.PutBack.html' title='itertools::structs::PutBack'>PutBack</a>&lt;I::IntoIter&gt; <span class='where'>where I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html' title='core::iter::traits::IntoIterator'>IntoIterator</a></span></pre><div class='docblock'><p>Create an iterator where you can put back a single item</p>
+               </span><a class='srclink' href='../src/itertools/adaptors/mod.rs.html#184-191' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn put_back&lt;I&gt;(iterable: I) -&gt; <a class="struct" href="../itertools/structs/struct.PutBack.html" title="struct itertools::structs::PutBack">PutBack</a>&lt;I::<a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html" title="trait core::iter::traits::IntoIterator">IntoIter</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;I: <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html" title="trait core::iter::traits::IntoIterator">IntoIterator</a>,&nbsp;</span></pre><div class='docblock'><p>Create an iterator where you can put back a single item</p>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -105,11 +106,9 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "itertools";
-        window.playgroundUrl = "";
     </script>
     <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

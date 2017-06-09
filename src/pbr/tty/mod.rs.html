@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/pbr-0.3.1/src/tty/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/pbr-1.0.0/src/tty/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -65,30 +66,30 @@
 <span id="21">21</span>
 <span id="22">22</span>
 <span id="23">23</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Most of the code in this module(tty) taken from:</span>
-<span class='doccomment'>//! https://github.com/eminence/terminal-size</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! A simple utility for getting the size of a terminal.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Supports both Linux and Windows, but help is needed to test other platforms</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Most of the code in for the `terminal_size()` function taken from:</span>
+<span class="doccomment">//! https://github.com/eminence/terminal-size</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A simple utility for getting the size of a terminal, and moving `n` lines up.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Supports both Linux and Windows, but help is needed to test other platforms</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!</span>
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Width</span>(<span class='kw'>pub</span> <span class='ident'>u16</span>);
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Height</span>(<span class='kw'>pub</span> <span class='ident'>u16</span>);
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Width</span>(<span class="kw">pub</span> <span class="ident">u16</span>);
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Height</span>(<span class="kw">pub</span> <span class="ident">u16</span>);
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>unix</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>unix</span>::<span class='ident'>terminal_size</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">mod</span> <span class="ident">unix</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">unix</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">unix</span>::<span class="kw-2">*</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>windows</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>windows</span>::<span class='ident'>terminal_size</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+<span class="kw">mod</span> <span class="ident">windows</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">windows</span>::<span class="kw-2">*</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -146,11 +147,9 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "pbr";
-        window.playgroundUrl = "";
     </script>
     <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>
