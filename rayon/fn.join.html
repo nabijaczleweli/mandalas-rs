@@ -62,7 +62,7 @@ it.</p>
 
 <h3 id='warning-about-blocking-io' class='section-header'><a href='#warning-about-blocking-io'>Warning about blocking I/O</a></h3>
 <p>The assumption is that the closures given to <code>join()</code> are
-CPU-bound tasks that to do not perform I/O or other blocking
+CPU-bound tasks that do not perform I/O or other blocking
 operations. If you do perform I/O, and that I/O should block
 (e.g., waiting for a network request), the overall performance may
 be poor.  Moreover, if you cause one closure to be blocked waiting
