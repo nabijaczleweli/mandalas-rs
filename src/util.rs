@@ -87,3 +87,44 @@ pub fn hsl_to_rgb(hsl: [f64; 3]) -> [f64; 3] {
     let m = hsl[2] - (chroma / 2f64);
     [rgb1[0] + m, rgb1[1] + m, rgb1[2] + m]
 }
+
+/// Translate an RGB colour point into a Sepia tone.
+///
+/// Based on https://stackoverflow.com/a/9449159/2851815.
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::rgb_to_sepia;
+/// assert_eq!(rgb_to_sepia([0.5, 0.5, 0.5]), [0.6755, 0.6015, 0.4685]);
+/// assert_eq!(rgb_to_sepia([0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);
+/// ```
+pub fn rgb_to_sepia(rgb: [f64; 3]) -> [f64; 3] {
+    [((rgb[0] * 0.393) + (rgb[1] * 0.769) + (rgb[2] * 0.189)).min(1.),
+     ((rgb[0] * 0.349) + (rgb[1] * 0.686) + (rgb[2] * 0.168)).min(1.),
+     ((rgb[0] * 0.272) + (rgb[1] * 0.534) + (rgb[2] * 0.131)).min(1.)]
+}
+
+/// Translate a YUV colour point (translated to 0–1 as opposed to -0.5–0.5)
+/// into an RGB colour point according to the BT.709 recommendation.
+///
+/// Based on https://en.wikipedia.org/wiki/YUV#HDTV_with_BT.709, https://goo.gl/kd6DPm and https://goo.gl/C9w4qT (original URLs too long).
+///
+/// Effectively computes
+///
+/// ![YUV to RGB matrix
+/// multiplicaiton](https://wikimedia.org/api/rest_v1/media/math/render/svg/9d783bf1ed1edbda3e8e87d3d9067bd156a5e75b)
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::yuv_to_rgb;
+/// assert_eq!(yuv_to_rgb([0f64, 0f64, 0f64]), [0f64, 0.297705, 0f64]);
+/// ```
+pub fn yuv_to_rgb(yuv: [f64; 3]) -> [f64; 3] {
+    // Scaled to [0-1, -0.5-0.5, -0.5-0.5]
+    let yuv = [yuv[0], yuv[1] - 0.5, yuv[2] - 0.5];
+    [(1.28033 * yuv[2] + yuv[0]).max(0f64).min(1f64),
+     (-0.21482 * yuv[1] - 0.38059 * yuv[2] + yuv[0]).max(0f64).min(1f64),
+     (2.12798 * yuv[1] + yuv[0]).max(0f64).min(1f64)]
+}
