@@ -7,6 +7,7 @@ implementors["libc"] = [];
 implementors["mandalas"] = [];
 implementors["rayon"] = [];
 implementors["regex_syntax"] = [];
+implementors["thread_local"] = [];
 implementors["void"] = [];
 
             if (window.register_implementors) {

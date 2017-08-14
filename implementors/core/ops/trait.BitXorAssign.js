@@ -9,6 +9,7 @@ implementors["mandalas"] = ["impl <a class=\"trait\" href=\"https://doc.rust-lan
 implementors["png"] = ["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/trait.BitXorAssign.html\" title=\"trait core::ops::BitXorAssign\">BitXorAssign</a> for <a class=\"struct\" href=\"png/struct.Transformations.html\" title=\"struct png::Transformations\">Transformations</a>",];
 implementors["rayon"] = [];
 implementors["regex_syntax"] = [];
+implementors["thread_local"] = [];
 implementors["void"] = [];
 
             if (window.register_implementors) {

@@ -1,5 +1,6 @@
 (function() {var implementors = {};
 implementors["mandalas"] = [];
+implementors["thread_local"] = [];
 implementors["unreachable"] = [];
 
             if (window.register_implementors) {

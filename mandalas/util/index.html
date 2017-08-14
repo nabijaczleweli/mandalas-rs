@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/mandalas/util.rs.html#1-89' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/mandalas/util.rs.html#1-130' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Various utility functions.</p>
 </div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -74,10 +74,25 @@
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="fn" href="fn.rgb_to_sepia.html"
+                                  title='fn mandalas::util::rgb_to_sepia'>rgb_to_sepia</a></td>
+                           <td class='docblock-short'>
+                                <p>Translate an RGB colour point into a Sepia tone.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="fn" href="fn.separated_number.html"
                                   title='fn mandalas::util::separated_number'>separated_number</a></td>
                            <td class='docblock-short'>
                                 <p>Convert the specified number to a string in the form &quot;1&#39;234&#39;567&quot;</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.yuv_to_rgb.html"
+                                  title='fn mandalas::util::yuv_to_rgb'>yuv_to_rgb</a></td>
+                           <td class='docblock-short'>
+                                <p>Translate a YUV colour point (translated to 0–1 as opposed to -0.5–0.5)
+into an RGB colour point according to the BT.709 recommendation.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -136,7 +151,6 @@
         window.rootPath = "../../";
         window.currentCrate = "mandalas";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
