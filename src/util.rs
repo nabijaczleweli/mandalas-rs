@@ -108,7 +108,8 @@ pub fn rgb_to_sepia(rgb: [f64; 3]) -> [f64; 3] {
 /// Translate a YUV colour point (translated to 0–1 as opposed to -0.5–0.5)
 /// into an RGB colour point according to the BT.709 recommendation.
 ///
-/// Based on https://en.wikipedia.org/wiki/YUV#HDTV_with_BT.709, https://goo.gl/kd6DPm and https://goo.gl/C9w4qT (original URLs too long).
+/// Based on https://en.wikipedia.org/wiki/YUV#HDTV_with_BT.709, https://goo.gl/kd6DPm and https://goo.gl/C9w4qT (original URLs
+/// too long).
 ///
 /// Effectively computes
 ///
@@ -127,4 +128,67 @@ pub fn yuv_to_rgb(yuv: [f64; 3]) -> [f64; 3] {
     [(1.28033 * yuv[2] + yuv[0]).max(0f64).min(1f64),
      (-0.21482 * yuv[1] - 0.38059 * yuv[2] + yuv[0]).max(0f64).min(1f64),
      (2.12798 * yuv[1] + yuv[0]).max(0f64).min(1f64)]
+}
+
+/// Translate a ROYGBP colour point into an RGB colour point according to sampling the svg on wikipedia.
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::roygbp_to_rgb;
+/// assert_eq!(roygbp_to_rgb([0f64, 0f64, 0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);
+/// ```
+pub fn roygbp_to_rgb(roygbp: [f64; 6]) -> [f64; 3] {
+    // R = e11716
+    // O = fc9019
+    // Y = fcf219
+    // G = 028226
+    // B = 3032fe
+    // P = 760087
+
+    [roygbp[0] * 0.250836120401338 + roygbp[1] * 0.280936454849498 + roygbp[2] * 0.280936454849498 + roygbp[3] * 0.00222965440356745 +
+     roygbp[4] * 0.0535117056856187 + roygbp[5] * 0.131549609810479,
+
+     roygbp[0] * 0.0390492359932088 + roygbp[1] * 0.244482173174873 + roygbp[2] * 0.410865874363328 + roygbp[3] * 0.220713073005093 +
+     roygbp[4] * 0.0848896434634975,
+
+     roygbp[0] * 0.0440881763527054 + roygbp[1] * 0.0501002004008016 + roygbp[2] * 0.0501002004008016 + roygbp[3] * 0.0761523046092184 +
+     roygbp[4] * 0.509018036072144 + roygbp[5] * 0.270541082164329]
+}
+
+/// Translate a PROYGBIV colour point into an RGB colour point according to sampling the svg on wikipedia.
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::proygbiv_to_rgb;
+/// assert_eq!(proygbiv_to_rgb([0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);
+/// ```
+pub fn proygbiv_to_rgb(proygbiv: [f64; 8]) -> [f64; 3] {
+    // P = ff69b4
+    // R = ff0000
+    // O = ff8e00
+    // Y = ffff00
+    // G = 008e00
+    // B = 00c0c0
+    // I = 400098
+    // V = 8e008e
+
+    [proygbiv[0] * 0.207993474714519 +
+     proygbiv[1] * 0.207993474714519 +
+     proygbiv[2] * 0.207993474714519 +
+     proygbiv[3] * 0.207993474714519 +
+     proygbiv[6] * 0.0522022838499184 +
+     proygbiv[7] * 0.115823817292007,
+
+     proygbiv[0] * 0.125598086124402 +
+     proygbiv[2] * 0.169856459330144 +
+     proygbiv[3] * 0.305023923444976 +
+     proygbiv[4] * 0.169856459330144 +
+     proygbiv[5] * 0.229665071770335,
+
+     proygbiv[0] * 0.27027027027027 +
+     proygbiv[5] * 0.288288288288288 +
+     proygbiv[6] * 0.228228228228228 +
+     proygbiv[7] * 0.213213213213213]
 }
