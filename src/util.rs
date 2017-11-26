@@ -174,21 +174,72 @@ pub fn proygbiv_to_rgb(proygbiv: [f64; 8]) -> [f64; 3] {
     // I = 400098
     // V = 8e008e
 
-    [proygbiv[0] * 0.207993474714519 +
-     proygbiv[1] * 0.207993474714519 +
-     proygbiv[2] * 0.207993474714519 +
-     proygbiv[3] * 0.207993474714519 +
-     proygbiv[6] * 0.0522022838499184 +
-     proygbiv[7] * 0.115823817292007,
+    [proygbiv[0] * 0.207993474714519 + proygbiv[1] * 0.207993474714519 + proygbiv[2] * 0.207993474714519 + proygbiv[3] * 0.207993474714519 +
+     proygbiv[6] * 0.0522022838499184 + proygbiv[7] * 0.115823817292007,
 
-     proygbiv[0] * 0.125598086124402 +
-     proygbiv[2] * 0.169856459330144 +
-     proygbiv[3] * 0.305023923444976 +
-     proygbiv[4] * 0.169856459330144 +
+     proygbiv[0] * 0.125598086124402 + proygbiv[2] * 0.169856459330144 + proygbiv[3] * 0.305023923444976 + proygbiv[4] * 0.169856459330144 +
      proygbiv[5] * 0.229665071770335,
 
-     proygbiv[0] * 0.27027027027027 +
-     proygbiv[5] * 0.288288288288288 +
-     proygbiv[6] * 0.228228228228228 +
-     proygbiv[7] * 0.213213213213213]
+     proygbiv[0] * 0.27027027027027 + proygbiv[5] * 0.288288288288288 + proygbiv[6] * 0.228228228228228 + proygbiv[7] * 0.213213213213213]
+}
+
+/// Translate a RPPDIBLCTGLLYAODBGB colour point into an RGB colour point according to
+/// [this PNG](https://learntocodewith.me/wp-content/uploads/2016/01/material-palette.png).
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::rppdiblctgllyaodbgb_to_rgb;
+/// assert_eq!(rppdiblctgllyaodbgb_to_rgb(
+///     [0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64,
+///      0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64,
+///      0f64, 0f64, 0f64, 0f64, 0f64]),
+///     [0f64, 0f64, 0f64]);
+/// ```
+pub fn rppdiblctgllyaodbgb_to_rgb(rppdiblctgllyaodbgb: [f64; 19]) -> [f64; 3] {
+    // R = f34634
+    // P = e81b62
+    // P = 9c00b0
+    // D = 6922b7
+    // I = 4544b5
+    // B = 328af4
+    // L = 229ff5
+    // C = 11b8d3
+    // T = 009486
+    // G = 48b14b
+    // L = 86c642
+    // L = c8e028
+    // Y = fcf025
+    // A = fdc500
+    // O = fd9b00
+    // D = fe5a1c
+    // B = 775648
+    // G = 9c9c9c
+    // B = 607a89
+
+    [rppdiblctgllyaodbgb[0] * 0.0901669758812616 + rppdiblctgllyaodbgb[1] * 0.0860853432282004 + rppdiblctgllyaodbgb[2] * 0.0578849721706865 +
+     rppdiblctgllyaodbgb[3] * 0.038961038961039 + rppdiblctgllyaodbgb[4] * 0.0256029684601113 + rppdiblctgllyaodbgb[5] * 0.0185528756957328 +
+     rppdiblctgllyaodbgb[6] * 0.0126159554730983 +
+     rppdiblctgllyaodbgb[7] * 0.00630797773654917 + rppdiblctgllyaodbgb[9] * 0.0267161410018553 + rppdiblctgllyaodbgb[10] * 0.049721706864564 +
+     rppdiblctgllyaodbgb[11] * 0.0742115027829314 +
+     rppdiblctgllyaodbgb[12] * 0.0935064935064935 + rppdiblctgllyaodbgb[13] * 0.0938775510204082 + rppdiblctgllyaodbgb[14] * 0.0938775510204082 +
+     rppdiblctgllyaodbgb[15] * 0.0942486085343228 +
+     rppdiblctgllyaodbgb[16] * 0.0441558441558442 + rppdiblctgllyaodbgb[17] * 0.0578849721706865 + rppdiblctgllyaodbgb[18] * 0.0356215213358071,
+
+     rppdiblctgllyaodbgb[0] * 0.0283057015770319 + rppdiblctgllyaodbgb[1] * 0.0109179134654266 + rppdiblctgllyaodbgb[3] * 0.0137484836231298 +
+     rppdiblctgllyaodbgb[4] * 0.0274969672462596 + rppdiblctgllyaodbgb[5] * 0.0558026688232915 + rppdiblctgllyaodbgb[6] * 0.0642943792964011 +
+     rppdiblctgllyaodbgb[7] * 0.0744035584310554 + rppdiblctgllyaodbgb[8] * 0.0598463404771533 + rppdiblctgllyaodbgb[9] * 0.0715729882733522 +
+     rppdiblctgllyaodbgb[10] * 0.0800646987464618 + rppdiblctgllyaodbgb[11] * 0.0905782450465022 + rppdiblctgllyaodbgb[12] * 0.097048119692681 +
+     rppdiblctgllyaodbgb[13] * 0.0796603315810756 +
+     rppdiblctgllyaodbgb[14] * 0.0626769106348564 + rppdiblctgllyaodbgb[15] * 0.0363930448847554 +
+     rppdiblctgllyaodbgb[16] * 0.0347755762232107 + rppdiblctgllyaodbgb[17] * 0.0630812778002426 + rppdiblctgllyaodbgb[18] * 0.0493327941771128,
+
+     rppdiblctgllyaodbgb[0] * 0.0243559718969555 + rppdiblctgllyaodbgb[1] * 0.0459016393442623 + rppdiblctgllyaodbgb[2] * 0.0824355971896956 +
+     rppdiblctgllyaodbgb[3] * 0.0857142857142857 + rppdiblctgllyaodbgb[4] * 0.0847775175644028 + rppdiblctgllyaodbgb[5] * 0.114285714285714 +
+     rppdiblctgllyaodbgb[6] * 0.114754098360656 +
+     rppdiblctgllyaodbgb[7] * 0.0988290398126464 + rppdiblctgllyaodbgb[8] * 0.0627634660421546 + rppdiblctgllyaodbgb[9] * 0.0351288056206089 +
+     rppdiblctgllyaodbgb[10] * 0.0309133489461358 +
+     rppdiblctgllyaodbgb[11] * 0.0187353629976581 + rppdiblctgllyaodbgb[12] * 0.0173302107728337 + rppdiblctgllyaodbgb[15] * 0.0131147540983607 +
+     rppdiblctgllyaodbgb[16] * 0.0337236533957845 +
+     rppdiblctgllyaodbgb[17] * 0.0730679156908665 + rppdiblctgllyaodbgb[18] * 0.0641686182669789]
 }
