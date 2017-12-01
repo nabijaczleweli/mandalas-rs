@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/rayon_core/lib.rs.html#1-364' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/rayon_core/lib.rs.html#1-390' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p><a href="https://github.com/nikomatsakis/rayon/issues/231">Under construction</a></p>
 
 <h2 id='restricting-multiple-versions' class='section-header'><a href='#restricting-multiple-versions'>Restricting multiple versions</a></h2>
@@ -76,10 +76,17 @@ succeed.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="struct" href="struct.FnContext.html"
+                                  title='struct rayon_core::FnContext'>FnContext</a></td>
+                           <td class='docblock-short'>
+                                <p>Provides the calling context to a closure called by <code>join_context</code>.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="struct" href="struct.Scope.html"
                                   title='struct rayon_core::Scope'>Scope</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Represents a fork-join scope which can be used to spawn any number of tasks. See <a href="fn.scope.html"><code>scope()</code></a> for more information.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -137,6 +144,18 @@ except for in two scenarios:</p>
                            <td class='docblock-short'>
                                 <p>The <code>join</code> function takes two closures and <em>potentially</em> runs them
 in parallel. It returns a pair of the results from those closures.</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.join_context.html"
+                                  title='fn rayon_core::join_context'>join_context</a></td>
+                           <td class='docblock-short'>
+                                <p>The <code>join_context</code> function is identical to <code>join</code>, except the closures
+have a parameter that provides context for the way the closure has been
+called, especially indicating whether they&#39;re executing on a different
+thread than where <code>join_context</code> was called.  This will occur if the second
+job is stolen by a different thread, or if <code>join_context</code> was called from
+outside the thread pool to begin with.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>

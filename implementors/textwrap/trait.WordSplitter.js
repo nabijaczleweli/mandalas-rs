@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["mandalas"] = [];
 implementors["textwrap"] = [];
 
             if (window.register_implementors) {
