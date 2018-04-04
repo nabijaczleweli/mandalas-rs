@@ -10,8 +10,11 @@
     <title>arraydeque - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Crate arraydeque</p><div class="block items"><ul><li><a href="#reexports">Reexports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'arraydeque', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate arraydeque</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'arraydeque', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,68 +62,57 @@
                </span><a class='srclink' href='../src/arraydeque/lib.rs.html#1-2633' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>A circular buffer with fixed capacity.
 Requires Rust 1.15+</p>
-
 <p>It can be stored directly on the stack if needed.</p>
-
 <p>This queue has <code>O(1)</code> amortized inserts and removals from both ends of the
 container. It also has <code>O(1)</code> indexing like a vector. The contained elements
 are not required to be copyable</p>
-
-<p>This crate is inspired by <a href="https://github.com/bluss/arrayvec"><strong>bluss/arrayvec</strong></a></p>
-
-<h1 id='feature-flags' class='section-header'><a href='#feature-flags'>Feature Flags</a></h1>
+<p>This crate is inspired by [<strong>bluss/arrayvec</strong>]
+[<strong>bluss/arrayvec</strong>]: https://github.com/bluss/arrayvec</p>
+<h1 id="feature-flags" class="section-header"><a href="#feature-flags">Feature Flags</a></h1>
 <p>The <strong>arraydeque</strong> crate has the following cargo feature flags:</p>
-
 <ul>
-<li><p><code>std</code></p>
-
+<li><code>std</code>
 <ul>
 <li>Optional, enabled by default</li>
 <li>Use libstd</li>
-</ul></li>
-<li><p><code>use_union</code></p>
-
+</ul>
+</li>
+<li><code>use_union</code>
 <ul>
 <li>Optional</li>
 <li>Requires Rust nightly channel</li>
 <li>Use the unstable feature untagged unions for the internal implementation,
 which has reduced space overhead</li>
-</ul></li>
-<li><p><code>use_generic_array</code></p>
-
+</ul>
+</li>
+<li><code>use_generic_array</code>
 <ul>
 <li>Optional</li>
 <li>Requires Rust stable channel</li>
 <li>Depend on generic-array and allow using it just like a fixed
 size array for ArrayDeque storage.</li>
-</ul></li>
 </ul>
-
-<h1 id='usage' class='section-header'><a href='#usage'>Usage</a></h1>
+</li>
+</ul>
+<h1 id="usage" class="section-header"><a href="#usage">Usage</a></h1>
 <p>First, add the following to your <code>Cargo.toml</code>:</p>
-
 <pre><code class="language-toml">[dependencies]
 arraydeque = &quot;0.2&quot;
 </code></pre>
-
 <p>Next, add this to your crate root:</p>
 
 <pre class="rust rust-example-rendered">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">arraydeque</span>;</pre>
-
 <p>Currently arraydeque by default links to the standard library, but if you would
 instead like to use arraydeque in a <code>#![no_std]</code> situation or crate you can
 request this via:</p>
-
 <pre><code class="language-toml">[dependencies]
 arraydeque = { version = &quot;0.2&quot;, default-features = false }
 </code></pre>
-
-<h1 id='capacity' class='section-header'><a href='#capacity'>Capacity</a></h1>
+<h1 id="capacity" class="section-header"><a href="#capacity">Capacity</a></h1>
 <p>Note that the <code>capacity()</code> is always <code>backed_array.len() - 1</code>.
 <a href="https://en.wikipedia.org/wiki/Circular_buffer">Read more</a></p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
 <pre class="rust rust-example-rendered">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">arraydeque</span>;
 
@@ -131,8 +131,7 @@ arraydeque = { version = &quot;0.2&quot;, default-features = false }
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vector</span>.<span class="ident">pop_front</span>(), <span class="prelude-val">Some</span>(<span class="number">2</span>));
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vector</span>.<span class="ident">pop_front</span>(), <span class="prelude-val">None</span>);
 }</pre>
-
-<h1 id='insert--remove' class='section-header'><a href='#insert--remove'>Insert &amp; Remove</a></h1>
+<h1 id="insert--remove" class="section-header"><a href="#insert--remove">Insert &amp; Remove</a></h1>
 <pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">arraydeque</span>::<span class="ident">ArrayDeque</span>;
 
@@ -145,8 +144,7 @@ arraydeque = { version = &quot;0.2&quot;, default-features = false }
 
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vector</span>[<span class="number">0</span>], <span class="number">12</span>);
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vector</span>[<span class="number">1</span>], <span class="number">13</span>);</pre>
-
-<h1 id='append--extend' class='section-header'><a href='#append--extend'>Append &amp; Extend</a></h1>
+<h1 id="append--extend" class="section-header"><a href="#append--extend">Append &amp; Extend</a></h1>
 <pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">arraydeque</span>::<span class="ident">ArrayDeque</span>;
 
@@ -163,8 +161,7 @@ arraydeque = { version = &quot;0.2&quot;, default-features = false }
 
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">vector</span>), <span class="string">&quot;[0, 1, 2, 3, 4, 5, 6]&quot;</span>);
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">vector2</span>), <span class="string">&quot;[]&quot;</span>);</pre>
-
-<h1 id='iterator' class='section-header'><a href='#iterator'>Iterator</a></h1>
+<h1 id="iterator" class="section-header"><a href="#iterator">Iterator</a></h1>
 <pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">arraydeque</span>::<span class="ident">ArrayDeque</span>;
 
@@ -174,8 +171,7 @@ arraydeque = { version = &quot;0.2&quot;, default-features = false }
 
 <span class="kw">let</span> <span class="ident">iters</span>: <span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="ident">vector</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">iters</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);</pre>
-
-<h1 id='from-iterator' class='section-header'><a href='#from-iterator'>From Iterator</a></h1>
+<h1 id="from-iterator" class="section-header"><a href="#from-iterator">From Iterator</a></h1>
 <pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">arraydeque</span>::<span class="ident">ArrayDeque</span>;
 
@@ -187,8 +183,7 @@ arraydeque = { version = &quot;0.2&quot;, default-features = false }
 <span class="ident">vector2</span> <span class="op">=</span> (<span class="number">0</span>..<span class="number">5</span>).<span class="ident">into_iter</span>().<span class="ident">collect</span>();
 
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vector</span>, <span class="ident">vector2</span>);</pre>
-
-<h1 id='generic-array' class='section-header'><a href='#generic-array'>Generic Array</a></h1>
+<h1 id="generic-array" class="section-header"><a href="#generic-array">Generic Array</a></h1>
 <pre><code class="language-toml">[dependencies]
 generic-array = &quot;0.5.1&quot;
 
@@ -219,7 +214,7 @@ features = [&quot;use_generic_array&quot;]
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vec</span>.<span class="ident">into_iter</span>().<span class="ident">take</span>(<span class="number">5</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span>(), <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]);
 }
 </pre>
-</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
 <table><tr><td><code>pub use array::<a class="trait" href="../arraydeque/array/trait.Array.html" title="trait arraydeque::array::Array">Array</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -235,6 +230,7 @@ features = [&quot;use_generic_array&quot;]
                                   title='struct arraydeque::ArrayDeque'>ArrayDeque</a></td>
                            <td class='docblock-short'>
                                 <p>A fixed capacity ring buffer.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -242,6 +238,7 @@ features = [&quot;use_generic_array&quot;]
                                   title='struct arraydeque::Drain'>Drain</a></td>
                            <td class='docblock-short'>
                                 <p>Draining <code>ArrayDeque</code> iterator</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -249,6 +246,7 @@ features = [&quot;use_generic_array&quot;]
                                   title='struct arraydeque::IntoIter'>IntoIter</a></td>
                            <td class='docblock-short'>
                                 <p>By-value <code>ArrayDeque</code> iterator</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -256,6 +254,7 @@ features = [&quot;use_generic_array&quot;]
                                   title='struct arraydeque::Iter'>Iter</a></td>
                            <td class='docblock-short'>
                                 <p><code>ArrayDeque</code> iterator</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -263,6 +262,7 @@ features = [&quot;use_generic_array&quot;]
                                   title='struct arraydeque::IterMut'>IterMut</a></td>
                            <td class='docblock-short'>
                                 <p><code>ArrayDeque</code> mutable iterator</p>
+
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
@@ -270,8 +270,9 @@ features = [&quot;use_generic_array&quot;]
                            <td><a class="trait" href="trait.RangeArgument.html"
                                   title='trait arraydeque::RangeArgument'>RangeArgument</a></td>
                            <td class='docblock-short'>
-                                <p><strong>IndexRange</strong> is implemented by Rust&#39;s built-in range types, produced
+                                <p><strong>IndexRange</strong> is implemented by Rust's built-in range types, produced
 by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <code>c..d</code>.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -286,18 +287,22 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

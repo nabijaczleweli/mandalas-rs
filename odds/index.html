@@ -10,8 +10,11 @@
     <title>odds - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Crate odds</p><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'odds', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate odds</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'odds', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -50,30 +61,27 @@
                    </a>
                </span><a class='srclink' href='../src/odds/lib.rs.html#1-197' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Odds and ends — collection miscellania.</p>
-
 <ul>
 <li>Utilities for debug-checked, release-unchecked indexing and slicing</li>
 <li>Fixpoint combinator for closures</li>
 <li>String and Vec extensions</li>
 </ul>
-
 <p>The <strong>odds</strong> crate has the following crate feature flags:</p>
-
 <ul>
 <li><code>std</code>
-
 <ul>
 <li>Default</li>
 <li>Requires Rust 1.6 <em>to opt out of</em></li>
 <li>Use libstd and std features.</li>
-</ul></li>
+</ul>
+</li>
 <li><code>unstable</code>.
-
 <ul>
 <li>Optional.</li>
 <li>Requires nightly channel.</li>
 <li>Implement the closure traits for <strong>Fix</strong>.</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
@@ -82,6 +90,7 @@
                                   title='mod odds::char'>char</a></td>
                            <td class='docblock-short'>
                                 <p>Extra functions for <code>char</code></p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -89,6 +98,7 @@
                                   title='mod odds::prelude'>prelude</a></td>
                            <td class='docblock-short'>
                                 <p>prelude of often used traits and functions</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -96,6 +106,7 @@
                                   title='mod odds::slice'>slice</a></td>
                            <td class='docblock-short'>
                                 <p>Extra functions for slices</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -103,6 +114,7 @@
                                   title='mod odds::stride'>stride</a></td>
                            <td class='docblock-short'>
                                 <p>Slice iterator with custom step size</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -110,6 +122,7 @@
                                   title='mod odds::string'>string</a></td>
                            <td class='docblock-short'>
                                 <p>Extensions to <code>&amp;str</code> and <code>String</code></p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -117,6 +130,7 @@
                                   title='mod odds::vec'>vec</a></td>
                            <td class='docblock-short'>
                                 <p>Extensions to <code>Vec</code></p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -125,6 +139,7 @@
                                   title='struct odds::Fix'>Fix</a></td>
                            <td class='docblock-short'>
                                 <p>Fixpoint combinator for rust closures, generalized over the return type.</p>
+
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
@@ -132,8 +147,9 @@
                            <td><a class="trait" href="trait.IndexRange.html"
                                   title='trait odds::IndexRange'>IndexRange</a></td>
                            <td class='docblock-short'>
-                                <p><strong>IndexRange</strong> is implemented by Rust&#39;s built-in range types, produced
+                                <p><strong>IndexRange</strong> is implemented by Rust's built-in range types, produced
 by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <code>c..d</code>.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -142,6 +158,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                                   title='fn odds::debug_assert_unreachable'>debug_assert_unreachable</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Act as <code>debug_assert!</code> in debug mode, asserting that this point is not reached.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -149,6 +166,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                                   title='fn odds::fix'>fix</a></td>
                            <td class='docblock-short'>
                                 <p>Fixpoint combinator for rust closures, generalized over the return type.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -156,6 +174,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                                   title='fn odds::get_unchecked'>get_unchecked</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Use <code>debug_assert!</code> to check indexing in debug mode. In release mode, no checks are done.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -163,6 +182,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                                   title='fn odds::get_unchecked_mut'>get_unchecked_mut</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Use <code>debug_assert!</code> to check indexing in debug mode. In release mode, no checks are done.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -170,6 +190,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                                   title='fn odds::ptr_eq'>ptr_eq</a></td>
                            <td class='docblock-short'>
                                 <p>Compare if <strong>a</strong> and <strong>b</strong> are equal pointers.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -177,6 +198,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                                   title='fn odds::raw_byte_repr'>raw_byte_repr</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Safe to use with any wholly initialized memory <code>ptr</code></p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -184,6 +206,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                                   title='fn odds::ref_eq'>ref_eq</a></td>
                            <td class='docblock-short'>
                                 <p>Compare if <strong>a</strong> and <strong>b</strong> are equal <em>as pointers</em>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -191,6 +214,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                                   title='fn odds::ref_slice'>ref_slice</a></td>
                            <td class='docblock-short'>
                                 <p>Create a length 1 slice out of a reference</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -198,6 +222,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                                   title='fn odds::ref_slice_mut'>ref_slice_mut</a></td>
                            <td class='docblock-short'>
                                 <p>Create a length 1 mutable slice out of a reference</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -206,6 +231,7 @@ by range syntax like <code>..</code>, <code>a..</code>, <code>..b</code> or <cod
                            <td class='docblock-short'>
                                 <p>Check slicing bounds in debug mode, otherwise just act as an unchecked
 slice call.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -214,6 +240,7 @@ slice call.</p>
                            <td class='docblock-short'>
                                 <p>Check slicing bounds in debug mode, otherwise just act as an unchecked
 slice call.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -228,18 +255,22 @@ slice call.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

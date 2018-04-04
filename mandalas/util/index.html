@@ -10,8 +10,11 @@
     <title>mandalas::util - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Module util</p><div class="block items"><ul><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>mandalas</a></p><script>window.sidebarCurrent = {name: 'util', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module util</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>mandalas</a></p><script>window.sidebarCurrent = {name: 'util', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -57,6 +68,7 @@
                                   title='fn mandalas::util::cmyk_to_rgb'>cmyk_to_rgb</a></td>
                            <td class='docblock-short'>
                                 <p>Translate a CMYK colour point into an RGB colour point.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -64,6 +76,7 @@
                                   title='fn mandalas::util::distance'>distance</a></td>
                            <td class='docblock-short'>
                                 <p>Calculate the distance between two specified 3-dimensional points.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -71,6 +84,7 @@
                                   title='fn mandalas::util::hsl_to_rgb'>hsl_to_rgb</a></td>
                            <td class='docblock-short'>
                                 <p>Translate an HSL colour point into an RGB colour point.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -78,6 +92,7 @@
                                   title='fn mandalas::util::proygbiv_to_rgb'>proygbiv_to_rgb</a></td>
                            <td class='docblock-short'>
                                 <p>Translate a PROYGBIV colour point into an RGB colour point according to sampling the svg on wikipedia.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -85,6 +100,7 @@
                                   title='fn mandalas::util::rgb_to_sepia'>rgb_to_sepia</a></td>
                            <td class='docblock-short'>
                                 <p>Translate an RGB colour point into a Sepia tone.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -92,6 +108,7 @@
                                   title='fn mandalas::util::roygbp_to_rgb'>roygbp_to_rgb</a></td>
                            <td class='docblock-short'>
                                 <p>Translate a ROYGBP colour point into an RGB colour point according to sampling the svg on wikipedia.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -100,13 +117,15 @@
                            <td class='docblock-short'>
                                 <p>Translate a RPPDIBLCTGLLYAODBGB colour point into an RGB colour point according to
 <a href="https://learntocodewith.me/wp-content/uploads/2016/01/material-palette.png">this PNG</a>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.separated_number.html"
                                   title='fn mandalas::util::separated_number'>separated_number</a></td>
                            <td class='docblock-short'>
-                                <p>Convert the specified number to a string in the form &quot;1&#39;234&#39;567&quot;</p>
+                                <p>Convert the specified number to a string in the form &quot;1'234'567&quot;</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -115,6 +134,7 @@
                            <td class='docblock-short'>
                                 <p>Translate a YUV colour point (translated to 0–1 as opposed to -0.5–0.5)
 into an RGB colour point according to the BT.709 recommendation.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -129,18 +149,22 @@ into an RGB colour point according to the BT.709 recommendation.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

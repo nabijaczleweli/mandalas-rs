@@ -10,8 +10,11 @@
     <title>mandalas::ops - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Module ops</p><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>mandalas</a></p><script>window.sidebarCurrent = {name: 'ops', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module ops</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>mandalas</a></p><script>window.sidebarCurrent = {name: 'ops', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -50,8 +61,7 @@
                    </a>
                </span><a class='srclink' href='../../src/mandalas/ops/mod.rs.html#1-84' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Main functions doing actual work.</p>
-
-<h1 id='the-tonči-juričev-grgin-mandala-generation-method' class='section-header'><a href='#the-tonči-juričev-grgin-mandala-generation-method'>The Tonči Juričev-Grgin mandala generation method</a></h1>
+<h1 id="the-tonči-juričev-grgin-mandala-generation-method" class="section-header"><a href="#the-tonči-juričev-grgin-mandala-generation-method">The Tonči Juričev-Grgin mandala generation method</a></h1>
 <p>First, choose a corner.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -60,6 +70,7 @@
                                   title='struct mandalas::ops::GenerationContext'>GenerationContext</a></td>
                            <td class='docblock-short'>
                                 <p>A generator for mandala points for a canvas of a given size.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -68,6 +79,7 @@
                                   title='fn mandalas::ops::filename_to_save'>filename_to_save</a></td>
                            <td class='docblock-short'>
                                 <p>Generate a filename to save the mandala in.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -75,6 +87,7 @@
                                   title='fn mandalas::ops::init_image'>init_image</a></td>
                            <td class='docblock-short'>
                                 <p>Initialise the mandala canvas from the given size.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -82,6 +95,7 @@
                                   title='fn mandalas::ops::points_to_generate'>points_to_generate</a></td>
                            <td class='docblock-short'>
                                 <p>Check how many points need generating to acquire a smooth image for the given size.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -89,6 +103,7 @@
                                   title='fn mandalas::ops::save'>save</a></td>
                            <td class='docblock-short'>
                                 <p>Save the mandala to the specified file</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -103,18 +118,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

@@ -4,14 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/quickersort-3.0.0/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/quickersort-3.0.1/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -28,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -56,9 +67,127 @@
 <span id="11">11</span>
 <span id="12">12</span>
 <span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
 </pre><pre class="rust ">
 <span class="comment">// (C) 2015 Viktor Dahl &lt;pazaconyoman@gmail.com&gt;</span>
 <span class="comment">// This file is licensed under the same terms as Rust itself.</span>
+<span class="doccomment">//! This crate implements the [introsort] sorting algorithm.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [introsort]: https://en.wikipedia.org/wiki/Introsort</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Interface ##</span>
+<span class="doccomment">//! The interface is similar to the standard library `sort` and `sort_by`</span>
+<span class="doccomment">//! functions.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! An example:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! extern crate quickersort;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!     let mut ss = vec![&quot;Introsort&quot;, &quot;or&quot;, &quot;introspective&quot;, &quot;sort&quot;, &quot;is&quot;,</span>
+<span class="doccomment">//!                       &quot;a&quot;, &quot;hybrid&quot;, &quot;sorting&quot;, &quot;algorithm&quot;, &quot;that&quot;,</span>
+<span class="doccomment">//!                       &quot;provides&quot;, &quot;both&quot;, &quot;fast&quot;, &quot;average&quot;,</span>
+<span class="doccomment">//!                       &quot;performance&quot;, &quot;and&quot;, &quot;(asymptotically)&quot;, &quot;optimal&quot;,</span>
+<span class="doccomment">//!                       &quot;worst-case&quot;, &quot;performance&quot;];</span>
+<span class="doccomment">//!     quickersort::sort(&amp;mut ss[..]);</span>
+<span class="doccomment">//!     println!(&quot;alphabetically&quot;);</span>
+<span class="doccomment">//!     for s in ss.iter() { println!(&quot;\t{}&quot;, s); }</span>
+<span class="doccomment">//!     quickersort::sort_by(&amp;mut ss[..], &amp;|a, b| a.len().cmp(&amp;b.len()));</span>
+<span class="doccomment">//!     println!(&quot;\nby length&quot;);</span>
+<span class="doccomment">//!     for s in ss.iter() { println!(&quot;\t{}&quot;, s); }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Unlike the standard library sort function, introsort is _not_ a stable sort.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Details ##</span>
+<span class="doccomment">//! At its heart, it is a dual-pivot quicksort. For partition with many equal</span>
+<span class="doccomment">//! elements, it will instead use a single-pivot quicksort optimized for this</span>
+<span class="doccomment">//! case. It detects excessive recursion during quicksort and switches to</span>
+<span class="doccomment">//! heapsort if need be, guaranteeing O(n log(n)) runtime on all inputs. For</span>
+<span class="doccomment">//! small partitions it uses insertion sort instead of quicksort.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Unlike the `std` sort, it does not allocate.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Performance ##</span>
+<span class="doccomment">//! It is quite fast, outperforming the standard sort on all data sets I have</span>
+<span class="doccomment">//! tried. The performance difference varies depending on the characteristics of</span>
+<span class="doccomment">//! the data. On large, completely random arrays, introsort is only 5-10% faster</span>
+<span class="doccomment">//! than the standard sort. However, introsort&#39;s performance is greatly improved</span>
+<span class="doccomment">//! if the data has few unique values or is (partially) sorted (including</span>
+<span class="doccomment">//! reversed data). For sorted data, introsort is ~4-5 times faster, and for</span>
+<span class="doccomment">//! data with few unique values it can be more than</span>
+<span class="doccomment">//! 20 times faster.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Floating point ##</span>
+<span class="doccomment">//! The crate, if built with the &quot;float&quot; feature (which is the default), also</span>
+<span class="doccomment">//! includes a `sort_floats` function. Floating point numbers are not `Ord`,</span>
+<span class="doccomment">//! only `PartialOrd`, so `sort` can not be used on them. The ordering used by</span>
+<span class="doccomment">//! `sort_floats` is</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ``` | -inf | &lt; 0 | -0 | +0 | &gt; 0 | +inf | NaN | ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! `sort_floats` is much more efficient than passing a comparator function</span>
+<span class="doccomment">//! implementing this ordering to `sort_by`.</span>
 
 <span class="attribute">#![<span class="ident">no_std</span>]</span>
 
@@ -84,18 +213,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
