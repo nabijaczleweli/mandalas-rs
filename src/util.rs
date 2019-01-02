@@ -2,6 +2,7 @@
 
 
 use itertools::Itertools;
+use std::u8;
 
 
 /// Calculate the distance between two specified 3-dimensional points.
@@ -10,6 +11,7 @@ pub fn distance(from: (usize, usize, usize), to: (usize, usize, usize)) -> f64 {
     let y = (from.1 as isize) - (to.1 as isize);
     let z = (from.2 as isize) - (to.2 as isize);
     ((x * x + y * y + z * z) as f64).sqrt()
+    // (x as f64 / y as f64).powi(z as i32)
 }
 
 /// Convert the specified number to a string in the form "1'234'567"
@@ -242,4 +244,24 @@ pub fn rppdiblctgllyaodbgb_to_rgb(rppdiblctgllyaodbgb: [f64; 19]) -> [f64; 3] {
      rppdiblctgllyaodbgb[11] * 0.0187353629976581 + rppdiblctgllyaodbgb[12] * 0.0173302107728337 + rppdiblctgllyaodbgb[15] * 0.0131147540983607 +
      rppdiblctgllyaodbgb[16] * 0.0337236533957845 +
      rppdiblctgllyaodbgb[17] * 0.0730679156908665 + rppdiblctgllyaodbgb[18] * 0.0641686182669789]
+}
+
+/// Translate a PRGB1555 colour point into an RGB colour point.
+///
+/// The P bit is the lowest bit.
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::prgb1555_to_rgb;
+/// assert_eq!(prgb1555_to_rgb([1f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);
+/// ```
+pub fn prgb1555_to_rgb(prgb1555: [f64; 4]) -> [f64; 3] {
+    const MAX_COLOUR: f64 = u8::MAX as f64;
+
+    let p_mask = ((prgb1555[0] * MAX_COLOUR) as u8 & 1) << 7;
+
+    [((((prgb1555[1] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR,
+     ((((prgb1555[2] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR,
+     ((((prgb1555[3] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR]
 }
