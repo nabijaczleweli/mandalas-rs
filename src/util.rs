@@ -254,12 +254,32 @@ pub fn rppdiblctgllyaodbgb_to_rgb(rppdiblctgllyaodbgb: [f64; 19]) -> [f64; 3] {
 ///
 /// ```
 /// # use mandalas::util::prgb1555_to_rgb;
-/// assert_eq!(prgb1555_to_rgb([1f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);
+/// assert_eq!(prgb1555_to_rgb([0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);
 /// ```
 pub fn prgb1555_to_rgb(prgb1555: [f64; 4]) -> [f64; 3] {
     const MAX_COLOUR: f64 = u8::MAX as f64;
 
     let p_mask = ((prgb1555[0] * MAX_COLOUR) as u8 & 1) << 7;
+
+    [((((prgb1555[1] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR,
+     ((((prgb1555[2] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR,
+     ((((prgb1555[3] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR]
+}
+
+/// Translate a PRGB1555 colour point into an RGB colour point.
+///
+/// The P bit is equal to bitcount(P) >= 6.
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::prgb1555_least6_to_rgb;
+/// assert_eq!(prgb1555_least6_to_rgb([0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);
+/// ```
+pub fn prgb1555_least6_to_rgb(prgb1555: [f64; 4]) -> [f64; 3] {
+    const MAX_COLOUR: f64 = u8::MAX as f64;
+
+    let p_mask = ((((prgb1555[0] * MAX_COLOUR) as u8).count_ones() >= 6) as u8) << 7;
 
     [((((prgb1555[1] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR,
      ((((prgb1555[2] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR,
