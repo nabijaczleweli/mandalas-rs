@@ -23,7 +23,7 @@ particularly optimized implementation: if you <strong>actually</strong> want to
 sort for real, you should prefer <a href="../rayon/slice/trait.ParallelSliceMut.html#method.par_sort">the <code>par_sort</code> method</a> offered
 by Rayon).</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">5</span>, <span class="number">1</span>, <span class="number">8</span>, <span class="number">22</span>, <span class="number">0</span>, <span class="number">44</span>];
 <span class="ident">quick_sort</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">v</span>);
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">22</span>, <span class="number">44</span>]);
@@ -52,7 +52,7 @@ by Rayon).</p>
     }
     <span class="ident">v</span>.<span class="ident">swap</span>(<span class="ident">i</span>, <span class="ident">pivot</span>);
     <span class="ident">i</span>
-}</pre>
+}</pre></div>
 <h1 id="warning-about-blocking-io" class="section-header"><a href="#warning-about-blocking-io">Warning about blocking I/O</a></h1>
 <p>The assumption is that the closures given to <code>join()</code> are
 CPU-bound tasks that do not perform I/O or other blocking

@@ -8,7 +8,7 @@ tested on MacOS, Linux and Windows</p>
 <li>simple example</li>
 </ol>
 
-<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pbr</span>;
 
 <span class="kw">use</span> <span class="ident">pbr</span>::<span class="ident">ProgressBar</span>;
@@ -23,12 +23,12 @@ tested on MacOS, Linux and Windows</p>
         <span class="ident">thread</span>::<span class="ident">sleep_ms</span>(<span class="number">200</span>);
     }
     <span class="ident">pb</span>.<span class="ident">finish_print</span>(<span class="string">&quot;done&quot;</span>);
-}</pre>
+}</pre></div>
 <ol start="2">
 <li>MultiBar example. see full example <a href="https://github.com/a8m/pb/blob/master/examples/multi.rs">here</a></li>
 </ol>
 
-<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pbr</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">thread</span>;
@@ -66,12 +66,12 @@ tested on MacOS, Linux and Windows</p>
     <span class="comment">// this is a blocking operation, until all bars will finish.</span>
     <span class="comment">// to ignore blocking, you can run it in a different thread.</span>
     <span class="ident">mb</span>.<span class="ident">listen</span>();
-}</pre>
+}</pre></div>
 <ol start="3">
 <li>Broadcast writing(simple file copying)</li>
 </ol>
 
-<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore">
 <span class="attribute">#![<span class="ident">feature</span>(<span class="ident">io</span>)]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pbr</span>;
 
@@ -88,42 +88,7 @@ tested on MacOS, Linux and Windows</p>
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">handle</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="string">&quot;copy-words&quot;</span>).<span class="ident">unwrap</span>().<span class="ident">broadcast</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">pb</span>);
     <span class="ident">copy</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">file</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">handle</span>).<span class="ident">unwrap</span>();
     <span class="ident">pb</span>.<span class="ident">finish_print</span>(<span class="string">&quot;done&quot;</span>);
-}</pre>
+}</pre></div>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.MultiBar.html"
-                                  title='struct pbr::MultiBar'>MultiBar</a></td>
-                           <td class='docblock-short'>
-                                
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.PbIter.html"
-                                  title='struct pbr::PbIter'>PbIter</a></td>
-                           <td class='docblock-short'>
-                                
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Pipe.html"
-                                  title='struct pbr::Pipe'>Pipe</a></td>
-                           <td class='docblock-short'>
-                                
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ProgressBar.html"
-                                  title='struct pbr::ProgressBar'>ProgressBar</a></td>
-                           <td class='docblock-short'>
-                                
-                           </td>
-                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="enum" href="enum.Units.html"
-                                  title='enum pbr::Units'>Units</a></td>
-                           <td class='docblock-short'>
-                                
-                           </td>
-                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "pbr";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
+<table><tr class='module-item'><td><a class="struct" href="struct.MultiBar.html" title='pbr::MultiBar struct'>MultiBar</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="struct" href="struct.PbIter.html" title='pbr::PbIter struct'>PbIter</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="struct" href="struct.Pipe.html" title='pbr::Pipe struct'>Pipe</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="struct" href="struct.ProgressBar.html" title='pbr::ProgressBar struct'>ProgressBar</a></td><td class='docblock-short'></td></tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table><tr class='module-item'><td><a class="enum" href="enum.Units.html" title='pbr::Units enum'>Units</a></td><td class='docblock-short'></td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "pbr";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
