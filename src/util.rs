@@ -5,6 +5,12 @@ use itertools::Itertools;
 use std::u8;
 
 
+pub static FLAG_ACE: &[[f64; 3]] = &[[0f64, 0f64, 0f64],
+                                     [(0xA3 as f64) / (0xFF as f64), (0xA3 as f64) / (0xFF as f64), (0xA3 as f64) / (0xFF as f64)],
+                                     [1f64, 1f64, 1f64],
+                                     [(0x80 as f64) / (0xFF as f64), 0f64, (0x80 as f64) / (0xFF as f64)]];
+
+
 /// Calculate the distance between two specified 3-dimensional points.
 pub fn distance(from: (usize, usize, usize), to: (usize, usize, usize)) -> f64 {
     let x = (from.0 as isize) - (to.0 as isize);
@@ -284,4 +290,21 @@ pub fn prgb1555_least6_to_rgb(prgb1555: [f64; 4]) -> [f64; 3] {
     [((((prgb1555[1] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR,
      ((((prgb1555[2] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR,
      ((((prgb1555[3] * MAX_COLOUR) as u8 >> 3) << 2) | p_mask) as f64 / MAX_COLOUR]
+}
+
+/// Translate a colour point and alpha into an RGB colour point from the specified flag colourset.
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::{FLAG_ACE, flag_hard_alpha_to_rgb};
+/// assert_eq!(flag_hard_alpha_to_rgb(FLAG_ACE, [0f64, 1f64]), FLAG_ACE[0]);
+/// assert_eq!(flag_hard_alpha_to_rgb(FLAG_ACE, [0.2 , 1f64]), FLAG_ACE[0]);
+/// assert_eq!(flag_hard_alpha_to_rgb(FLAG_ACE, [0.4 , 1f64]), FLAG_ACE[1]);
+/// assert_eq!(flag_hard_alpha_to_rgb(FLAG_ACE, [0.4 , 0.5 ]), [FLAG_ACE[1][0] * 0.5, FLAG_ACE[1][1] * 0.5, FLAG_ACE[1][2] * 0.5]);
+/// ```
+pub fn flag_hard_alpha_to_rgb(flag: &[[f64; 3]], id_alpha: [f64; 2]) -> [f64; 3] {
+    let colour = flag[(id_alpha[0] / (1f64 / (flag.len() as f64))).floor().min((flag.len() - 1) as f64) as usize];
+
+    [colour[0] * id_alpha[1], colour[1] * id_alpha[1], colour[2] * id_alpha[1]]
 }
