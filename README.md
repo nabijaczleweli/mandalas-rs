@@ -2,3 +2,9 @@
 A mandala generator using Tonči Juričev-Grgin's method.
 
 ## [Docs](https://rawcdn.githack.com/nabijaczleweli/mandalas-rs/doc/mandalas/index.html)
+
+## Special thanks
+
+To all who support further development on Patreon, in particular:
+
+  * ThePhD
