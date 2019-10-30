@@ -9,9 +9,8 @@ mod gen_ctx;
 
 pub use self::gen_ctx::GenerationContext;
 
-use std::fs::File;
 use std::path::Path;
-use image::{DynamicImage, ImageFormat};
+use image::DynamicImage;
 
 
 /// Initialise the mandala canvas from the given size.
@@ -80,5 +79,5 @@ pub fn filename_to_save(size: (usize, usize, usize), z: usize) -> String {
 /// }
 /// ```
 pub fn save(image: &DynamicImage, outdir: &Path, fname: &str) {
-    image.save(&mut File::create(outdir.join(fname)).unwrap(), ImageFormat::PNG).unwrap();
+    image.save(&mut outdir.join(fname)).unwrap();
 }

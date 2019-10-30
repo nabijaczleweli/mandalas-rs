@@ -1,6 +1,8 @@
-use rand::distributions::{Sample, Range};
+use self::super::super::util::distance;
 use fixed_vec_deque::FixedVecDeque;
-use rand::StdRng;
+use rand::seq::SliceRandom;
+use rand::rngs::StdRng;
+use rand::SeedableRng;
 use quickersort;
 use std::f64;
 use std::u8;
@@ -10,7 +12,7 @@ use std::u8;
 pub struct GenerationContext {
     past_positions: FixedVecDeque<[(usize, usize, usize); 5 + 1]>,
     generator: StdRng,
-    corners: (Range<usize>, Vec<(usize, usize, usize)>),
+    corners: [(usize, usize, usize); 8],
     dist_div: f64,
 }
 
@@ -26,16 +28,15 @@ impl GenerationContext {
 
         GenerationContext {
             past_positions: past,
-            generator: StdRng::new().unwrap(),
-            corners: (Range::new(0, 8),
-                      vec![(0, 0, 0),
-                           (mandala_size.0, 0, 0),
-                           (0, mandala_size.1, 0),
-                           (mandala_size.0, mandala_size.1, 0),
-                           (0, 0, mandala_size.2),
-                           (mandala_size.0, 0, mandala_size.2),
-                           (0, mandala_size.1, mandala_size.2),
-                           (mandala_size.0, mandala_size.1, mandala_size.2)]),
+            generator: StdRng::from_entropy(),
+            corners: [(0, 0, 0),
+                      (mandala_size.0, 0, 0),
+                      (0, mandala_size.1, 0),
+                      (mandala_size.0, mandala_size.1, 0),
+                      (0, 0, mandala_size.2),
+                      (mandala_size.0, 0, mandala_size.2),
+                      (0, mandala_size.1, mandala_size.2),
+                      (mandala_size.0, mandala_size.1, mandala_size.2)],
             dist_div: 2f64,
         }
     }
@@ -47,7 +48,7 @@ impl GenerationContext {
         static MAX_COLOUR: f64 = u8::MAX as f64;
 
         let &(prev_x, prev_y, prev_z) = self.past_positions.back().unwrap();
-        let (to_x, to_y, to_z) = self.corners.1[self.corners.0.sample(&mut self.generator)];
+        let &(to_x, to_y, to_z) = self.corners.choose(&mut self.generator).unwrap();
 
         let x = (prev_x as f64 - ((prev_x as f64 - to_x as f64) / self.dist_div)) as usize;
         let y = (prev_y as f64 - ((prev_y as f64 - to_y as f64) / self.dist_div)) as usize;

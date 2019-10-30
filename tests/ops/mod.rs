@@ -1,7 +1,7 @@
 mod points_to_generate;
 mod init_image;
 
-use image::{self, GenericImage, DynamicImage, ColorType};
+use image::{self, GenericImageView, DynamicImage, ColorType};
 use std::env::temp_dir;
 use mandalas::ops;
 use std::fs;

@@ -1,12 +1,18 @@
 extern crate mandalas;
+extern crate image;
 extern crate rand;
 extern crate pbr;
 
 use std::io::{Write, stdout};
 use std::process::exit;
 use std::path::PathBuf;
+use image::RgbImage;
 use std::sync::mpsc;
 use std::thread;
+
+
+struct ImageContainer(*mut RgbImage);
+unsafe impl Send for ImageContainer {}
 
 
 fn main() {
@@ -23,14 +29,26 @@ fn actual_main() -> Result<(), i32> {
     stdout().flush().unwrap();
     let mut imgs = mandalas::ops::init_image(opts.resolution);
     println!(" Done");
+    println!();
 
     let pts = mandalas::ops::points_to_generate(opts.resolution);
 
+    let mut progress = pbr::MultiBar::new();
+    progress.println(&format!("{}x{}x{} mandala", opts.resolution.0, opts.resolution.1, opts.resolution.2));
+
     let rx = {
         let pts = pts / opts.threads;
-        let (tx, rx) = mpsc::sync_channel(100);
+        let (tx, rx) = mpsc::sync_channel(10);
+
+        progress.println(&format!("Generation threads: {}; granularity: {} points",
+                                  opts.threads,
+                                  mandalas::util::separated_number(pts / 100)));
 
         for _ in 0..opts.threads {
+            let mut pb = progress.create_bar(100);
+            pb.show_speed = false;
+            pb.show_tick = false;
+
             let tx = tx.clone();
             let res = opts.resolution;
             thread::spawn(move || {
@@ -42,40 +60,47 @@ fn actual_main() -> Result<(), i32> {
                         *p = gen.gen();
                     }
                     tx.send(points).unwrap();
+                    pb.inc();
                 }
+
+                pb.finish();
             });
         }
 
         rx
     };
 
-    let mut pb = pbr::ProgressBar::new(pts / 1000000);
-    pb.show_speed = false;
-    pb.show_tick = false;
-    pb.message(&format!("A {}x{}x{} mandala on {} thread{}. Points [M]: ",
-                        opts.resolution.0,
-                        opts.resolution.1,
-                        opts.resolution.2,
-                        opts.threads,
-                        if opts.threads == 1 { "" } else { "s" }));
+    progress.println("");
+    progress.println(&format!("Collection threads: 1; granularity: {} points", mandalas::util::separated_number(1000000)));
     {
-        let ref mut imgs: Vec<_> = imgs.iter_mut().map(|img| img.as_mut_rgb8().unwrap()).collect();
-        for (i, (pos, colour)) in rx.iter().flatten().enumerate() {
-            imgs[pos.2 as usize][(pos.0, pos.1)].data = colour;
+        let mut pb = progress.create_bar(pts / 1000000);
+        pb.show_speed = false;
+        pb.show_tick = false;
 
-            if i % 85000000 == 0 {
-                pb.add(85);
+        let mut imgs: Vec<_> = imgs.iter_mut().map(|img| ImageContainer(img.as_mut_rgb8().unwrap() as *mut _)).collect();
+        thread::spawn(move || {
+            let mut imgs: Vec<_> = imgs.drain(..).map(|img| unsafe { &mut *img.0 }).collect();
+
+            for (i, (pos, colour)) in rx.iter().flatten().enumerate() {
+                imgs[pos.2 as usize][(pos.0, pos.1)].0 = colour;
+
+                if i % (15 * 1000000) == 0 {
+                    pb.add(15);
+                }
             }
-        }
+            pb.finish();
+        });
     }
-    pb.finish_print("");
 
-    for y in 0..opts.resolution.2 {
-        let fname = mandalas::ops::filename_to_save(opts.resolution, y);
+    progress.listen();
+
+    // let imgs = imgs.join().expect("Collection thread panicked");
+    for z in 0..opts.resolution.2 {
+        let fname = mandalas::ops::filename_to_save(opts.resolution, z);
         print!("Saving to {}...",
                PathBuf::from(&opts.outdir.0).join(&fname).to_str().unwrap().replace('\\', "/"));
         stdout().flush().unwrap();
-        mandalas::ops::save(&imgs[y], &opts.outdir.1, &fname);
+        mandalas::ops::save(&imgs[z], &opts.outdir.1, &fname);
         println!(" Done");
     }
 

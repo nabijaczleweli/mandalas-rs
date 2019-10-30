@@ -308,3 +308,94 @@ pub fn flag_hard_alpha_to_rgb(flag: &[[f64; 3]], id_alpha: [f64; 2]) -> [f64; 3]
 
     [colour[0] * id_alpha[1], colour[1] * id_alpha[1], colour[2] * id_alpha[1]]
 }
+
+
+
+
+/*
+/// Translate a PROYGBIV colour point into an RGB colour point according to sampling the svg on wikipedia.
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::proygbiv_to_rgb;
+/// assert_eq!(proygbiv_to_rgb([0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);
+/// ```
+pub fn lab_to_rgb(lab: [f64; 3]) -> [f64; 3] {
+    float var_Y = ( l_s + 16. ) / 116.;
+    float var_X = a_s / 500. + var_Y;
+    float var_Z = var_Y - b_s / 200.;
+
+    if ( pow(var_Y,3) > 0.008856 ) var_Y = pow(var_Y,3);
+    else                      var_Y = ( var_Y - 16. / 116. ) / 7.787;
+    if ( pow(var_X,3) > 0.008856 ) var_X = pow(var_X,3);
+    else                      var_X = ( var_X - 16. / 116. ) / 7.787;
+    if ( pow(var_Z,3) > 0.008856 ) var_Z = pow(var_Z,3);
+    else                      var_Z = ( var_Z - 16. / 116. ) / 7.787;
+
+    float X = 95.047 * var_X ;    //ref_X =  95.047     Observer= 2°, Illuminant= D65
+    float Y = 100.000 * var_Y  ;   //ref_Y = 100.000
+    float Z = 108.883 * var_Z ;    //ref_Z = 108.883
+
+
+    var_X = X / 100. ;       //X from 0 to  95.047      (Observer = 2°, Illuminant = D65)
+    var_Y = Y / 100. ;       //Y from 0 to 100.000
+    var_Z = Z / 100. ;      //Z from 0 to 108.883
+
+    float var_R = var_X *  3.2406 + var_Y * -1.5372 + var_Z * -0.4986;
+    float var_G = var_X * -0.9689 + var_Y *  1.8758 + var_Z *  0.0415;
+    float var_B = var_X *  0.0557 + var_Y * -0.2040 + var_Z *  1.0570;
+
+    if ( var_R > 0.0031308 ) var_R = 1.055 * pow(var_R , ( 1 / 2.4 ))  - 0.055;
+    else                     var_R = 12.92 * var_R;
+    if ( var_G > 0.0031308 ) var_G = 1.055 * pow(var_G , ( 1 / 2.4 ) )  - 0.055;
+    else                     var_G = 12.92 * var_G;
+    if ( var_B > 0.0031308 ) var_B = 1.055 * pow( var_B , ( 1 / 2.4 ) ) - 0.055;
+    else                     var_B = 12.92 * var_B;
+
+    R = var_R * 255.;
+    G = var_G * 255.;
+    B = var_B * 255.;
+}
+
+void LAB2RGB(int L, int a, int b, unsigned char & R, unsigned char & G, unsigned char & B)
+{
+    float X, Y, Z, fX, fY, fZ;
+    int RR, GG, BB;
+
+    fY = pow((L + 16.0) / 116.0, 3.0);
+    if (fY < 0.008856)
+        fY = L / 903.3;
+    Y = fY;
+
+    if (fY > 0.008856)
+        fY = powf(fY, 1.0/3.0);
+    else
+        fY = 7.787 * fY + 16.0/116.0;
+
+    fX = a / 500.0 + fY;
+    if (fX > 0.206893)
+        X = powf(fX, 3.0);
+    else
+        X = (fX - 16.0/116.0) / 7.787;
+
+    fZ = fY - b /200.0;
+    if (fZ > 0.206893)
+        Z = powf(fZ, 3.0);
+    else
+        Z = (fZ - 16.0/116.0) / 7.787;
+
+    X *= (0.950456 * 255);
+    Y *=             255;
+    Z *= (1.088754 * 255);
+
+    RR =  (int)(3.240479*X - 1.537150*Y - 0.498535*Z + 0.5);
+    GG = (int)(-0.969256*X + 1.875992*Y + 0.041556*Z + 0.5);
+    BB =  (int)(0.055648*X - 0.204043*Y + 1.057311*Z + 0.5);
+
+    R = (unsigned char)(RR < 0 ? 0 : RR > 255 ? 255 : RR);
+    G = (unsigned char)(GG < 0 ? 0 : GG > 255 ? 255 : GG);
+    B = (unsigned char)(BB < 0 ? 0 : BB > 255 ? 255 : BB);
+
+    //printf("Lab=(%f,%f,%f) ==> RGB(%f,%f,%f)\n",L,a,b,*R,*G,*B);
+}*/

@@ -1,4 +1,4 @@
-use image::{GenericImage, ColorType};
+use image::{GenericImageView, ColorType};
 use mandalas::ops::init_image;
 
 
