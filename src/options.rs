@@ -34,14 +34,21 @@ pub struct Options {
     pub resolution: (usize, usize, usize),
     /// The directory to put the resulting mandalas in. Default: working directory.
     pub outdir: (String, PathBuf),
-    /// The amount of threads to run. Default: amount of hypercores on the CPU - 1.
-    pub threads: u64,
+    /// The amount of threads to generate points on. Default: 4 or CPU threads - 1.
+    pub threads_gen: u64,
+    /// The amount of threads to collect on. Default: rest of CPU threads or 1
+    pub threads_coll: u64,
 }
 
 impl Options {
     /// Parse `env`-wide command-line arguments into an `Options` instance
     pub fn parse() -> Options {
-        let cpus_s = cmp::max(1, num_cpus::get() - 1).to_string();
+        let cpus_total = num_cpus::get();
+
+        let cpus_gen = cmp::max(1, cpus_total * 3 / 4);
+        let cpus_coll_s = cmp::max(1, cpus_total - cpus_gen).to_string();
+
+        let cpus_gen_s = cpus_gen.to_string();
         let matches = App::new("mandalas")
             .version(crate_version!())
             .author(crate_authors!("\n"))
@@ -50,7 +57,12 @@ impl Options {
             .args(&[Arg::from_usage("-o --outdir=[OUTPUT_DIR] 'The directory to put the resulting mandalas in. Default: working directory'")
                         .validator(Options::outdir_validator),
                     Arg::from_usage("-s --size 'The output mandala resolution'").default_value("900x900x900").validator(Options::size_validator),
-                    Arg::from_usage("-j --jobs 'The amount of threads to use for generation'").default_value(&cpus_s).validator(Options::jobs_validator)])
+                    Arg::from_usage("-j --jobs-gen 'The amount of threads to use for point generation'")
+                        .default_value(&cpus_gen_s)
+                        .validator(Options::jobs_validator),
+                    Arg::from_usage("-J --jobs-coll 'The amount of threads to use for point collection'")
+                        .default_value(&cpus_coll_s)
+                        .validator(Options::jobs_validator)])
             .get_matches();
 
         Options {
@@ -76,7 +88,8 @@ impl Options {
                     }
                 }
             },
-            threads: u64::from_str(matches.value_of("jobs").unwrap()).unwrap(),
+            threads_gen: u64::from_str(matches.value_of("jobs-gen").unwrap()).unwrap(),
+            threads_coll: u64::from_str(matches.value_of("jobs-coll").unwrap()).unwrap(),
         }
     }
 
