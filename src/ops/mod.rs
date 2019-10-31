@@ -9,7 +9,6 @@ mod gen_ctx;
 
 pub use self::gen_ctx::GenerationContext;
 
-use std::path::Path;
 use image::DynamicImage;
 
 
@@ -56,29 +55,4 @@ pub fn points_to_generate(size: (usize, usize, usize)) -> u64 {
 /// Generate a filename to save the mandala in.
 pub fn filename_to_save(size: (usize, usize, usize), z: usize) -> String {
     format!("mandala-{}x{}x{}-{:05}.png", size.0, size.1, size.2, z)
-}
-
-/// Save the mandala to the specified file
-///
-/// # Examples
-///
-/// ```
-/// # use std::fs;
-/// # use mandalas::Options;
-/// # use std::env::temp_dir;
-/// # use mandalas::ops::{filename_to_save, init_image, save};
-/// # let opts = Options {
-/// #     resolution: (900, 900, 1),
-/// #     outdir: ("$TEMP/mandalas-doctest/save-0".to_string(), temp_dir().join("mandalas-doctest").join("save-0")),
-/// #     threads_gen: 0,
-/// #     threads_coll: 0,
-/// # };
-/// # let _ = fs::create_dir_all(&opts.outdir.1);
-/// # let mandala = init_image(opts.resolution);
-/// for (i, man) in mandala.iter().enumerate() {
-///     save(man, &opts.outdir.1, &filename_to_save(opts.resolution, i));
-/// }
-/// ```
-pub fn save(image: &DynamicImage, outdir: &Path, fname: &str) {
-    image.save(&mut outdir.join(fname)).unwrap();
 }

@@ -34,9 +34,9 @@ pub struct Options {
     pub resolution: (usize, usize, usize),
     /// The directory to put the resulting mandalas in. Default: working directory.
     pub outdir: (String, PathBuf),
-    /// The amount of threads to generate points on. Default: 4 or CPU threads - 1.
+    /// The amount of threads to generate points on. Default: 3/4ths of the CPU threads.
     pub threads_gen: u64,
-    /// The amount of threads to collect on. Default: rest of CPU threads or 1
+    /// The amount of threads to collect on. Default: rest of CPU threads.
     pub threads_coll: u64,
 }
 

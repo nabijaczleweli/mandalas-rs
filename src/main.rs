@@ -4,15 +4,17 @@ extern crate rand;
 extern crate pbr;
 
 use std::thread::Builder as ThreadBuilder;
+use image::{DynamicImage, RgbImage};
 use std::io::{Write, stdout};
 use std::process::exit;
-use std::path::PathBuf;
-use image::RgbImage;
 use std::sync::mpsc;
 
 
-struct ImageContainer(*mut RgbImage);
-unsafe impl Send for ImageContainer {}
+struct RgbImageContainer(*mut RgbImage);
+unsafe impl Send for RgbImageContainer {}
+
+struct DynamicImagesContainer(*const Vec<DynamicImage>);
+unsafe impl Send for DynamicImagesContainer {}
 
 
 fn main() {
@@ -84,17 +86,17 @@ fn actual_main() -> Result<(), i32> {
 
     progress.println("");
     progress.println(&format!("Collection threads: {}", opts.threads_coll));
+    let mut dummy_img = RgbImage::new(0, 0);
     for (coll_i, rx) in rxs.into_iter().enumerate() {
         let mut pb = progress.create_bar(pts / opts.threads_coll);
         pb.show_speed = false;
         pb.show_tick = false;
 
         let threads_coll = opts.threads_coll as usize;
-        let mut dummy_img = RgbImage::new(0, 0);
         let imgs: Vec<_> = imgs.iter_mut()
             .enumerate()
             .map(|(img_i, img)| {
-                ImageContainer(if img_i % threads_coll == coll_i {
+                RgbImageContainer(if img_i % threads_coll == coll_i {
                     img.as_mut_rgb8().unwrap() as *mut _
                 } else {
                     &mut dummy_img as *mut _
@@ -104,6 +106,9 @@ fn actual_main() -> Result<(), i32> {
         ThreadBuilder::new()
             .name(format!("collector {}", coll_i))
             .spawn(move || {
+                // This unsafe is sound because we only use layers whose number mod threads_coll matchers our coll_i,
+                // and both top-level imgs and dummy_img live past this thread which terminates before progress.listen() returns below,
+                // so while there exist hundreds of mutable references to dummy_img, none of them are actually used (hopefully).
                 let mut imgs: Vec<_> = imgs.into_iter().map(|img| unsafe { &mut *img.0 }).collect();
 
                 let mut acc = 0usize;
@@ -126,15 +131,38 @@ fn actual_main() -> Result<(), i32> {
     }
 
     progress.listen();
+    println!();
 
-    for z in 0..opts.resolution.2 {
-        let fname = mandalas::ops::filename_to_save(opts.resolution, z);
-        print!("Saving to {}...",
-               PathBuf::from(&opts.outdir.0).join(&fname).to_str().unwrap().replace('\\', "/"));
-        stdout().flush().unwrap();
-        mandalas::ops::save(&imgs[z], &opts.outdir.1, &fname);
-        println!(" Done");
+    let threads_save = opts.threads_gen + opts.threads_coll;
+    let mut progress = pbr::MultiBar::new();
+    progress.println(&format!("Saving {} images on {} threads", opts.resolution.2, threads_save));
+
+    for save_i in 0..threads_save {
+        let mut pb = progress.create_bar(opts.resolution.2 as u64 / threads_save);
+        pb.show_speed = false;
+        pb.show_tick = false;
+
+        let resolution = opts.resolution;
+        let outdir = opts.outdir.1.clone();
+        let imgs = DynamicImagesContainer(&imgs as *const _);
+        ThreadBuilder::new()
+            .name(format!("saver {}", save_i))
+            .spawn(move || {
+                // This unsafe is sound because (a) this thread exits before progress.listen() call below returns,
+                // abd top-level imgs lives longer than that and (b) this is an immutable reference.
+                let imgs = unsafe { &*imgs.0 as &Vec<DynamicImage> };
+
+                for z in (save_i as usize..resolution.2).step_by(threads_save as usize) {
+                    imgs[z].save(outdir.join(mandalas::ops::filename_to_save(resolution, z))).unwrap();
+                    pb.inc();
+                }
+
+                pb.finish();
+            })
+            .unwrap();
     }
+
+    progress.listen();
 
     Ok(())
 }
