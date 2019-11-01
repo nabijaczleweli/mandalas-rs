@@ -11,6 +11,26 @@ use std::sync::mpsc;
 use std::fs;
 
 
+/// In how many chunks to generate-send the a generator thread's points
+///
+/// Each generator thread generates and sends `pts / threads_gen` points,
+/// but groups them into `GENERATION_CHUNKS` discrete chunks for processing.
+const GENERATION_CHUNKS: u64 = 1000;
+
+/// How many generation chunks to cache per layer group
+///
+/// Note that high (on the order of 100, 1000) values will drastically increase worst-case (collection stalled) memory usage
+///
+/// This roughly works out to
+/// ```
+/// QUEUE_DEPTH * (pts / threads_gen / GENERATION_CHUNKS) * threads_coll * (sizeof(gen()) == 8)
+/// ```
+///
+/// So for a queue depth of 10, 1000 chunks, a 2160x image => 10^12 points on 19/5 threads
+/// this works out to up to 21 gigabytes of additional memory.
+const QUEUE_DEPTH: usize = 10;
+
+
 struct RgbImageContainer(*mut RgbImage);
 unsafe impl Send for RgbImageContainer {}
 
@@ -46,14 +66,14 @@ fn actual_main() -> Result<(), i32> {
 
     let rxs = {
         let pts = pts / opts.threads_gen;
-        let (txs, rxs): (Vec<_>, Vec<_>) = (0..opts.threads_coll).map(|_| mpsc::sync_channel(10)).unzip();
+        let (txs, rxs): (Vec<_>, Vec<_>) = (0..opts.threads_coll).map(|_| mpsc::sync_channel(QUEUE_DEPTH)).unzip();
 
         progress.println(&format!("Generation threads: {}; granularity: {} points",
                                   opts.threads_gen,
-                                  mandalas::util::separated_number(pts / 1000)));
+                                  mandalas::util::separated_number(pts / GENERATION_CHUNKS)));
 
         for gen_i in 0..opts.threads_gen {
-            let mut pb = progress.create_bar(1000);
+            let mut pb = progress.create_bar(GENERATION_CHUNKS);
             pb.show_speed = false;
             pb.show_tick = false;
 
@@ -65,9 +85,9 @@ fn actual_main() -> Result<(), i32> {
                 .spawn(move || {
                     let mut gen = mandalas::ops::GenerationContext::new(res);
 
-                    for _ in 0..1000 {
-                        let mut pointss = vec![Vec::with_capacity(pts as usize / 1000); threads_coll];
-                        for _ in 0..(pts / 1000) {
+                    for _ in 0..GENERATION_CHUNKS {
+                        let mut pointss = vec![Vec::with_capacity((pts / GENERATION_CHUNKS) as usize); threads_coll];
+                        for _ in 0..(pts / GENERATION_CHUNKS) {
                             let point = gen.gen();
                             pointss[(point.0).2 as usize % threads_coll].push(point);
                         }

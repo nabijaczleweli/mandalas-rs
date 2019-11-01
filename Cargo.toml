@@ -1,6 +1,6 @@
 [package]
 name = "mandalas"
-description = "A mandala generator using Tonči Juričev-Grgin's method"
+description = "A mandala generator using Tonči Juričev-Grgin's method with a scalable driver"
 documentation = "https://rawcdn.githack.com/nabijaczleweli/mandalas-rs/doc/mandalas/index.html"
 repository = "https://github.com/nabijaczleweli/mandalas-rs"
 readme = "README.md"
