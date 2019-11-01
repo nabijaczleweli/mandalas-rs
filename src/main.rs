@@ -8,6 +8,7 @@ use image::{DynamicImage, RgbImage};
 use std::io::{Write, stdout};
 use std::process::exit;
 use std::sync::mpsc;
+use std::fs;
 
 
 struct RgbImageContainer(*mut RgbImage);
@@ -34,6 +35,7 @@ fn actual_main() -> Result<(), i32> {
     println!();
 
     let pts = mandalas::ops::points_to_generate(opts.resolution);
+
 
     let mut progress = pbr::MultiBar::new();
     progress.println(&format!("{}x{}x{} mandala from {} points",
@@ -86,7 +88,7 @@ fn actual_main() -> Result<(), i32> {
 
     progress.println("");
     progress.println(&format!("Collection threads: {}", opts.threads_coll));
-    let mut dummy_img = RgbImage::new(0, 0);
+    let mut dummy_img = RgbImage::new(opts.resolution.0 as u32, opts.resolution.1 as u32);
     for (coll_i, rx) in rxs.into_iter().enumerate() {
         let mut pb = progress.create_bar(pts / opts.threads_coll);
         pb.show_speed = false;
@@ -131,12 +133,19 @@ fn actual_main() -> Result<(), i32> {
     }
 
     progress.listen();
+    if dummy_img.into_raw().into_iter().find(|&c| c != 0).is_some() {
+        eprintln!("warning: dummy image not empty");
+    }
     println!();
+
 
     let threads_save = opts.threads_gen + opts.threads_coll;
     let mut progress = pbr::MultiBar::new();
     progress.println(&format!("Saving {} images on {} threads", opts.resolution.2, threads_save));
 
+    // This should be ensured at option validation stage, but shit happens,
+    // and zombieing forever when one the threads panic disowned with 30 gigs of ram is less than desirable
+    fs::create_dir_all(&opts.outdir.1).unwrap();
     for save_i in 0..threads_save {
         let mut pb = progress.create_bar(opts.resolution.2 as u64 / threads_save);
         pb.show_speed = false;
