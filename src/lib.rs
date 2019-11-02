@@ -4,10 +4,14 @@ extern crate quickersort;
 extern crate lazy_static;
 extern crate itertools;
 extern crate num_cpus;
+#[cfg(target_os = "windows")]
+extern crate winapi;
 extern crate regex;
 extern crate image;
 #[macro_use]
 extern crate clap;
+#[cfg(not(target_os = "windows"))]
+extern crate libc;
 extern crate rand;
 
 mod options;

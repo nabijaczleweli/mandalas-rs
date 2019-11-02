@@ -31,6 +31,12 @@ clap = "2.33"
 rand = "0.7"
 pbr = "1.0"
 
+[target.'cfg(target_os = "windows")'.dependencies]
+winapi = "0.3"
+
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+libc = "0.2"
+
 
 [[bin]]
 name = "mandalas"

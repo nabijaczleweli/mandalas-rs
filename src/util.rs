@@ -55,7 +55,8 @@ pub fn separated_number(num: u64) -> String {
 /// assert_eq!(cmyk_to_rgb([0f64, 1f64, 0f64, 0f64]), [1f64, 0f64, 1f64]);
 /// ```
 pub fn cmyk_to_rgb(cmyk: [f64; 4]) -> [f64; 3] {
-    [(1f64 - cmyk[0]) * (1f64 - cmyk[3]), (1f64 - cmyk[1]) * (1f64 - cmyk[3]), (1f64 - cmyk[2]) * (1f64 - cmyk[3])]
+    let rec_k = 1f64 - cmyk[3];
+    [(1f64 - cmyk[0]) * rec_k, (1f64 - cmyk[1]) * rec_k, (1f64 - cmyk[2]) * rec_k]
 }
 
 /// Translate an HSL colour point into an RGB colour point.
