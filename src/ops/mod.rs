@@ -77,7 +77,7 @@ pub fn affine_thread<T>(thread: &JoinHandle<T>, to_cpu: usize) {
     #[cfg(target_os = "windows")]
     {
         if unsafe { SetThreadAffinityMask(thread.as_raw_handle(), mask) } == 0 {
-            eprintln!("Couldn't set affinity mask to cpu {}: {:08x}", to_cpu, unsafe { GetLastError() });
+            eprintln!("Couldn't set affinity mask to cpu {}: {:#010x}", to_cpu, unsafe { GetLastError() });
         }
     }
 
@@ -85,7 +85,7 @@ pub fn affine_thread<T>(thread: &JoinHandle<T>, to_cpu: usize) {
     {
         let err = unsafe { pthread_setaffinity_np(thread.as_pthread_t(), mem::size_of_val(&mask), &mask as *const _ as *const cpu_set_t) };
         if err != 0 {
-            eprintln!("Couldn't set affinity mask to cpu {}: {:04x}", to_cpu, err);
+            eprintln!("Couldn't set affinity mask to cpu {}: {}", to_cpu, err);
         }
     }
 }

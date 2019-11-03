@@ -80,7 +80,7 @@ fn actual_main() -> Result<(), i32> {
             let threads_coll = opts.threads_coll as usize;
             let txs = txs.clone();
             let res = opts.resolution;
-            ThreadBuilder::new()
+            let thread = ThreadBuilder::new()
                 .name(format!("generator {}", gen_i))
                 .spawn(move || {
                     let mut gen = mandalas::ops::GenerationContext::new(res);
@@ -101,6 +101,9 @@ fn actual_main() -> Result<(), i32> {
                     pb.finish();
                 })
                 .unwrap();
+            if opts.affine_threads {
+                mandalas::ops::affine_thread(&thread, gen_i as usize);
+            }
         }
 
         rxs
@@ -125,7 +128,7 @@ fn actual_main() -> Result<(), i32> {
                 })
             })
             .collect();
-        ThreadBuilder::new()
+        let thread = ThreadBuilder::new()
             .name(format!("collector {}", coll_i))
             .spawn(move || {
                 // This unsafe is sound because we only use layers whose number mod threads_coll matchers our coll_i,
@@ -150,6 +153,9 @@ fn actual_main() -> Result<(), i32> {
                 pb.finish();
             })
             .unwrap();
+        if opts.affine_threads {
+            mandalas::ops::affine_thread(&thread, opts.threads_gen as usize + coll_i);
+        }
     }
 
     progress.listen();

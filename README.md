@@ -44,8 +44,9 @@ USAGE:
     mandalas [OPTIONS]
 
 FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
+    -A, --affine-threads    Affine worker threads to specific CPUs
+    -h, --help              Prints help information
+    -V, --version           Prints version information
 
 OPTIONS:
     -J, --jobs-coll <jobs-coll>    The amount of threads to use for point collection [default: ncpus / 4]

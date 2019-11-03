@@ -38,6 +38,8 @@ pub struct Options {
     pub threads_gen: u64,
     /// The amount of threads to collect on. Default: rest of CPU threads.
     pub threads_coll: u64,
+    /// Whether to affine worker threads to specific CPUs. Default: false
+    pub affine_threads: bool,
 }
 
 impl Options {
@@ -62,7 +64,8 @@ impl Options {
                         .validator(Options::jobs_validator),
                     Arg::from_usage("-J --jobs-coll 'The amount of threads to use for point collection'")
                         .default_value(&cpus_coll_s)
-                        .validator(Options::jobs_validator)])
+                        .validator(Options::jobs_validator),
+                    Arg::from_usage("-A --affine-threads 'Affine worker threads to specific CPUs'")])
             .get_matches();
 
         Options {
@@ -90,6 +93,7 @@ impl Options {
             },
             threads_gen: u64::from_str(matches.value_of("jobs-gen").unwrap()).unwrap(),
             threads_coll: u64::from_str(matches.value_of("jobs-coll").unwrap()).unwrap(),
+            affine_threads: matches.is_present("affine-threads"),
         }
     }
 
