@@ -28,7 +28,7 @@ fn actual_main() -> Result<(), i32> {
 
     let rx = {
         let pts = pts / opts.threads;
-        let (tx, rx) = mpsc::channel();
+        let (tx, rx) = mpsc::sync_channel(100);
 
         for _ in 0..opts.threads {
             let tx = tx.clone();
@@ -36,8 +36,12 @@ fn actual_main() -> Result<(), i32> {
             thread::spawn(move || {
                 let mut gen = mandalas::ops::GenerationContext::new(res);
 
-                for _ in 0..pts {
-                    tx.send(gen.gen()).unwrap();
+                for _ in 0..100 {
+                    let mut points = vec![gen.gen(); pts as usize / 100];
+                    for p in &mut points[1..] {
+                        *p = gen.gen();
+                    }
+                    tx.send(points).unwrap();
                 }
             });
         }
@@ -45,10 +49,10 @@ fn actual_main() -> Result<(), i32> {
         rx
     };
 
-    let mut pb = pbr::ProgressBar::new(pts / 1000);
+    let mut pb = pbr::ProgressBar::new(pts / 1000000);
     pb.show_speed = false;
     pb.show_tick = false;
-    pb.message(&format!("A {}x{}x{} mandala on {} thread{}. Points [k]: ",
+    pb.message(&format!("A {}x{}x{} mandala on {} thread{}. Points [M]: ",
                         opts.resolution.0,
                         opts.resolution.1,
                         opts.resolution.2,
@@ -56,10 +60,10 @@ fn actual_main() -> Result<(), i32> {
                         if opts.threads == 1 { "" } else { "s" }));
     {
         let ref mut imgs: Vec<_> = imgs.iter_mut().map(|img| img.as_mut_rgb8().unwrap()).collect();
-        for (i, (pos, colour)) in rx.iter().enumerate() {
+        for (i, (pos, colour)) in rx.iter().flatten().enumerate() {
             imgs[pos.2 as usize][(pos.0, pos.1)].data = colour;
 
-            if i % 85000 == 0 {
+            if i % 85000000 == 0 {
                 pb.add(85);
             }
         }
