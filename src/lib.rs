@@ -1,7 +1,7 @@
+extern crate fixed_vec_deque;
 extern crate quickersort;
 #[macro_use]
 extern crate lazy_static;
-extern crate arraydeque;
 extern crate itertools;
 extern crate num_cpus;
 extern crate regex;
