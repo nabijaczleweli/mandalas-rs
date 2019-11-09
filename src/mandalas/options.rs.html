@@ -109,6 +109,19 @@
 <span id="109">109</span>
 <span id="110">110</span>
 <span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Option parsing and management.</span>
 <span class="doccomment">//!</span>
@@ -146,14 +159,21 @@
     <span class="kw">pub</span> <span class="ident">resolution</span>: (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>),
     <span class="doccomment">/// The directory to put the resulting mandalas in. Default: working directory.</span>
     <span class="kw">pub</span> <span class="ident">outdir</span>: (<span class="ident">String</span>, <span class="ident">PathBuf</span>),
-    <span class="doccomment">/// The amount of threads to run. Default: amount of hypercores on the CPU - 1.</span>
-    <span class="kw">pub</span> <span class="ident">threads</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// The amount of threads to generate points on. Default: 4 or CPU threads - 1.</span>
+    <span class="kw">pub</span> <span class="ident">threads_gen</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// The amount of threads to collect on. Default: rest of CPU threads or 1</span>
+    <span class="kw">pub</span> <span class="ident">threads_coll</span>: <span class="ident">u64</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Options</span> {
     <span class="doccomment">/// Parse `env`-wide command-line arguments into an `Options` instance</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Options</span> {
-        <span class="kw">let</span> <span class="ident">cpus_s</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">max</span>(<span class="number">1</span>, <span class="ident">num_cpus</span>::<span class="ident">get</span>() <span class="op">-</span> <span class="number">1</span>).<span class="ident">to_string</span>();
+        <span class="kw">let</span> <span class="ident">cpus_total</span> <span class="op">=</span> <span class="ident">num_cpus</span>::<span class="ident">get</span>();
+
+        <span class="kw">let</span> <span class="ident">cpus_gen</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">max</span>(<span class="number">1</span>, <span class="ident">cpus_total</span> <span class="op">*</span> <span class="number">3</span> <span class="op">/</span> <span class="number">4</span>);
+        <span class="kw">let</span> <span class="ident">cpus_coll_s</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">max</span>(<span class="number">1</span>, <span class="ident">cpus_total</span> <span class="op">-</span> <span class="ident">cpus_gen</span>).<span class="ident">to_string</span>();
+
+        <span class="kw">let</span> <span class="ident">cpus_gen_s</span> <span class="op">=</span> <span class="ident">cpus_gen</span>.<span class="ident">to_string</span>();
         <span class="kw">let</span> <span class="ident">matches</span> <span class="op">=</span> <span class="ident">App</span>::<span class="ident">new</span>(<span class="string">&quot;mandalas&quot;</span>)
             .<span class="ident">version</span>(<span class="macro">crate_version</span><span class="macro">!</span>())
             .<span class="ident">author</span>(<span class="macro">crate_authors</span><span class="macro">!</span>(<span class="string">&quot;\n&quot;</span>))
@@ -162,7 +182,12 @@
             .<span class="ident">args</span>(<span class="kw-2">&amp;</span>[<span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-o --outdir=[OUTPUT_DIR] &#39;The directory to put the resulting mandalas in. Default: working directory&#39;&quot;</span>)
                         .<span class="ident">validator</span>(<span class="ident">Options</span>::<span class="ident">outdir_validator</span>),
                     <span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-s --size &#39;The output mandala resolution&#39;&quot;</span>).<span class="ident">default_value</span>(<span class="string">&quot;900x900x900&quot;</span>).<span class="ident">validator</span>(<span class="ident">Options</span>::<span class="ident">size_validator</span>),
-                    <span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-j --jobs &#39;The amount of threads to use for generation&#39;&quot;</span>).<span class="ident">default_value</span>(<span class="kw-2">&amp;</span><span class="ident">cpus_s</span>).<span class="ident">validator</span>(<span class="ident">Options</span>::<span class="ident">jobs_validator</span>)])
+                    <span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-j --jobs-gen &#39;The amount of threads to use for point generation&#39;&quot;</span>)
+                        .<span class="ident">default_value</span>(<span class="kw-2">&amp;</span><span class="ident">cpus_gen_s</span>)
+                        .<span class="ident">validator</span>(<span class="ident">Options</span>::<span class="ident">jobs_validator</span>),
+                    <span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-J --jobs-coll &#39;The amount of threads to use for point collection&#39;&quot;</span>)
+                        .<span class="ident">default_value</span>(<span class="kw-2">&amp;</span><span class="ident">cpus_coll_s</span>)
+                        .<span class="ident">validator</span>(<span class="ident">Options</span>::<span class="ident">jobs_validator</span>)])
             .<span class="ident">get_matches</span>();
 
         <span class="ident">Options</span> {
@@ -188,7 +213,8 @@
                     }
                 }
             },
-            <span class="ident">threads</span>: <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">matches</span>.<span class="ident">value_of</span>(<span class="string">&quot;jobs&quot;</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>(),
+            <span class="ident">threads_gen</span>: <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">matches</span>.<span class="ident">value_of</span>(<span class="string">&quot;jobs-gen&quot;</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>(),
+            <span class="ident">threads_coll</span>: <span class="ident">u64</span>::<span class="ident">from_str</span>(<span class="ident">matches</span>.<span class="ident">value_of</span>(<span class="string">&quot;jobs-coll&quot;</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>(),
         }
     }
 
