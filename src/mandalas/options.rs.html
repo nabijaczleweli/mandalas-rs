@@ -159,9 +159,9 @@
     <span class="kw">pub</span> <span class="ident">resolution</span>: (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>),
     <span class="doccomment">/// The directory to put the resulting mandalas in. Default: working directory.</span>
     <span class="kw">pub</span> <span class="ident">outdir</span>: (<span class="ident">String</span>, <span class="ident">PathBuf</span>),
-    <span class="doccomment">/// The amount of threads to generate points on. Default: 4 or CPU threads - 1.</span>
+    <span class="doccomment">/// The amount of threads to generate points on. Default: 3/4ths of the CPU threads.</span>
     <span class="kw">pub</span> <span class="ident">threads_gen</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// The amount of threads to collect on. Default: rest of CPU threads or 1</span>
+    <span class="doccomment">/// The amount of threads to collect on. Default: rest of CPU threads.</span>
     <span class="kw">pub</span> <span class="ident">threads_coll</span>: <span class="ident">u64</span>,
 }
 
