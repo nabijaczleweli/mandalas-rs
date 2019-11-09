@@ -74,10 +74,13 @@
 <span id="74">74</span>
 <span id="75">75</span>
 <span id="76">76</span>
+<span id="77">77</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">distributions</span>::{<span class="ident">Sample</span>, <span class="ident">Range</span>};
+<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">distance</span>;
 <span class="kw">use</span> <span class="ident">fixed_vec_deque</span>::<span class="ident">FixedVecDeque</span>;
-<span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">StdRng</span>;
+<span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">seq</span>::<span class="ident">SliceRandom</span>;
+<span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">rngs</span>::<span class="ident">StdRng</span>;
+<span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">SeedableRng</span>;
 <span class="kw">use</span> <span class="ident">quickersort</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">f64</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">u8</span>;
@@ -87,7 +90,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GenerationContext</span> {
     <span class="ident">past_positions</span>: <span class="ident">FixedVecDeque</span><span class="op">&lt;</span>[(<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>); <span class="number">5</span> <span class="op">+</span> <span class="number">1</span>]<span class="op">&gt;</span>,
     <span class="ident">generator</span>: <span class="ident">StdRng</span>,
-    <span class="ident">corners</span>: (<span class="ident">Range</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>)<span class="op">&gt;</span>),
+    <span class="ident">corners</span>: [(<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>); <span class="number">8</span>],
     <span class="ident">dist_div</span>: <span class="ident">f64</span>,
 }
 
@@ -95,7 +98,7 @@
     <span class="doccomment">/// Prepare a new, clean, generation context.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Whole history is initialised to the canvas&#39; center.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">mandala_size</span>: (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>)) <span class="op">-&gt;</span> <span class="ident">GenerationContext</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">mandala_size</span>: (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">GenerationContext</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">past</span> <span class="op">=</span> <span class="ident">FixedVecDeque</span>::<span class="ident">new</span>();
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">past</span>.<span class="ident">capacity</span>() {
             <span class="kw-2">*</span><span class="ident">past</span>.<span class="ident">push_back</span>() <span class="op">=</span> (<span class="ident">mandala_size</span>.<span class="number">0</span> <span class="op">/</span> <span class="number">2</span>, <span class="ident">mandala_size</span>.<span class="number">1</span> <span class="op">/</span> <span class="number">2</span>, <span class="ident">mandala_size</span>.<span class="number">2</span> <span class="op">/</span> <span class="number">2</span>);
@@ -103,16 +106,15 @@
 
         <span class="ident">GenerationContext</span> {
             <span class="ident">past_positions</span>: <span class="ident">past</span>,
-            <span class="ident">generator</span>: <span class="ident">StdRng</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>(),
-            <span class="ident">corners</span>: (<span class="ident">Range</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">8</span>),
-                      <span class="macro">vec</span><span class="macro">!</span>[(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
-                           (<span class="ident">mandala_size</span>.<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
-                           (<span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">1</span>, <span class="number">0</span>),
-                           (<span class="ident">mandala_size</span>.<span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">1</span>, <span class="number">0</span>),
-                           (<span class="number">0</span>, <span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">2</span>),
-                           (<span class="ident">mandala_size</span>.<span class="number">0</span>, <span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">2</span>),
-                           (<span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">1</span>, <span class="ident">mandala_size</span>.<span class="number">2</span>),
-                           (<span class="ident">mandala_size</span>.<span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">1</span>, <span class="ident">mandala_size</span>.<span class="number">2</span>)]),
+            <span class="ident">generator</span>: <span class="ident">StdRng</span>::<span class="ident">from_entropy</span>(),
+            <span class="ident">corners</span>: [(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
+                      (<span class="ident">mandala_size</span>.<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
+                      (<span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">1</span>, <span class="number">0</span>),
+                      (<span class="ident">mandala_size</span>.<span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">1</span>, <span class="number">0</span>),
+                      (<span class="number">0</span>, <span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">2</span>),
+                      (<span class="ident">mandala_size</span>.<span class="number">0</span>, <span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">2</span>),
+                      (<span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">1</span>, <span class="ident">mandala_size</span>.<span class="number">2</span>),
+                      (<span class="ident">mandala_size</span>.<span class="number">0</span>, <span class="ident">mandala_size</span>.<span class="number">1</span>, <span class="ident">mandala_size</span>.<span class="number">2</span>)],
             <span class="ident">dist_div</span>: <span class="number">2f64</span>,
         }
     }
@@ -120,11 +122,11 @@
     <span class="doccomment">/// Generate a mandala point.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value is in the format `((pos_x, pos_y, pos_z), [r, g, b])`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> ((<span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>), [<span class="ident">u8</span>; <span class="number">3</span>]) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> ((<span class="ident">u32</span>, <span class="ident">u32</span>, <span class="ident">u32</span>), [<span class="ident">u8</span>; <span class="number">3</span>]) {
         <span class="kw">static</span> <span class="ident">MAX_COLOUR</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">u8</span>::<span class="ident">MAX</span> <span class="kw">as</span> <span class="ident">f64</span>;
 
         <span class="kw">let</span> <span class="kw-2">&amp;</span>(<span class="ident">prev_x</span>, <span class="ident">prev_y</span>, <span class="ident">prev_z</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">past_positions</span>.<span class="ident">back</span>().<span class="ident">unwrap</span>();
-        <span class="kw">let</span> (<span class="ident">to_x</span>, <span class="ident">to_y</span>, <span class="ident">to_z</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">corners</span>.<span class="number">1</span>[<span class="self">self</span>.<span class="ident">corners</span>.<span class="number">0</span>.<span class="ident">sample</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">generator</span>)];
+        <span class="kw">let</span> <span class="kw-2">&amp;</span>(<span class="ident">to_x</span>, <span class="ident">to_y</span>, <span class="ident">to_z</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">corners</span>.<span class="ident">choose</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">generator</span>).<span class="ident">unwrap</span>();
 
         <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> (<span class="ident">prev_x</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">-</span> ((<span class="ident">prev_x</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">-</span> <span class="ident">to_x</span> <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">dist_div</span>)) <span class="kw">as</span> <span class="ident">usize</span>;
         <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> (<span class="ident">prev_y</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">-</span> ((<span class="ident">prev_y</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">-</span> <span class="ident">to_y</span> <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">/</span> <span class="self">self</span>.<span class="ident">dist_div</span>)) <span class="kw">as</span> <span class="ident">usize</span>;
@@ -138,7 +140,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">distances2</span> <span class="op">=</span> <span class="ident">distances</span>.<span class="ident">clone</span>();
         <span class="ident">quickersort</span>::<span class="ident">sort_floats</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">distances2</span>);
         <span class="kw">let</span> <span class="ident">max</span> <span class="op">=</span> <span class="ident">distances2</span>[<span class="ident">distances2</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">distances_i</span> <span class="op">=</span> <span class="ident">distances</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">d</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">d</span> <span class="op">!=</span> <span class="ident">max</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">distances_i</span> <span class="op">=</span> <span class="ident">distances</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">d</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">d</span> <span class="op">!</span><span class="op">=</span> <span class="ident">max</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>);
         <span class="kw">let</span> <span class="ident">distances</span> <span class="op">=</span> [<span class="ident">distances_i</span>.<span class="ident">next</span>().<span class="ident">unwrap_or</span>(<span class="ident">distances</span>[<span class="number">0</span>]),
                          <span class="ident">distances_i</span>.<span class="ident">next</span>().<span class="ident">unwrap_or</span>(<span class="ident">distances</span>[<span class="number">1</span>]),
                          <span class="ident">distances_i</span>.<span class="ident">next</span>().<span class="ident">unwrap_or</span>(<span class="ident">distances</span>[<span class="number">2</span>]),

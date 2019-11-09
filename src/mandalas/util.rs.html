@@ -308,6 +308,97 @@
 <span id="308">308</span>
 <span id="309">309</span>
 <span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Various utility functions.</span>
 
@@ -323,7 +414,7 @@
 
 
 <span class="doccomment">/// Calculate the distance between two specified 3-dimensional points.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">distance</span>(<span class="ident">from</span>: (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>), <span class="ident">to</span>: (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>)) <span class="op">-&gt;</span> <span class="ident">f64</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">distance</span>(<span class="ident">from</span>: (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>), <span class="ident">to</span>: (<span class="ident">usize</span>, <span class="ident">usize</span>, <span class="ident">usize</span>)) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
     <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> (<span class="ident">from</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">isize</span>) <span class="op">-</span> (<span class="ident">to</span>.<span class="number">0</span> <span class="kw">as</span> <span class="ident">isize</span>);
     <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> (<span class="ident">from</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">isize</span>) <span class="op">-</span> (<span class="ident">to</span>.<span class="number">1</span> <span class="kw">as</span> <span class="ident">isize</span>);
     <span class="kw">let</span> <span class="ident">z</span> <span class="op">=</span> (<span class="ident">from</span>.<span class="number">2</span> <span class="kw">as</span> <span class="ident">isize</span>) <span class="op">-</span> (<span class="ident">to</span>.<span class="number">2</span> <span class="kw">as</span> <span class="ident">isize</span>);
@@ -340,7 +431,7 @@
 <span class="doccomment">/// assert_eq!(separated_number(1000), &quot;1&#39;000&quot;.to_string());</span>
 <span class="doccomment">/// assert_eq!(separated_number(100000), &quot;100&#39;000&quot;.to_string());</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">separated_number</span>(<span class="ident">num</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">separated_number</span>(<span class="ident">num</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
     <span class="ident">num</span>.<span class="ident">to_string</span>()
         .<span class="ident">chars</span>()
         .<span class="ident">rev</span>()
@@ -365,7 +456,7 @@
 <span class="doccomment">/// assert_eq!(cmyk_to_rgb([0f64, 0f64, 0f64, 0f64]), [1f64, 1f64, 1f64]);</span>
 <span class="doccomment">/// assert_eq!(cmyk_to_rgb([0f64, 1f64, 0f64, 0f64]), [1f64, 0f64, 1f64]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cmyk_to_rgb</span>(<span class="ident">cmyk</span>: [<span class="ident">f64</span>; <span class="number">4</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cmyk_to_rgb</span>(<span class="ident">cmyk</span>: [<span class="ident">f64</span>; <span class="number">4</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     [(<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">0</span>]) <span class="op">*</span> (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">3</span>]), (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">1</span>]) <span class="op">*</span> (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">3</span>]), (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">2</span>]) <span class="op">*</span> (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">3</span>])]
 }
 
@@ -380,24 +471,24 @@
 <span class="doccomment">/// assert_eq!(hsl_to_rgb([1f64, 1f64, 1f64]), [1f64, 1f64, 1f64]);</span>
 <span class="doccomment">/// assert_eq!(hsl_to_rgb([0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hsl_to_rgb</span>(<span class="ident">hsl</span>: [<span class="ident">f64</span>; <span class="number">3</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">hsl_to_rgb</span>(<span class="ident">hsl</span>: [<span class="ident">f64</span>; <span class="number">3</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     <span class="kw">let</span> <span class="ident">h_deg</span> <span class="op">=</span> <span class="ident">hsl</span>[<span class="number">0</span>] <span class="op">*</span> <span class="number">360f64</span>;
     <span class="kw">let</span> <span class="ident">h_prim</span> <span class="op">=</span> <span class="ident">h_deg</span> <span class="op">/</span> <span class="number">60f64</span>;
 
     <span class="kw">let</span> <span class="ident">chroma</span> <span class="op">=</span> (<span class="number">1f64</span> <span class="op">-</span> (<span class="number">2f64</span> <span class="op">*</span> <span class="ident">hsl</span>[<span class="number">2</span>] <span class="op">-</span> <span class="number">1f64</span>)) <span class="op">*</span> <span class="ident">hsl</span>[<span class="number">1</span>];
     <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">chroma</span> <span class="op">*</span> (<span class="number">1f64</span> <span class="op">-</span> ((<span class="ident">h_prim</span> <span class="op">%</span> <span class="number">2f64</span>) <span class="op">-</span> <span class="number">1f64</span>).<span class="ident">abs</span>());
 
-    <span class="kw">let</span> <span class="ident">rgb1</span> <span class="op">=</span> <span class="kw">if</span> <span class="number">0f64</span> <span class="op">&lt;=</span> <span class="ident">h_prim</span> <span class="op">&amp;&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;=</span> <span class="number">1f64</span> {
+    <span class="kw">let</span> <span class="ident">rgb1</span> <span class="op">=</span> <span class="kw">if</span> <span class="number">0f64</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">h_prim</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">1f64</span> {
         [<span class="ident">chroma</span>, <span class="ident">x</span>, <span class="number">0f64</span>]
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">1f64</span> <span class="op">&lt;=</span> <span class="ident">h_prim</span> <span class="op">&amp;&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;=</span> <span class="number">2f64</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">1f64</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">h_prim</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">2f64</span> {
         [<span class="ident">x</span>, <span class="ident">chroma</span>, <span class="number">0f64</span>]
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">2f64</span> <span class="op">&lt;=</span> <span class="ident">h_prim</span> <span class="op">&amp;&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;=</span> <span class="number">3f64</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">2f64</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">h_prim</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">3f64</span> {
         [<span class="number">0f64</span>, <span class="ident">chroma</span>, <span class="ident">x</span>]
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">3f64</span> <span class="op">&lt;=</span> <span class="ident">h_prim</span> <span class="op">&amp;&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;=</span> <span class="number">4f64</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">3f64</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">h_prim</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">4f64</span> {
         [<span class="number">0f64</span>, <span class="ident">x</span>, <span class="ident">chroma</span>]
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">4f64</span> <span class="op">&lt;=</span> <span class="ident">h_prim</span> <span class="op">&amp;&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;=</span> <span class="number">5f64</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">4f64</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">h_prim</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">5f64</span> {
         [<span class="ident">x</span>, <span class="number">0f64</span>, <span class="ident">chroma</span>]
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">5f64</span> <span class="op">&lt;=</span> <span class="ident">h_prim</span> <span class="op">&amp;&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;</span> <span class="number">6f64</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="number">5f64</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">h_prim</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">h_prim</span> <span class="op">&lt;</span> <span class="number">6f64</span> {
         [<span class="ident">chroma</span>, <span class="number">0f64</span>, <span class="ident">x</span>]
     } <span class="kw">else</span> {
         [<span class="number">0f64</span>, <span class="number">0f64</span>, <span class="number">0f64</span>]
@@ -418,7 +509,7 @@
 <span class="doccomment">/// assert_eq!(rgb_to_sepia([0.5, 0.5, 0.5]), [0.6755, 0.6015, 0.4685]);</span>
 <span class="doccomment">/// assert_eq!(rgb_to_sepia([0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rgb_to_sepia</span>(<span class="ident">rgb</span>: [<span class="ident">f64</span>; <span class="number">3</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rgb_to_sepia</span>(<span class="ident">rgb</span>: [<span class="ident">f64</span>; <span class="number">3</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     [((<span class="ident">rgb</span>[<span class="number">0</span>] <span class="op">*</span> <span class="number">0.393</span>) <span class="op">+</span> (<span class="ident">rgb</span>[<span class="number">1</span>] <span class="op">*</span> <span class="number">0.769</span>) <span class="op">+</span> (<span class="ident">rgb</span>[<span class="number">2</span>] <span class="op">*</span> <span class="number">0.189</span>)).<span class="ident">min</span>(<span class="number">1.</span>),
      ((<span class="ident">rgb</span>[<span class="number">0</span>] <span class="op">*</span> <span class="number">0.349</span>) <span class="op">+</span> (<span class="ident">rgb</span>[<span class="number">1</span>] <span class="op">*</span> <span class="number">0.686</span>) <span class="op">+</span> (<span class="ident">rgb</span>[<span class="number">2</span>] <span class="op">*</span> <span class="number">0.168</span>)).<span class="ident">min</span>(<span class="number">1.</span>),
      ((<span class="ident">rgb</span>[<span class="number">0</span>] <span class="op">*</span> <span class="number">0.272</span>) <span class="op">+</span> (<span class="ident">rgb</span>[<span class="number">1</span>] <span class="op">*</span> <span class="number">0.534</span>) <span class="op">+</span> (<span class="ident">rgb</span>[<span class="number">2</span>] <span class="op">*</span> <span class="number">0.131</span>)).<span class="ident">min</span>(<span class="number">1.</span>)]
@@ -441,7 +532,7 @@
 <span class="doccomment">/// # use mandalas::util::yuv_to_rgb;</span>
 <span class="doccomment">/// assert_eq!(yuv_to_rgb([0f64, 0f64, 0f64]), [0f64, 0.297705, 0f64]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">yuv_to_rgb</span>(<span class="ident">yuv</span>: [<span class="ident">f64</span>; <span class="number">3</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">yuv_to_rgb</span>(<span class="ident">yuv</span>: [<span class="ident">f64</span>; <span class="number">3</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     <span class="comment">// Scaled to [0-1, -0.5-0.5, -0.5-0.5]</span>
     <span class="kw">let</span> <span class="ident">yuv</span> <span class="op">=</span> [<span class="ident">yuv</span>[<span class="number">0</span>], <span class="ident">yuv</span>[<span class="number">1</span>] <span class="op">-</span> <span class="number">0.5</span>, <span class="ident">yuv</span>[<span class="number">2</span>] <span class="op">-</span> <span class="number">0.5</span>];
     [(<span class="number">1.28033</span> <span class="op">*</span> <span class="ident">yuv</span>[<span class="number">2</span>] <span class="op">+</span> <span class="ident">yuv</span>[<span class="number">0</span>]).<span class="ident">max</span>(<span class="number">0f64</span>).<span class="ident">min</span>(<span class="number">1f64</span>),
@@ -457,7 +548,7 @@
 <span class="doccomment">/// # use mandalas::util::roygbp_to_rgb;</span>
 <span class="doccomment">/// assert_eq!(roygbp_to_rgb([0f64, 0f64, 0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">roygbp_to_rgb</span>(<span class="ident">roygbp</span>: [<span class="ident">f64</span>; <span class="number">6</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">roygbp_to_rgb</span>(<span class="ident">roygbp</span>: [<span class="ident">f64</span>; <span class="number">6</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     <span class="comment">// R = e11716</span>
     <span class="comment">// O = fc9019</span>
     <span class="comment">// Y = fcf219</span>
@@ -483,7 +574,7 @@
 <span class="doccomment">/// # use mandalas::util::proygbiv_to_rgb;</span>
 <span class="doccomment">/// assert_eq!(proygbiv_to_rgb([0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">proygbiv_to_rgb</span>(<span class="ident">proygbiv</span>: [<span class="ident">f64</span>; <span class="number">8</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">proygbiv_to_rgb</span>(<span class="ident">proygbiv</span>: [<span class="ident">f64</span>; <span class="number">8</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     <span class="comment">// P = ff69b4</span>
     <span class="comment">// R = ff0000</span>
     <span class="comment">// O = ff8e00</span>
@@ -515,7 +606,7 @@
 <span class="doccomment">///      0f64, 0f64, 0f64, 0f64, 0f64]),</span>
 <span class="doccomment">///     [0f64, 0f64, 0f64]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rppdiblctgllyaodbgb_to_rgb</span>(<span class="ident">rppdiblctgllyaodbgb</span>: [<span class="ident">f64</span>; <span class="number">19</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rppdiblctgllyaodbgb_to_rgb</span>(<span class="ident">rppdiblctgllyaodbgb</span>: [<span class="ident">f64</span>; <span class="number">19</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     <span class="comment">// R = f34634</span>
     <span class="comment">// P = e81b62</span>
     <span class="comment">// P = 9c00b0</span>
@@ -573,14 +664,14 @@
 <span class="doccomment">/// # use mandalas::util::prgb1555_to_rgb;</span>
 <span class="doccomment">/// assert_eq!(prgb1555_to_rgb([0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prgb1555_to_rgb</span>(<span class="ident">prgb1555</span>: [<span class="ident">f64</span>; <span class="number">4</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prgb1555_to_rgb</span>(<span class="ident">prgb1555</span>: [<span class="ident">f64</span>; <span class="number">4</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     <span class="kw">const</span> <span class="ident">MAX_COLOUR</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">u8</span>::<span class="ident">MAX</span> <span class="kw">as</span> <span class="ident">f64</span>;
 
-    <span class="kw">let</span> <span class="ident">p_mask</span> <span class="op">=</span> ((<span class="ident">prgb1555</span>[<span class="number">0</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&amp;</span> <span class="number">1</span>) <span class="op">&lt;&lt;</span> <span class="number">7</span>;
+    <span class="kw">let</span> <span class="ident">p_mask</span> <span class="op">=</span> ((<span class="ident">prgb1555</span>[<span class="number">0</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&amp;</span> <span class="number">1</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">7</span>;
 
-    [((((<span class="ident">prgb1555</span>[<span class="number">1</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>) <span class="op">&lt;&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>,
-     ((((<span class="ident">prgb1555</span>[<span class="number">2</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>) <span class="op">&lt;&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>,
-     ((((<span class="ident">prgb1555</span>[<span class="number">3</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>) <span class="op">&lt;&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>]
+    [((((<span class="ident">prgb1555</span>[<span class="number">1</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">3</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>,
+     ((((<span class="ident">prgb1555</span>[<span class="number">2</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">3</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>,
+     ((((<span class="ident">prgb1555</span>[<span class="number">3</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">3</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>]
 }
 
 <span class="doccomment">/// Translate a PRGB1555 colour point into an RGB colour point.</span>
@@ -593,14 +684,14 @@
 <span class="doccomment">/// # use mandalas::util::prgb1555_least6_to_rgb;</span>
 <span class="doccomment">/// assert_eq!(prgb1555_least6_to_rgb([0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prgb1555_least6_to_rgb</span>(<span class="ident">prgb1555</span>: [<span class="ident">f64</span>; <span class="number">4</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">prgb1555_least6_to_rgb</span>(<span class="ident">prgb1555</span>: [<span class="ident">f64</span>; <span class="number">4</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     <span class="kw">const</span> <span class="ident">MAX_COLOUR</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">u8</span>::<span class="ident">MAX</span> <span class="kw">as</span> <span class="ident">f64</span>;
 
-    <span class="kw">let</span> <span class="ident">p_mask</span> <span class="op">=</span> ((((<span class="ident">prgb1555</span>[<span class="number">0</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span>).<span class="ident">count_ones</span>() <span class="op">&gt;=</span> <span class="number">6</span>) <span class="kw">as</span> <span class="ident">u8</span>) <span class="op">&lt;&lt;</span> <span class="number">7</span>;
+    <span class="kw">let</span> <span class="ident">p_mask</span> <span class="op">=</span> ((((<span class="ident">prgb1555</span>[<span class="number">0</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span>).<span class="ident">count_ones</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">6</span>) <span class="kw">as</span> <span class="ident">u8</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">7</span>;
 
-    [((((<span class="ident">prgb1555</span>[<span class="number">1</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>) <span class="op">&lt;&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>,
-     ((((<span class="ident">prgb1555</span>[<span class="number">2</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>) <span class="op">&lt;&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>,
-     ((((<span class="ident">prgb1555</span>[<span class="number">3</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>) <span class="op">&lt;&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>]
+    [((((<span class="ident">prgb1555</span>[<span class="number">1</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">3</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>,
+     ((((<span class="ident">prgb1555</span>[<span class="number">2</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">3</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>,
+     ((((<span class="ident">prgb1555</span>[<span class="number">3</span>] <span class="op">*</span> <span class="ident">MAX_COLOUR</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">&gt;</span><span class="op">&gt;</span> <span class="number">3</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">2</span>) <span class="op">|</span> <span class="ident">p_mask</span>) <span class="kw">as</span> <span class="ident">f64</span> <span class="op">/</span> <span class="ident">MAX_COLOUR</span>]
 }
 
 <span class="doccomment">/// Translate a colour point and alpha into an RGB colour point from the specified flag colourset.</span>
@@ -614,10 +705,101 @@
 <span class="doccomment">/// assert_eq!(flag_hard_alpha_to_rgb(FLAG_ACE, [0.4 , 1f64]), FLAG_ACE[1]);</span>
 <span class="doccomment">/// assert_eq!(flag_hard_alpha_to_rgb(FLAG_ACE, [0.4 , 0.5 ]), [FLAG_ACE[1][0] * 0.5, FLAG_ACE[1][1] * 0.5, FLAG_ACE[1][2] * 0.5]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flag_hard_alpha_to_rgb</span>(<span class="ident">flag</span>: <span class="kw-2">&amp;</span>[[<span class="ident">f64</span>; <span class="number">3</span>]], <span class="ident">id_alpha</span>: [<span class="ident">f64</span>; <span class="number">2</span>]) <span class="op">-&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">flag_hard_alpha_to_rgb</span>(<span class="ident">flag</span>: <span class="kw-2">&amp;</span>[[<span class="ident">f64</span>; <span class="number">3</span>]], <span class="ident">id_alpha</span>: [<span class="ident">f64</span>; <span class="number">2</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
     <span class="kw">let</span> <span class="ident">colour</span> <span class="op">=</span> <span class="ident">flag</span>[(<span class="ident">id_alpha</span>[<span class="number">0</span>] <span class="op">/</span> (<span class="number">1f64</span> <span class="op">/</span> (<span class="ident">flag</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>))).<span class="ident">floor</span>().<span class="ident">min</span>((<span class="ident">flag</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">f64</span>) <span class="kw">as</span> <span class="ident">usize</span>];
 
     [<span class="ident">colour</span>[<span class="number">0</span>] <span class="op">*</span> <span class="ident">id_alpha</span>[<span class="number">1</span>], <span class="ident">colour</span>[<span class="number">1</span>] <span class="op">*</span> <span class="ident">id_alpha</span>[<span class="number">1</span>], <span class="ident">colour</span>[<span class="number">2</span>] <span class="op">*</span> <span class="ident">id_alpha</span>[<span class="number">1</span>]]
 }
+
+
+
+
+<span class="comment">/*
+/// Translate a PROYGBIV colour point into an RGB colour point according to sampling the svg on wikipedia.
+///
+/// # Examples
+///
+/// ```
+/// # use mandalas::util::proygbiv_to_rgb;
+/// assert_eq!(proygbiv_to_rgb([0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64, 0f64]), [0f64, 0f64, 0f64]);
+/// ```
+pub fn lab_to_rgb(lab: [f64; 3]) -&gt; [f64; 3] {
+    float var_Y = ( l_s + 16. ) / 116.;
+    float var_X = a_s / 500. + var_Y;
+    float var_Z = var_Y - b_s / 200.;
+
+    if ( pow(var_Y,3) &gt; 0.008856 ) var_Y = pow(var_Y,3);
+    else                      var_Y = ( var_Y - 16. / 116. ) / 7.787;
+    if ( pow(var_X,3) &gt; 0.008856 ) var_X = pow(var_X,3);
+    else                      var_X = ( var_X - 16. / 116. ) / 7.787;
+    if ( pow(var_Z,3) &gt; 0.008856 ) var_Z = pow(var_Z,3);
+    else                      var_Z = ( var_Z - 16. / 116. ) / 7.787;
+
+    float X = 95.047 * var_X ;    //ref_X =  95.047     Observer= 2°, Illuminant= D65
+    float Y = 100.000 * var_Y  ;   //ref_Y = 100.000
+    float Z = 108.883 * var_Z ;    //ref_Z = 108.883
+
+
+    var_X = X / 100. ;       //X from 0 to  95.047      (Observer = 2°, Illuminant = D65)
+    var_Y = Y / 100. ;       //Y from 0 to 100.000
+    var_Z = Z / 100. ;      //Z from 0 to 108.883
+
+    float var_R = var_X *  3.2406 + var_Y * -1.5372 + var_Z * -0.4986;
+    float var_G = var_X * -0.9689 + var_Y *  1.8758 + var_Z *  0.0415;
+    float var_B = var_X *  0.0557 + var_Y * -0.2040 + var_Z *  1.0570;
+
+    if ( var_R &gt; 0.0031308 ) var_R = 1.055 * pow(var_R , ( 1 / 2.4 ))  - 0.055;
+    else                     var_R = 12.92 * var_R;
+    if ( var_G &gt; 0.0031308 ) var_G = 1.055 * pow(var_G , ( 1 / 2.4 ) )  - 0.055;
+    else                     var_G = 12.92 * var_G;
+    if ( var_B &gt; 0.0031308 ) var_B = 1.055 * pow( var_B , ( 1 / 2.4 ) ) - 0.055;
+    else                     var_B = 12.92 * var_B;
+
+    R = var_R * 255.;
+    G = var_G * 255.;
+    B = var_B * 255.;
+}
+
+void LAB2RGB(int L, int a, int b, unsigned char &amp; R, unsigned char &amp; G, unsigned char &amp; B)
+{
+    float X, Y, Z, fX, fY, fZ;
+    int RR, GG, BB;
+
+    fY = pow((L + 16.0) / 116.0, 3.0);
+    if (fY &lt; 0.008856)
+        fY = L / 903.3;
+    Y = fY;
+
+    if (fY &gt; 0.008856)
+        fY = powf(fY, 1.0/3.0);
+    else
+        fY = 7.787 * fY + 16.0/116.0;
+
+    fX = a / 500.0 + fY;
+    if (fX &gt; 0.206893)
+        X = powf(fX, 3.0);
+    else
+        X = (fX - 16.0/116.0) / 7.787;
+
+    fZ = fY - b /200.0;
+    if (fZ &gt; 0.206893)
+        Z = powf(fZ, 3.0);
+    else
+        Z = (fZ - 16.0/116.0) / 7.787;
+
+    X *= (0.950456 * 255);
+    Y *=             255;
+    Z *= (1.088754 * 255);
+
+    RR =  (int)(3.240479*X - 1.537150*Y - 0.498535*Z + 0.5);
+    GG = (int)(-0.969256*X + 1.875992*Y + 0.041556*Z + 0.5);
+    BB =  (int)(0.055648*X - 0.204043*Y + 1.057311*Z + 0.5);
+
+    R = (unsigned char)(RR &lt; 0 ? 0 : RR &gt; 255 ? 255 : RR);
+    G = (unsigned char)(GG &lt; 0 ? 0 : GG &gt; 255 ? 255 : GG);
+    B = (unsigned char)(BB &lt; 0 ? 0 : BB &gt; 255 ? 255 : BB);
+
+    //printf(&quot;Lab=(%f,%f,%f) ==&gt; RGB(%f,%f,%f)\n&quot;,L,a,b,*R,*G,*B);
+}*/</span>
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "mandalas";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

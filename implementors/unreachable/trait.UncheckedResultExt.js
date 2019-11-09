@@ -6,5 +6,4 @@ implementors["unreachable"] = [];
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()

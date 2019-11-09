@@ -41,7 +41,7 @@ tested on MacOS, Linux and Windows</p>
     <span class="ident">mb</span>.<span class="ident">println</span>(<span class="string">&quot;Application header:&quot;</span>);
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p1</span> <span class="op">=</span> <span class="ident">mb</span>.<span class="ident">create_bar</span>(<span class="ident">count</span>);
-    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">thread</span>::<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">||</span> {
+    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">thread</span>::<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">count</span> {
             <span class="ident">p1</span>.<span class="ident">inc</span>();
             <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">100</span>));
@@ -53,7 +53,7 @@ tested on MacOS, Linux and Windows</p>
     <span class="ident">mb</span>.<span class="ident">println</span>(<span class="string">&quot;add a separator between the two bars&quot;</span>);
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">p2</span> <span class="op">=</span> <span class="ident">mb</span>.<span class="ident">create_bar</span>(<span class="ident">count</span> <span class="op">*</span> <span class="number">2</span>);
-    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">thread</span>::<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">||</span> {
+    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">thread</span>::<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">count</span> <span class="op">*</span> <span class="number">2</span> {
             <span class="ident">p2</span>.<span class="ident">inc</span>();
             <span class="ident">thread</span>::<span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">100</span>));

@@ -6,5 +6,4 @@ implementors["num_rational"] = [{text:"impl&lt;'a, 'b, T:&nbsp;<a class=\"trait\
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()

@@ -6,5 +6,4 @@ implementors["fixed_vec_deque"] = [];
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()
