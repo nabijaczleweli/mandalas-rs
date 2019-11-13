@@ -194,7 +194,7 @@
                     <span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-J --jobs-coll &#39;The amount of threads to use for point collection&#39;&quot;</span>)
                         .<span class="ident">default_value</span>(<span class="kw-2">&amp;</span><span class="ident">cpus_coll_s</span>)
                         .<span class="ident">validator</span>(<span class="ident">Options</span>::<span class="ident">jobs_validator</span>),
-                    <span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-A --affine-threads &#39;Whether to affine worker threads to specific CPUs&#39;&quot;</span>)])
+                    <span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-A --affine-threads &#39;Affine worker threads to specific CPUs&#39;&quot;</span>)])
             .<span class="ident">get_matches</span>();
 
         <span class="ident">Options</span> {
