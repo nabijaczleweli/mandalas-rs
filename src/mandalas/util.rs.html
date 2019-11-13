@@ -399,6 +399,7 @@
 <span id="399">399</span>
 <span id="400">400</span>
 <span id="401">401</span>
+<span id="402">402</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Various utility functions.</span>
 
@@ -457,7 +458,8 @@
 <span class="doccomment">/// assert_eq!(cmyk_to_rgb([0f64, 1f64, 0f64, 0f64]), [1f64, 0f64, 1f64]);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cmyk_to_rgb</span>(<span class="ident">cmyk</span>: [<span class="ident">f64</span>; <span class="number">4</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">f64</span>; <span class="number">3</span>] {
-    [(<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">0</span>]) <span class="op">*</span> (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">3</span>]), (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">1</span>]) <span class="op">*</span> (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">3</span>]), (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">2</span>]) <span class="op">*</span> (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">3</span>])]
+    <span class="kw">let</span> <span class="ident">rec_k</span> <span class="op">=</span> <span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">3</span>];
+    [(<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">0</span>]) <span class="op">*</span> <span class="ident">rec_k</span>, (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">1</span>]) <span class="op">*</span> <span class="ident">rec_k</span>, (<span class="number">1f64</span> <span class="op">-</span> <span class="ident">cmyk</span>[<span class="number">2</span>]) <span class="op">*</span> <span class="ident">rec_k</span>]
 }
 
 <span class="doccomment">/// Translate an HSL colour point into an RGB colour point.</span>
